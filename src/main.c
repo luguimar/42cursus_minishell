@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/13 04:06:32 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/13 22:30:12 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	minishell(char *input, char **envp)
 	}
 	if (cid == 0)
 	{
-		args = ft_splitquote(input, '|');
+		args = ft_split_if_not_in_quote(input, '|');
 		if (args == NULL)
 			return (1);
 		pipex(ft_matrixlen((void **) args), args, envp);

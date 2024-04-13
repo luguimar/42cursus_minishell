@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:40:24 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/13 03:10:39 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/13 21:45:51 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,6 @@ int					ft_strcmp(const char *str1, const char *str2);
 int					bigger(int a, int b);
 int					smaller(int a, int b);
 char				has_open_quote(char *s, int index);
+char				**ft_split_if_not_in_quote(char *s, char c);
 
 #endif
