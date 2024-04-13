@@ -6,11 +6,30 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 15:31:54 by luguimar          #+#    #+#             */
-/*   Updated: 2023/10/07 15:16:52 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/13 03:09:45 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+char	has_open_quote(char *s, int index)
+{
+	int		i;
+	char	quote;
+
+	i = 0;
+	quote = '\0';
+	while (i < index)
+	{
+		if ((s[i] == '\'' || s[i] == '\"') && \
+		(i == 0 || s[i - 1] != '\\') && quote == '\0')
+			quote = s[i];
+		else if (s[i] == quote && s[i - 1] != '\\')
+			quote = '\0';
+		i++;
+	}
+	return (quote);
+}
 
 int	is_end_wordquote(char *s, int index, char c)
 {
