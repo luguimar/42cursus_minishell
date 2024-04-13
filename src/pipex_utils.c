@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/12 23:10:26 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/13 01:44:36 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,10 @@ char	**last_one(char **argv, char **path, char **envp, int i)
 	char	**args;
 	int		argc;
 
+	(void)argc;
 	argc = ft_matrixlen((void **)argv);
 	args = ft_splitquote_nulls(argv[i], ' ');
 	*path = get_right_path(args, envp, *path);
-	check_error(access(argv[argc - 1], W_OK), argv[argc - 1], args, *path);
+	//check_error(access(argv[argc - 1], W_OK), argv[argc - 1], args, *path);
 	return (args);
 }

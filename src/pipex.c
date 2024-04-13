@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/12 23:10:14 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/13 03:49:51 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,8 @@ void	redirect_files(int i, char *argv[], char **envp)
 	{
 		args = ft_splitquote_nulls(argv[ft_abs_value(i)], ' ');
 		path = get_right_path(args, envp, path);
-		if (i == 2 || i == -3)
-			check_error(access(argv[1], R_OK), argv[1], args, path);
+		//if (i == 2 || i == -3)
+		//	check_error(access(argv[1], R_OK), argv[1], args, path);
 		dup2stdout(pipefd);
 		exec_command(path, envp, args, 1);
 	}
@@ -119,21 +119,12 @@ int	pipex(int argc, char **argv, char **envp)
 	char	**args;
 
 	(void)fd;
-	if (argc >= 5)
-	{
-		i = 2;
-		if (argc > 5 && !ft_strncmp(argv[1], "here_doc\0", 9))
-			i = 3;
-		if (i == 3)
-			heredoc(argv[2]);
-		path = NULL;
-		dup2redirect(fd, argv, envp, i);
-		while (++i <= argc - 3)
-			redirect_files(i, argv, envp);
-		args = last_one(argv, &path, envp, i);
-		exec_command(path, envp, args, 1);
-	}
-	else
-		ft_printf("Wrong number of arguments!\n");
+	i = -1;
+	path = NULL;
+	//dup2redirect(fd, argv, envp, i);
+	while (++i < argc - 1)
+		redirect_files(i, argv, envp);
+	args = last_one(argv, &path, envp, i);
+	exec_command(path, envp, args, 1);
 	return (1);
 }

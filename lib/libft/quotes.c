@@ -6,9 +6,11 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 12:55:47 by luguimar          #+#    #+#             */
-/*   Updated: 2023/10/04 18:24:56 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/13 03:14:22 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "libft.h"
 
 char	inquote(char *s, int index)
 {
@@ -22,7 +24,7 @@ char	inquote(char *s, int index)
 		if (s[i] == '\0')
 			break ;
 		if ((s[i - 1] == '\"' || s[i - 1] == '\'') && s[i - 2] != '\\'
-			&& quote == '\0')
+			&& quote == '\0' && !has_open_quote(s, i - 2))
 			quote = s[i - 1];
 		else if (s[i] == quote && s[i - 1] != '\\')
 			quote = '\0';
