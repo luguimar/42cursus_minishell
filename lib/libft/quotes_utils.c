@@ -6,11 +6,19 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 15:31:54 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/13 21:39:07 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/14 19:38:42 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+int	is_c_not_in_quotes(char *s, int index, char c)
+{
+	if (s[index] == c && !inquote(s, index))
+		return (1);
+	else
+		return (0);
+}
 
 char	has_open_quote(char *s, int index)
 {
