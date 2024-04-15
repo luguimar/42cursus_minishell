@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/12 20:40:55 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/16 00:36:40 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,25 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
+
+typedef struct s_env
+{
+	char	*key;
+	char	*value;
+	char	*full;
+}				t_env;
+
+typedef struct s_shell
+{
+	t_list	*env;
+}				t_shell;
+
+//envparser
+
+int		env_to_list(t_shell *shell, char **envp);
+t_env	*envnew(char *key, char *value, char *env_i);
+
+//pipes
 
 void	dup2stdout(int *pipefd);
 void	dup2stdin(int *pipefd);
