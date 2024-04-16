@@ -6,11 +6,38 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 23:50:43 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/16 00:39:03 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 00:31:02 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+char	**env_to_array(t_list *env)
+{
+	int		i;
+	char	**envp;
+	t_list	*tmp;
+
+	i = 0;
+	tmp = env;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	envp = (char **)malloc(sizeof(char *) * (i + 1));
+	if (!envp)
+		return (NULL);
+	i = 0;
+	while (env)
+	{
+		envp[i] = ((t_env *)env->content)->full;
+		env = env->next;
+		i++;
+	}
+	envp[i] = NULL;
+	return (envp);
+}
 
 t_env	*envnew(char *key, char *value, char *env_i)
 {

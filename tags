@@ -39,10 +39,12 @@ dup2redirect	src/pipex_utils.c	/^void	dup2redirect(int *fd, char **argv, char **
 dup2stdin	src/pipex_utils.c	/^void	dup2stdin(int *pipefd)$/;"	f
 dup2stdout	src/pipex_utils.c	/^void	dup2stdout(int *pipefd)$/;"	f
 env	includes/minishell.h	/^	t_list	*env;$/;"	m	struct:s_shell
+env_to_array	src/envparser.c	/^char	**env_to_array(t_list *env)$/;"	f
 env_to_list	src/envparser.c	/^int	env_to_list(t_shell *shell, char **envp)$/;"	f
 envnew	src/envparser.c	/^t_env	*envnew(char *key, char *value, char *env_i)$/;"	f
 exec_command	src/pipex.c	/^static void	exec_command(char *path, char **envp, char **args, int isparent)$/;"	f	file:
 free_array_of_strings	lib/libft/free_array_of_strings.c	/^void	free_array_of_strings(char **str)$/;"	f
+free_everything	src/main.c	/^void	free_everything(t_shell *shell)$/;"	f
 ft_abs_value	lib/libft/ft_abs_value.c	/^int	ft_abs_value(int n)$/;"	f
 ft_atoi	lib/libft/ft_atoi.c	/^int	ft_atoi(const char *nptr)$/;"	f
 ft_atol	lib/libft/ft_atol.c	/^long long	ft_atol(const char *nptr)$/;"	f
@@ -116,7 +118,7 @@ isquote	lib/libft/quotes.c	/^char	isquote(char *s, int index)$/;"	f
 key	includes/minishell.h	/^	char	*key;$/;"	m	struct:s_env
 last_one	src/pipex_utils.c	/^char	**last_one(char **argv, char **path, char **envp, int i)$/;"	f
 main	src/main.c	/^int	main(int argc, char **argv, char **envp)$/;"	f
-minishell	src/main.c	/^int	minishell(t_shell shell)$/;"	f
+minishell	src/main.c	/^int	minishell(t_shell *shell)$/;"	f
 module	lib/libft/ft_itoa.c	/^long int	module(int n)$/;"	f
 next	lib/libft/libft.h	/^	struct s_list	*next;$/;"	m	struct:s_list	typeref:struct:s_list::s_list
 pipex	src/pipex.c	/^int	pipex(int argc, char **argv, char **envp)$/;"	f
