@@ -6,39 +6,13 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/13 22:30:12 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/16 01:41:58 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	**matrix_dup(char **matrix)
-{
-	char	**new_matrix;
-	int		i;
-
-	i = 0;
-	while (matrix[i])
-		i++;
-	new_matrix = (char **)malloc(sizeof(char *) * (i + 1));
-	if (new_matrix == NULL)
-		return (NULL);
-	i = 0;
-	while (matrix[i])
-	{
-		new_matrix[i] = ft_strdup(matrix[i]);
-		if (new_matrix[i] == NULL)
-		{
-			free_array_of_strings(new_matrix);
-			return (NULL);
-		}
-		i++;
-	}
-	new_matrix[i] = NULL;
-	return (new_matrix);
-}
-
-int	minishell(char *input, char **envp)
+int	minishell(t_shell shell)
 {
 	char	**args;
 	int		cid;
@@ -64,18 +38,16 @@ int	minishell(char *input, char **envp)
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	*input;
-	char	**envp_dup;
+	t_shell	shell;
 
 	(void)argc;
 	(void)argv;
-	envp_dup = matrix_dup(envp);
 	while (1)
 	{
-		input = readline("minishell$>");
-		if (input == NULL)
+		shell.input = readline("minishell$>");
+		if (shell.input == NULL)
 			break ;
-		minishell(input, envp_dup);
+		minishell(shell);
 		/*if (ft_strcmp(input, "exit") == 0)
 		{
 			free(input);
@@ -83,7 +55,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		ft_putstr_fd(input, 1);
 		ft_putchar_fd('\n', 1);*/
-		free(input);
+		free(shell.input);
 	}
 	return (0);
 }
