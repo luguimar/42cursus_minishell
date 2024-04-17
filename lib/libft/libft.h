@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:40:24 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/14 19:39:07 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 11:20:48 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,5 +101,7 @@ int					smaller(int a, int b);
 char				has_open_quote(char *s, int index);
 char				**ft_split_if_not_in_quote(char *s, char c);
 int					is_c_not_in_quotes(char *s, int index, char c);
+char				*ft_strjoinfree2(char *s1, char *s2);
+char				*ft_strjoinfreeall(char *s1, char *s2);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 23:50:43 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 03:57:18 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 09:37:22 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,15 @@ char	**env_to_array(t_list *env)
 	char	**envp;
 	t_list	*tmp;
 
+	tmp = env;
 	i = 0;
 	envp = (char **)malloc(sizeof(char *) * (ft_lstsize(env) + 1));
 	if (!envp)
 		return (NULL);
-	while (env)
+	while (tmp)
 	{
-		envp[i] = ((t_env *)env->content)->full;
-		env = env->next;
+		envp[i] = ((t_env *)tmp->content)->full;
+		tmp = tmp->next;
 		i++;
 	}
 	envp[i] = NULL;
