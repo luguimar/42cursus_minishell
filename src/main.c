@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 05:45:47 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 12:52:18 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	minishell(t_shell *shell)
 		return (1);
 	}
 	if (cid == 0)
-		pipex(ft_matrixlen((void **) args), args, env_to_array(shell->env));
+		pipex(ft_matrixlen((void **) args), args, shell);
 	else
 		waitpid(cid, NULL, 0);
 	return (0);

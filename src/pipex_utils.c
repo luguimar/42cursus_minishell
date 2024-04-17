@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/13 01:44:36 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 13:01:55 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	dup2stdin(int *pipefd)
 	dup2(pipefd[0], STDIN_FILENO);
 }
 
-void	dup2redirect(int *fd, char **argv, char **envp, int i)
+void	dup2redirect(int *fd, char **argv, t_shell *shell, int i)
 {
 	fd[0] = open(argv[1], O_RDONLY);
 	if (i != 3)
@@ -36,9 +36,9 @@ void	dup2redirect(int *fd, char **argv, char **envp, int i)
 	dup2(fd[0], STDIN_FILENO);
 	dup2(fd[1], STDOUT_FILENO);
 	if (i == 3)
-		redirect_files(-3, argv, envp);
+		redirect_files(-3, argv, shell);
 	else
-		redirect_files(i, argv, envp);
+		redirect_files(i, argv, shell);
 }
 
 void	heredoc(char *limiter)

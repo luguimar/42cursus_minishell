@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 05:54:11 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 13:15:25 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,19 @@ typedef struct s_shell
 
 int		exec_builtin(char **args, t_shell *shell);
 
+//cd
+
+int		ft_cd_case_double_dash(t_shell *shell, char ***args);
+char	*ft_strremoveprev(char *str, char *old, char *new);
+char	*ft_strreplace(char *str, char *old, char *new);
+char	*ft_cd_check_for_dots(char **args, t_shell *shell);
+int		ft_cd_normal(char **args, t_shell *shell);
+int		ft_cd_case_dotdot(t_shell *shell, char ***args);
+int		ft_cd_aux_extra(t_shell *shell, char ***args);
+int		ft_cd_case_slash(t_shell *shell, char ***args);
+int		ft_cd_case_tild(t_shell *shell, char ***args);
+int		ft_cd_aux(char **args, t_shell *shell);
+
 //envparser
 
 int		env_to_list(t_shell *shell, char **envp);
@@ -49,12 +62,12 @@ char	*get_env_value(t_list *env, char *key);
 
 void	dup2stdout(int *pipefd);
 void	dup2stdin(int *pipefd);
-void	dup2redirect(int *fd, char **argv, char **envp, int i);
-void	redirect_files(int i, char *argv[], char **envp);
+void	dup2redirect(int *fd, char **argv, t_shell *shell, int i);
+void	redirect_files(int i, char *argv[], t_shell *shell);
 void	heredoc(char *limiter);
 char	*get_right_path(char **cmd, char **envp, char *right_path);
 char	**last_one(char **argv, char **path, char **envp, int i);
 void	check_error(int status, char *message, char **args, char *path);
-int		pipex(int argc, char **argv, char **envp);
+int		pipex(int argc, char **argv, t_shell *shell);
 
 #endif
