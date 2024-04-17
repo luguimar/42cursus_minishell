@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 13:08:21 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:24:41 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,17 +65,14 @@ char	*get_right_path(char **cmd, char **envp, char *right_path)
 		return (NULL);
 	while (envp[i] && !ft_strnstr(envp[i], "PATH=", 5))
 		i++;
+	if (!envp[i])
+		return (NULL);
 	path = ft_split(envp[i] + 5, ':');
 	i = -1;
 	while (cmd && path[++i] && *cmd[0] != '/')
 	{
-		right_path = ft_strjoin(path[i], "/");
-		right_path = ft_strjoinfree(right_path, *cmd);
-		if (access(right_path, F_OK) == 0)
-		{
-			free_array_of_strings(path);
+		if (get_right_path_aux(cmd, path, i, &right_path))
 			return (right_path);
-		}
 		free(right_path);
 	}
 	free_array_of_strings(path);

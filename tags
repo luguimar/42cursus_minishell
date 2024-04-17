@@ -52,7 +52,7 @@ clean	Makefile	/^clean:$/;"	t
 clean	lib/libft/Makefile	/^clean:$/;"	t
 clean_stash	lib/libft/get_next_line.c	/^static char	*clean_stash(char *stash)$/;"	f	typeref:typename:char *	file:
 content	lib/libft/libft.h	/^	void			*content;$/;"	m	struct:s_list	typeref:typename:void *
-dup2redirect	src/pipex_utils.c	/^void	dup2redirect(int *fd, char **argv, t_shell *shell, int i)$/;"	f	typeref:typename:void
+delete_env_node	src/unset_utils.c	/^void	delete_env_node(t_list **env, char *key)$/;"	f	typeref:typename:void
 dup2stdin	src/pipex_utils.c	/^void	dup2stdin(int *pipefd)$/;"	f	typeref:typename:void
 dup2stdout	src/pipex_utils.c	/^void	dup2stdout(int *pipefd)$/;"	f	typeref:typename:void
 env	includes/minishell.h	/^	t_list	*env;$/;"	m	struct:s_shell	typeref:typename:t_list *
@@ -65,6 +65,7 @@ exec_command	src/pipex.c	/^static void	exec_command(char *path, t_shell *shell, 
 fclean	Makefile	/^fclean: clean$/;"	t
 fclean	lib/libft/Makefile	/^fclean: clean$/;"	t
 free_array_of_strings	lib/libft/free_array_of_strings.c	/^void	free_array_of_strings(char **str)$/;"	f	typeref:typename:void
+free_env	src/unset_utils.c	/^static void	free_env(void *content)$/;"	f	typeref:typename:void	file:
 free_everything	src/main.c	/^void	free_everything(t_shell *shell)$/;"	f	typeref:typename:void
 ft_abs_value	lib/libft/ft_abs_value.c	/^int	ft_abs_value(int n)$/;"	f	typeref:typename:int
 ft_atoi	lib/libft/ft_atoi.c	/^int	ft_atoi(const char *nptr)$/;"	f	typeref:typename:int
@@ -80,6 +81,8 @@ ft_cd_case_slash	src/cd_utils.c	/^int	ft_cd_case_slash(t_shell *shell, char ***a
 ft_cd_case_tild	src/cd_utils.c	/^int	ft_cd_case_tild(t_shell *shell, char ***args)$/;"	f	typeref:typename:int
 ft_cd_check_for_dots	src/cd_utils1.c	/^char	*ft_cd_check_for_dots(char **args, t_shell *shell)$/;"	f	typeref:typename:char *
 ft_cd_normal	src/cd_utils1.c	/^int	ft_cd_normal(char **args, t_shell *shell)$/;"	f	typeref:typename:int
+ft_env	src/builtins_extra.c	/^int	ft_env(char **args, t_shell *shell)$/;"	f	typeref:typename:int
+ft_exit	src/builtins.c	/^static int	ft_exit(char **args, t_shell *shell)$/;"	f	typeref:typename:int	file:
 ft_isalnum	lib/libft/ft_isalnum.c	/^int	ft_isalnum(int c)$/;"	f	typeref:typename:int
 ft_isalpha	lib/libft/ft_isalpha.c	/^int	ft_isalpha(int c)$/;"	f	typeref:typename:int
 ft_isascii	lib/libft/ft_isascii.c	/^int	ft_isascii(int c)$/;"	f	typeref:typename:int
@@ -107,6 +110,7 @@ ft_putendl_fd	lib/libft/ft_putendl_fd.c	/^void	ft_putendl_fd(char *s, int fd)$/;
 ft_putnbr_base_fd	lib/libft/ft_putnbr_base_fd.c	/^int	ft_putnbr_base_fd(unsigned long decimal, char *base, int fd)$/;"	f	typeref:typename:int
 ft_putnbr_fd	lib/libft/ft_putnbr_fd.c	/^int	ft_putnbr_fd(int n, int fd)$/;"	f	typeref:typename:int
 ft_putstr_fd	lib/libft/ft_putstr_fd.c	/^int	ft_putstr_fd(char *s, int fd)$/;"	f	typeref:typename:int
+ft_pwd	src/builtins.c	/^static int	ft_pwd(char **args, t_shell *shell)$/;"	f	typeref:typename:int	file:
 ft_split	lib/libft/ft_split.c	/^char	**ft_split(char const *s, char c)$/;"	f	typeref:typename:char **
 ft_split_if_not_in_quote	lib/libft/ft_split_if_not_in_quote.c	/^char	**ft_split_if_not_in_quote(char *s, char c)$/;"	f	typeref:typename:char **
 ft_splitquote	lib/libft/ft_splitquote.c	/^char	**ft_splitquote(char *s, char c)$/;"	f	typeref:typename:char **
@@ -133,11 +137,13 @@ ft_strtrim	lib/libft/ft_strtrim.c	/^char	*ft_strtrim(char const *s1, char const 
 ft_substr	lib/libft/ft_substr.c	/^char	*ft_substr(char const *s, unsigned int start, size_t len)$/;"	f	typeref:typename:char *
 ft_tolower	lib/libft/ft_tolower.c	/^int	ft_tolower(int c)$/;"	f	typeref:typename:int
 ft_toupper	lib/libft/ft_toupper.c	/^int	ft_toupper(int c)$/;"	f	typeref:typename:int
+ft_unset	src/builtins.c	/^static int	ft_unset(char **args, t_shell *shell)$/;"	f	typeref:typename:int	file:
 full	includes/minishell.h	/^	char	*full;$/;"	m	struct:s_env	typeref:typename:char *
 get_env_value	src/envparser_extra.c	/^char	*get_env_value(t_list *env, char *key)$/;"	f	typeref:typename:char *
 get_line	lib/libft/get_next_line.c	/^static char	*get_line(char *stash)$/;"	f	typeref:typename:char *	file:
 get_next_line	lib/libft/get_next_line.c	/^char	*get_next_line(int fd)$/;"	f	typeref:typename:char *
 get_right_path	src/pipex.c	/^char	*get_right_path(char **cmd, char **envp, char *right_path)$/;"	f	typeref:typename:char *
+get_right_path_aux	src/pipex_utils.c	/^int	get_right_path_aux(char **cmd, char **path, int i, char **right_path)$/;"	f	typeref:typename:int
 get_stash	lib/libft/get_next_line.c	/^static char	*get_stash(int fd, char *stash)$/;"	f	typeref:typename:char *	file:
 has_open_quote	lib/libft/quotes_utils.c	/^char	has_open_quote(char *s, int index)$/;"	f	typeref:typename:char
 heredoc	src/pipex_utils.c	/^void	heredoc(char *limiter)$/;"	f	typeref:typename:void
