@@ -6,15 +6,17 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/13 03:49:51 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:24:41 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	exec_command(char *path, char **envp, char **args, int isparent)
+static void	exec_command(char *path, t_shell *shell, char **args, int isparent)
 {
-	if (!path || !envp || !args)
+	if (exec_builtin(args, shell))
+		return ;
+	if (!path || !shell->env_array || !args)
 	{
 		while (--isparent)
 			wait(NULL);
@@ -22,17 +24,17 @@ static void	exec_command(char *path, char **envp, char **args, int isparent)
 		if (args)
 			ft_printf("%s: command not found\n", args[0]);
 		else
-			ft_printf("pipex: '' : command not found\n");
+			ft_printf("minishell: '' : command not found\n");
 		if (path)
 			free(path);
 		free_array_of_strings(args);
 		exit(127);
 	}
-	execve(path, args, envp);
+	execve(path, args, shell->env_array);
 	if (isparent)
 		wait(NULL);
 	dup2(STDERR_FILENO, STDOUT_FILENO);
-	perror("pipex");
+	perror("minishell");
 	free(path);
 	free_array_of_strings(args);
 	exit(1);
@@ -63,17 +65,14 @@ char	*get_right_path(char **cmd, char **envp, char *right_path)
 		return (NULL);
 	while (envp[i] && !ft_strnstr(envp[i], "PATH=", 5))
 		i++;
+	if (!envp[i])
+		return (NULL);
 	path = ft_split(envp[i] + 5, ':');
 	i = -1;
 	while (cmd && path[++i] && *cmd[0] != '/')
 	{
-		right_path = ft_strjoin(path[i], "/");
-		right_path = ft_strjoinfree(right_path, *cmd);
-		if (access(right_path, F_OK) == 0)
-		{
-			free_array_of_strings(path);
+		if (get_right_path_aux(cmd, path, i, &right_path))
 			return (right_path);
-		}
 		free(right_path);
 	}
 	free_array_of_strings(path);
@@ -82,7 +81,7 @@ char	*get_right_path(char **cmd, char **envp, char *right_path)
 	return (NULL);
 }
 
-void	redirect_files(int i, char *argv[], char **envp)
+void	redirect_files(int i, char *argv[], t_shell *shell)
 {
 	int		cid;
 	int		pipefd[2];
@@ -96,11 +95,11 @@ void	redirect_files(int i, char *argv[], char **envp)
 	if (cid == 0)
 	{
 		args = ft_splitquote_nulls(argv[ft_abs_value(i)], ' ');
-		path = get_right_path(args, envp, path);
+		path = get_right_path(args, shell->env_array, path);
 		//if (i == 2 || i == -3)
 		//	check_error(access(argv[1], R_OK), argv[1], args, path);
 		dup2stdout(pipefd);
-		exec_command(path, envp, args, 1);
+		exec_command(path, shell, args, 1);
 	}
 	else if (cid == -1)
 		check_error(-1, "fork", args, path);
@@ -111,7 +110,7 @@ void	redirect_files(int i, char *argv[], char **envp)
 	}
 }
 
-int	pipex(int argc, char **argv, char **envp)
+int	pipex(int argc, char **argv, t_shell *shell)
 {
 	int		fd[2];
 	int		i;
@@ -121,10 +120,10 @@ int	pipex(int argc, char **argv, char **envp)
 	(void)fd;
 	i = -1;
 	path = NULL;
-	//dup2redirect(fd, argv, envp, i);
+	//dup2redirect(fd, argv, shell, i);
 	while (++i < argc - 1)
-		redirect_files(i, argv, envp);
-	args = last_one(argv, &path, envp, i);
-	exec_command(path, envp, args, 1);
+		redirect_files(i, argv, shell);
+	args = last_one(argv, &path, shell->env_array, i);
+	exec_command(path, shell, args, 1);
 	return (1);
 }

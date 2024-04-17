@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/13 01:44:36 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:22:42 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,16 @@ void	dup2stdin(int *pipefd)
 	dup2(pipefd[0], STDIN_FILENO);
 }
 
-void	dup2redirect(int *fd, char **argv, char **envp, int i)
+int	get_right_path_aux(char **cmd, char **path, int i, char **right_path)
 {
-	fd[0] = open(argv[1], O_RDONLY);
-	if (i != 3)
-		fd[1] = open(argv[ft_matrixlen((void **)argv) - 1],
-				O_WRONLY | O_CREAT | O_TRUNC, 0664);
-	else
-		fd[1] = open(argv[ft_matrixlen((void **)argv) - 1],
-				O_WRONLY | O_CREAT | O_APPEND, 0664);
-	dup2(fd[0], STDIN_FILENO);
-	dup2(fd[1], STDOUT_FILENO);
-	if (i == 3)
-		redirect_files(-3, argv, envp);
-	else
-		redirect_files(i, argv, envp);
+	*right_path = ft_strjoin(path[i], "/");
+	*right_path = ft_strjoinfree(*right_path, *cmd);
+	if (access(*right_path, F_OK) == 0)
+	{
+		free_array_of_strings(path);
+		return (1);
+	}
+	return (0);
 }
 
 void	heredoc(char *limiter)
@@ -72,3 +67,20 @@ char	**last_one(char **argv, char **path, char **envp, int i)
 	//check_error(access(argv[argc - 1], W_OK), argv[argc - 1], args, *path);
 	return (args);
 }
+/*
+void	dup2redirect(int *fd, char **argv, t_shell *shell, int i)
+{
+	fd[0] = open(argv[1], O_RDONLY);
+	if (i != 3)
+		fd[1] = open(argv[ft_matrixlen((void **)argv) - 1],
+				O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	else
+		fd[1] = open(argv[ft_matrixlen((void **)argv) - 1],
+				O_WRONLY | O_CREAT | O_APPEND, 0664);
+	dup2(fd[0], STDIN_FILENO);
+	dup2(fd[1], STDOUT_FILENO);
+	if (i == 3)
+		redirect_files(-3, argv, shell);
+	else
+		redirect_files(i, argv, shell);
+}*/
