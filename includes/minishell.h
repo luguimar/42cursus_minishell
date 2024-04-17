@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 14:24:18 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 21:26:01 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int		ft_cd_case_tild(t_shell *shell, char ***args);
 int		ft_cd_aux(char **args, t_shell *shell);
 //unset
 void	delete_env_node(t_list **env, char *key);
+void	free_env(void *content);
 //env
 int		ft_env(char **args, t_shell *shell);
 

@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 21:39:52 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/14 19:48:19 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 20:53:37 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	wordcounter(char *s, char c)
 	wordcount = 0;
 	while (s[i] != '\0')
 	{
-		if (s[i] != c && ((s[i + 1] == c && !inquote(s, i + 1)) \
+		if (!is_c_not_in_quotes(s, i, c) && (is_c_not_in_quotes(s, i, c) \
 		|| s[i + 1] == '\0'))
 			wordcount++;
 		i++;
@@ -56,7 +56,7 @@ static void	strfiller(char *s, char **str, char c)
 	nextc = 0;
 	while (s[i] != '\0')
 	{
-		if (s[i] != c && (is_c_not_in_quotes(s, i + 1, c) || s[i + 1] == '\0'))
+		if (!is_c_not_in_quotes(s, i, c) && (is_c_not_in_quotes(s, i + 1, c) || s[i + 1] == '\0'))
 		{
 			j = i + 1;
 			while (--j >= nextc)
@@ -107,13 +107,14 @@ char	**ft_split_if_not_in_quote(char *s, char c)
 	str[wordcounter(s, c)] = NULL;
 	while (s[++i] != '\0')
 	{
-		if (s[i] != c && (is_c_not_in_quotes(s, i + 1, c) || s[i + 1] == '\0'))
+		if ((!is_c_not_in_quotes(s, i, c) && \
+		is_c_not_in_quotes(s, i + 1, c)) || s[i + 1] == '\0')
 		{
 			strmalloc(&j, &str, &k);
 			if (!str)
 				return (NULL);
 		}
-		if (s[i] != c)
+		if (!is_c_not_in_quotes(s, i, c))
 			j++;
 	}
 	strfiller((char *)s, str, c);

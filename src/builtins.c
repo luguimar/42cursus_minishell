@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 05:09:37 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 13:59:38 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 20:30:31 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,17 +67,16 @@ static int	ft_pwd(char **args, t_shell *shell)
 
 static int	ft_cd(char **args, t_shell *shell)
 {
-	auto char *path;
 	if (ft_matrixlen((void **)args) > 2)
 	{
 		ft_putstr_fd("cd: too many arguments\n", 2);
 		free_array_of_strings(args);
 		return (1);
 	}
+	if (!args[1])
+		return (ft_cd_case_double_dash(shell, &args));
 	if (ft_cd_aux(args, shell))
 		return (1);
-	if (ft_matrixlen((void **)args) == 1)
-		path = ft_strdup(get_env_value(shell->env, "HOME"));
 	else
 		return (ft_cd_normal(args, shell));
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 12:55:47 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/13 03:14:22 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 20:59:46 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@ char	inquote(char *s, int index)
 	{
 		if (s[i] == '\0')
 			break ;
-		if ((s[i - 1] == '\"' || s[i - 1] == '\'') && s[i - 2] != '\\'
-			&& quote == '\0' && !has_open_quote(s, i - 2))
+		if (i != 0 && ((s[i - 1] == '\"' || s[i - 1] == '\'') \
+		&& s[i - 2] != '\\' && quote == '\0' && \
+		(i == 1 || !has_open_quote(s, i - 2))))
 			quote = s[i - 1];
 		else if (s[i] == quote && s[i - 1] != '\\')
 			quote = '\0';
@@ -37,10 +38,10 @@ char	isquote(char *s, int index)
 	char	quote;
 
 	quote = '\0';
-	if ((s[index] == inquote(s, index - 1) && !inquote(s, index))
-		|| (!inquote(s, index - 1) && s[index - 1] == s[index]
-			&& (s[index - 1] == '\"' || s[index - 1] == '\'')
-			&& !inquote(s, index - 2) && !inquote(s, index + 1)))
+	if (index > 0 && ((s[index] == inquote(s, index - 1) && !inquote(s, index)) \
+		|| (!inquote(s, index - 1) && s[index - 1] == s[index] \
+			&& (s[index - 1] == '\"' || s[index - 1] == '\'') \
+			&& !inquote(s, index - 2) && !inquote(s, index + 1))))
 	{
 		quote = inquote(s, index - 1);
 		if (quote == '\0')
