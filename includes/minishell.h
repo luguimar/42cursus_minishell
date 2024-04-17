@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 02:42:33 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 05:54:11 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,18 @@ typedef struct s_shell
 	t_list	*env;
 }				t_shell;
 
+//builtins
+
+int		exec_builtin(char **args, t_shell *shell);
+
 //envparser
 
 int		env_to_list(t_shell *shell, char **envp);
 t_env	*envnew(char *key, char *value, char *env_i);
 char	**env_to_array(t_list *env);
+void	add_env(t_shell *shell, char *key, char *value);
+void	change_value(t_list *env, char *key, char *value);
+char	*get_env_value(t_list *env, char *key);
 
 //pipes
 

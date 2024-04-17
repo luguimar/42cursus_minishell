@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 05:09:16 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 05:45:47 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,19 @@ void	free_everything(t_shell *shell)
 
 int	minishell(t_shell *shell)
 {
-	char	**args;
-	int		cid;
-
+	auto char **args;
+	auto int cid;
+	args = ft_split_if_not_in_quote(shell->input, '|');
+	if (args == NULL)
+		return (1);
+	if (ft_matrixlen((void **) args) == 1)
+	{
+		if (exec_builtin(args, shell))
+		{
+			free_array_of_strings(args);
+			return (0);
+		}
+	}
 	cid = fork();
 	if (cid == -1)
 	{
@@ -40,12 +50,7 @@ int	minishell(t_shell *shell)
 		return (1);
 	}
 	if (cid == 0)
-	{
-		args = ft_split_if_not_in_quote(shell->input, '|');
-		if (args == NULL)
-			return (1);
 		pipex(ft_matrixlen((void **) args), args, env_to_array(shell->env));
-	}
 	else
 		waitpid(cid, NULL, 0);
 	return (0);
