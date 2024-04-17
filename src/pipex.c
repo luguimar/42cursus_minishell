@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/13 03:49:51 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 05:08:45 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static void	exec_command(char *path, char **envp, char **args, int isparent)
 {
+	if (!path && envp && args && is_builtin(args[0]))
+		return (exec_builtin(args, envp));
 	if (!path || !envp || !args)
 	{
 		while (--isparent)
@@ -22,7 +24,7 @@ static void	exec_command(char *path, char **envp, char **args, int isparent)
 		if (args)
 			ft_printf("%s: command not found\n", args[0]);
 		else
-			ft_printf("pipex: '' : command not found\n");
+			ft_printf("minishell: '' : command not found\n");
 		if (path)
 			free(path);
 		free_array_of_strings(args);
@@ -32,7 +34,7 @@ static void	exec_command(char *path, char **envp, char **args, int isparent)
 	if (isparent)
 		wait(NULL);
 	dup2(STDERR_FILENO, STDOUT_FILENO);
-	perror("pipex");
+	perror("minishell");
 	free(path);
 	free_array_of_strings(args);
 	exit(1);

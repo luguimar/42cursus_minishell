@@ -6,11 +6,34 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 23:50:43 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 00:31:02 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 03:57:18 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	change_value(t_list *env, char *key, char *value)
+{
+	while (env)
+	{
+		if (!ft_strcmp(((t_env *)env->content)->key, key))
+		{
+			free(((t_env *)env->content)->value);
+			((t_env *)env->content)->value = value;
+			free(((t_env *)env->content)->full);
+			((t_env *)env->content)->full = ft_strjoin(key, \
+				ft_strjoin("=", value));
+			return ;
+		}
+		env = env->next;
+	}
+}
+
+void	add_env(t_shell *shell, char *key, char *value)
+{
+	ft_lstadd_back(&shell->env, ft_lstnew((void *)envnew(key, value, \
+		ft_strjoin(key, ft_strjoin("=", value)))));
+}
 
 char	**env_to_array(t_list *env)
 {
@@ -19,16 +42,9 @@ char	**env_to_array(t_list *env)
 	t_list	*tmp;
 
 	i = 0;
-	tmp = env;
-	while (tmp)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	envp = (char **)malloc(sizeof(char *) * (i + 1));
+	envp = (char **)malloc(sizeof(char *) * (ft_lstsize(env) + 1));
 	if (!envp)
 		return (NULL);
-	i = 0;
 	while (env)
 	{
 		envp[i] = ((t_env *)env->content)->full;

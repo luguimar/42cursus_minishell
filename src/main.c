@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 00:36:57 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/17 05:09:16 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	free_everything(t_shell *shell)
 		free(tmp->content);
 		free(tmp);
 	}
+	free(shell->env_array);
 }
 
 int	minishell(t_shell *shell)
@@ -57,20 +58,16 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	shell.env = NULL;
+	shell.input = NULL;
+	shell.env = NULL;
 	env_to_list(&shell, envp);
+	shell.env_array = env_to_array(shell.env);
 	while (1)
 	{
 		shell.input = readline("minishell$>");
 		if (shell.input == NULL)
 			break ;
 		minishell(&shell);
-		/*if (ft_strcmp(input, "exit") == 0)
-		{
-			free(input);
-			break ;
-		}
-		ft_putstr_fd(input, 1);
-		ft_putchar_fd('\n', 1);*/
 		free(shell.input);
 	}
 	return (0);
