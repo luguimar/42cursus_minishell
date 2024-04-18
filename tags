@@ -33,7 +33,7 @@ add_env	src/envparser.c	/^void	add_env(t_shell *shell, char *key, char *value)$/
 algcounter	lib/libft/ft_itoa.c	/^int	algcounter(int n)$/;"	f
 bigger	lib/libft/int_size_utils.c	/^int	bigger(int a, int b)$/;"	f
 change_value	src/envparser.c	/^void	change_value(t_list *env, char *key, char *value)$/;"	f
-check_error	src/pipex.c	/^void	check_error(int status, char *message, char **args, char *path)$/;"	f
+check_error	src/pipex.c	/^void	check_error(int status, char *message, char **args, char *path)$/;"	f	typeref:typename:void
 checktype	lib/libft/ft_printf.c	/^int	checktype(int ch, va_list args)$/;"	f
 clean_stash	lib/libft/get_next_line.c	/^static char	*clean_stash(char *stash)$/;"	f	file:
 content	lib/libft/libft.h	/^	void			*content;$/;"	m	struct:s_list
@@ -45,8 +45,8 @@ env_array	includes/minishell.h	/^	char	**env_array;$/;"	m	struct:s_shell
 env_to_array	src/envparser.c	/^char	**env_to_array(t_list *env)$/;"	f
 env_to_list	src/envparser.c	/^int	env_to_list(t_shell *shell, char **envp)$/;"	f
 envnew	src/envparser.c	/^t_env	*envnew(char *key, char *value, char *env_i)$/;"	f
-exec_builtin	src/builtins.c	/^int	exec_builtin(char **args, t_shell *shell)$/;"	f
-exec_command	src/pipex.c	/^static void	exec_command(char *path, t_shell *shell, char **args, int isparent)$/;"	f	file:
+exec_builtin	src/builtins.c	/^int	exec_builtin(char **args, t_shell *shell)$/;"	f	typeref:typename:int
+exec_command	src/pipex.c	/^static void	exec_command(char *path, t_shell *shell, char **args, int isparent)$/;"	f	typeref:typename:void	file:
 free_array_of_strings	lib/libft/free_array_of_strings.c	/^void	free_array_of_strings(char **str)$/;"	f
 free_env	src/unset_utils.c	/^void	free_env(void *content)$/;"	f
 free_everything	src/main.c	/^void	free_everything(t_shell *shell)$/;"	f
@@ -55,7 +55,7 @@ ft_atoi	lib/libft/ft_atoi.c	/^int	ft_atoi(const char *nptr)$/;"	f
 ft_atol	lib/libft/ft_atol.c	/^long long	ft_atol(const char *nptr)$/;"	f
 ft_bzero	lib/libft/ft_bzero.c	/^void	ft_bzero(void *b, size_t len)$/;"	f
 ft_calloc	lib/libft/ft_calloc.c	/^void	*ft_calloc(size_t number, size_t size)$/;"	f
-ft_cd	src/builtins.c	/^static int	ft_cd(char **args, t_shell *shell)$/;"	f	file:
+ft_cd	src/builtins.c	/^static int	ft_cd(char **args, t_shell *shell)$/;"	f	typeref:typename:int	file:
 ft_cd_aux	src/cd_utils.c	/^int	ft_cd_aux(char **args, t_shell *shell)$/;"	f
 ft_cd_aux_extra	src/cd_utils.c	/^int	ft_cd_aux_extra(t_shell *shell, char ***args)$/;"	f
 ft_cd_case_dotdot	src/cd_utils.c	/^int	ft_cd_case_dotdot(t_shell *shell, char ***args)$/;"	f
@@ -65,7 +65,7 @@ ft_cd_case_tild	src/cd_utils.c	/^int	ft_cd_case_tild(t_shell *shell, char ***arg
 ft_cd_check_for_dots	src/cd_utils1.c	/^char	*ft_cd_check_for_dots(char **args, t_shell *shell)$/;"	f
 ft_cd_normal	src/cd_utils1.c	/^int	ft_cd_normal(char **args, t_shell *shell)$/;"	f
 ft_env	src/builtins_extra.c	/^int	ft_env(char **args, t_shell *shell)$/;"	f
-ft_exit	src/builtins.c	/^static int	ft_exit(char **args, t_shell *shell)$/;"	f	file:
+ft_exit	src/builtins.c	/^static int	ft_exit(char **args, t_shell *shell)$/;"	f	typeref:typename:int	file:
 ft_isalnum	lib/libft/ft_isalnum.c	/^int	ft_isalnum(int c)$/;"	f
 ft_isalpha	lib/libft/ft_isalpha.c	/^int	ft_isalpha(int c)$/;"	f
 ft_isascii	lib/libft/ft_isascii.c	/^int	ft_isascii(int c)$/;"	f
@@ -93,7 +93,7 @@ ft_putendl_fd	lib/libft/ft_putendl_fd.c	/^void	ft_putendl_fd(char *s, int fd)$/;
 ft_putnbr_base_fd	lib/libft/ft_putnbr_base_fd.c	/^int	ft_putnbr_base_fd(unsigned long decimal, char *base, int fd)$/;"	f
 ft_putnbr_fd	lib/libft/ft_putnbr_fd.c	/^int	ft_putnbr_fd(int n, int fd)$/;"	f
 ft_putstr_fd	lib/libft/ft_putstr_fd.c	/^int	ft_putstr_fd(char *s, int fd)$/;"	f
-ft_pwd	src/builtins.c	/^static int	ft_pwd(char **args, t_shell *shell)$/;"	f	file:
+ft_pwd	src/builtins.c	/^static int	ft_pwd(char **args, t_shell *shell)$/;"	f	typeref:typename:int	file:
 ft_split	lib/libft/ft_split.c	/^char	**ft_split(char const *s, char c)$/;"	f
 ft_split_if_not_in_quote	lib/libft/ft_split_if_not_in_quote.c	/^char	**ft_split_if_not_in_quote(char *s, char c)$/;"	f
 ft_splitquote	lib/libft/ft_splitquote.c	/^char	**ft_splitquote(char *s, char c)$/;"	f
@@ -120,12 +120,12 @@ ft_strtrim	lib/libft/ft_strtrim.c	/^char	*ft_strtrim(char const *s1, char const 
 ft_substr	lib/libft/ft_substr.c	/^char	*ft_substr(char const *s, unsigned int start, size_t len)$/;"	f
 ft_tolower	lib/libft/ft_tolower.c	/^int	ft_tolower(int c)$/;"	f
 ft_toupper	lib/libft/ft_toupper.c	/^int	ft_toupper(int c)$/;"	f
-ft_unset	src/builtins.c	/^static int	ft_unset(char **args, t_shell *shell)$/;"	f	file:
+ft_unset	src/builtins.c	/^static int	ft_unset(char **args, t_shell *shell)$/;"	f	typeref:typename:int	file:
 full	includes/minishell.h	/^	char	*full;$/;"	m	struct:s_env
 get_env_value	src/envparser_extra.c	/^char	*get_env_value(t_list *env, char *key)$/;"	f
 get_line	lib/libft/get_next_line.c	/^static char	*get_line(char *stash)$/;"	f	file:
 get_next_line	lib/libft/get_next_line.c	/^char	*get_next_line(int fd)$/;"	f
-get_right_path	src/pipex.c	/^char	*get_right_path(char **cmd, char **envp, char *right_path)$/;"	f
+get_right_path	src/pipex.c	/^char	*get_right_path(char **cmd, char **envp, char *right_path)$/;"	f	typeref:typename:char *
 get_right_path_aux	src/pipex_utils.c	/^int	get_right_path_aux(char **cmd, char **path, int i, char **right_path)$/;"	f
 get_stash	lib/libft/get_next_line.c	/^static char	*get_stash(int fd, char *stash)$/;"	f	file:
 has_open_quote	lib/libft/quotes_utils.c	/^char	has_open_quote(char *s, int index)$/;"	f
@@ -145,10 +145,10 @@ main	src/main.c	/^int	main(int argc, char **argv, char **envp)$/;"	f
 minishell	src/main.c	/^int	minishell(t_shell *shell)$/;"	f
 module	lib/libft/ft_itoa.c	/^long int	module(int n)$/;"	f
 next	lib/libft/libft.h	/^	struct s_list	*next;$/;"	m	struct:s_list	typeref:struct:s_list::s_list
-pipex	src/pipex.c	/^int	pipex(int argc, char **argv, t_shell *shell)$/;"	f
+pipex	src/pipex.c	/^int	pipex(int argc, char **argv, t_shell *shell)$/;"	f	typeref:typename:int
 prev	lib/libft/libft.h	/^	struct s_list	*prev;$/;"	m	struct:s_list	typeref:struct:s_list::s_list
 quote	lib/libft/quotes.c	/^char	quote(char *s, int index)$/;"	f
-redirect_files	src/pipex.c	/^void	redirect_files(int i, char *argv[], t_shell *shell)$/;"	f
+redirect_files	src/pipex.c	/^void	redirect_files(int i, char *argv[], t_shell *shell)$/;"	f	typeref:typename:void
 s_env	includes/minishell.h	/^typedef struct s_env$/;"	s
 s_list	lib/libft/libft.h	/^typedef struct s_list$/;"	s
 s_shell	includes/minishell.h	/^typedef struct s_shell$/;"	s

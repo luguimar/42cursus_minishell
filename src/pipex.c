@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 21:37:20 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/18 20:30:23 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	exec_command(char *path, t_shell *shell, char **args, int isparent)
 {
 	if (exec_builtin(args, shell))
-		return ;
+		exit(0);
 	if (!path || !shell->env_array || !args)
 	{
 		while (--isparent)

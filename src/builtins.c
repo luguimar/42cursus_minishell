@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 05:09:37 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/18 15:42:10 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/18 20:32:31 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ int	exec_builtin(char **args, t_shell *shell)
 	char	**new_args;
 
 	new_args = ft_splitquote(args[0], ' ');
-	free_array_of_strings(args);
 	if (ft_strcmp(new_args[0], "cd") == 0)
 		return (ft_cd(new_args, shell));
 	else if (ft_strcmp(new_args[0], "pwd") == 0)
@@ -100,5 +99,5 @@ int	exec_builtin(char **args, t_shell *shell)
 	else if (ft_strcmp(new_args[0], "echo") == 0)
 		return (ft_echo(new_args, shell));*/
 	free_array_of_strings(new_args);
-	return (0);
+	return (1);
 }
