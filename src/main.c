@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 21:29:18 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/18 15:39:18 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,19 @@
 void	free_everything(t_shell *shell)
 {
 	t_list	*tmp;
+	t_list	*tmp2;
 
 	tmp = shell->env;
-	while (shell->env)
+	tmp2 = shell->env;
+	while (tmp)
 	{
-		tmp = shell->env;
-		shell->env = shell->env->next;
-		free_env(tmp);
-		free(tmp);
+		tmp = tmp2;
+		if (tmp2)
+		{
+			tmp2 = tmp2->next;
+			free_env(tmp->content);
+			free(tmp);
+		}
 	}
 	free(shell->env_array);
 	free(shell->input);
