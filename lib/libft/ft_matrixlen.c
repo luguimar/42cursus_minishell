@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 19:03:06 by luguimar          #+#    #+#             */
-/*   Updated: 2023/10/12 19:49:57 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/18 23:03:04 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	ft_matrixlen(void **matrix)
 	int	i;
 
 	i = 0;
+	if (!matrix)
+		return (0);
 	while (matrix[i] != NULL)
 		i++;
 	return (i);

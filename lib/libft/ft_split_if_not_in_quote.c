@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 21:39:52 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 20:53:37 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/19 03:41:51 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	wordcounter(char *s, char c)
 	wordcount = 0;
 	while (s[i] != '\0')
 	{
-		if (!is_c_not_in_quotes(s, i, c) && (is_c_not_in_quotes(s, i, c) \
+		if (!is_c_not_in_quotes(s, i, c) && (is_c_not_in_quotes(s, i + 1, c) \
 		|| s[i + 1] == '\0'))
 			wordcount++;
 		i++;
@@ -51,12 +51,13 @@ static void	strfiller(char *s, char **str, char c)
 	int	k;
 	int	nextc;
 
-	i = 0;
+	i = -1;
 	k = 0;
 	nextc = 0;
-	while (s[i] != '\0')
+	while (s[++i] != '\0')
 	{
-		if (!is_c_not_in_quotes(s, i, c) && (is_c_not_in_quotes(s, i + 1, c) || s[i + 1] == '\0'))
+		if (!is_c_not_in_quotes(s, i, c) && \
+		(is_c_not_in_quotes(s, i + 1, c) || s[i + 1] == '\0'))
 		{
 			j = i + 1;
 			while (--j >= nextc)
@@ -69,7 +70,6 @@ static void	strfiller(char *s, char **str, char c)
 				}
 			}
 		}
-		i++;
 	}
 }
 
@@ -117,8 +117,7 @@ char	**ft_split_if_not_in_quote(char *s, char c)
 		if (!is_c_not_in_quotes(s, i, c))
 			j++;
 	}
-	strfiller((char *)s, str, c);
-	return (str);
+	return (strfiller((char *)s, str, c), str);
 }
 
 /*static int	wordcounter(char *s, char c)

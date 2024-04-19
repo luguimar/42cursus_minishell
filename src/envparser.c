@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 23:50:43 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 09:37:22 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/18 23:18:15 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	change_value(t_list *env, char *key, char *value)
 			free(((t_env *)env->content)->value);
 			((t_env *)env->content)->value = value;
 			free(((t_env *)env->content)->full);
-			((t_env *)env->content)->full = ft_strjoin(key, \
+			((t_env *)env->content)->full = ft_strjoinfree2(key, \
 				ft_strjoin("=", value));
 			return ;
 		}

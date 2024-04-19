@@ -1,34 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_extra.c                                   :+:      :+:    :+:   */
+/*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 13:58:44 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/18 23:27:24 by luguimar         ###   ########.fr       */
+/*   Created: 2024/04/19 02:27:37 by luguimar          #+#    #+#             */
+/*   Updated: 2024/04/19 02:29:25 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	ft_env(char **args, t_shell *shell)
+int	execve_error(char *path, char **args, t_shell *shell, int isparent)
 {
-	t_list	*tmp;
-
-	if (ft_matrixlen((void **)args) > 1)
-	{
-		ft_putstr_fd("env: too many arguments\n", 2);
-		free_array_of_strings(args);
-		return (1);
-	}
-	tmp = shell->env;
-	while (tmp)
-	{
-		ft_putstr_fd(((t_env *)tmp->content)->full, 1);
-		ft_putstr_fd("\n", 1);
-		tmp = tmp->next;
-	}
+	if (isparent)
+		wait(NULL);
+	dup2(STDERR_FILENO, STDOUT_FILENO);
+	perror("minishell");
+	free_everything(shell);
+	free(path);
 	free_array_of_strings(args);
 	return (1);
 }

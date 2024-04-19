@@ -1,34 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_extra.c                                   :+:      :+:    :+:   */
+/*   ft_isint.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 13:58:44 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/18 23:27:24 by luguimar         ###   ########.fr       */
+/*   Created: 2024/04/18 23:56:54 by luguimar          #+#    #+#             */
+/*   Updated: 2024/04/19 00:00:39 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "libft.h"
 
-int	ft_env(char **args, t_shell *shell)
+int	ft_isint(const char *str)
 {
-	t_list	*tmp;
+	int	i;
 
-	if (ft_matrixlen((void **)args) > 1)
+	i = 0;
+	if (str[i] == '-')
+		i++;
+	while (str[i])
 	{
-		ft_putstr_fd("env: too many arguments\n", 2);
-		free_array_of_strings(args);
-		return (1);
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
 	}
-	tmp = shell->env;
-	while (tmp)
+	if (ft_strlen(str) > 11)
+		return (0);
+	if (ft_strlen(str) == 11 && str[0] != '-')
+		return (0);
+	if (ft_strlen(str) == 11 && str[0] == '-')
 	{
-		ft_putstr_fd(((t_env *)tmp->content)->full, 1);
-		ft_putstr_fd("\n", 1);
-		tmp = tmp->next;
+		if (ft_atol(str) < -2147483648)
+			return (0);
 	}
-	free_array_of_strings(args);
 	return (1);
 }
