@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 14:24:18 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/19 05:18:58 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,17 @@ int		exec_builtin(char **args, t_shell *shell);
 int		ft_cd_case_double_dash(t_shell *shell, char ***args);
 char	*ft_strremoveprev(char *str, char *old, char *new);
 char	*ft_strreplace(char *str, char *old, char *new);
-char	*ft_cd_check_for_dots(char **args, t_shell *shell);
+char	*ft_cd_check_for_dots(char *args);
 int		ft_cd_normal(char **args, t_shell *shell);
 int		ft_cd_case_dotdot(t_shell *shell, char ***args);
 int		ft_cd_aux_extra(t_shell *shell, char ***args);
 int		ft_cd_case_slash(t_shell *shell, char ***args);
 int		ft_cd_case_tild(t_shell *shell, char ***args);
 int		ft_cd_aux(char **args, t_shell *shell);
+int		ft_cd_case_dash(t_shell *shell, char **args);
 //unset
 void	delete_env_node(t_list **env, char *key);
+void	free_env(void *content);
 //env
 int		ft_env(char **args, t_shell *shell);
 
@@ -72,5 +74,6 @@ char	**last_one(char **argv, char **path, char **envp, int i);
 void	check_error(int status, char *message, char **args, char *path);
 int		pipex(int argc, char **argv, t_shell *shell);
 int		get_right_path_aux(char **cmd, char **path, int i, char **right_path);
+int		execve_error(char *path, char **args, t_shell *shell, int isparent);
 
 #endif

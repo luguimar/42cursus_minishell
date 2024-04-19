@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 13:40:48 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/19 02:17:01 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,19 @@
 void	free_everything(t_shell *shell)
 {
 	t_list	*tmp;
+	t_list	*tmp2;
 
-	while (shell->env)
+	tmp = shell->env;
+	tmp2 = shell->env;
+	while (tmp)
 	{
-		tmp = shell->env;
-		shell->env = shell->env->next;
-		free(((t_env *)tmp->content)->full);
-		free(tmp->content);
-		free(tmp);
+		tmp = tmp2;
+		if (tmp2)
+		{
+			tmp2 = tmp2->next;
+			free_env(tmp->content);
+			free(tmp);
+		}
 	}
 	free(shell->env_array);
 	free(shell->input);
@@ -30,8 +35,9 @@ void	free_everything(t_shell *shell)
 
 int	minishell(t_shell *shell)
 {
-	auto char **args;
-	auto int cid;
+	char	**args;
+	int		cid;
+
 	args = ft_split_if_not_in_quote(shell->input, '|');
 	if (args == NULL)
 		return (1);
@@ -45,15 +51,12 @@ int	minishell(t_shell *shell)
 	}
 	cid = fork();
 	if (cid == -1)
-	{
-		ft_putstr_fd("fork: ", 2);
-		perror(NULL);
-		return (1);
-	}
+		return (ft_putstr_fd("fork: ", 2), perror(NULL), 1);
 	if (cid == 0)
 		pipex(ft_matrixlen((void **) args), args, shell);
 	else
 		waitpid(cid, NULL, 0);
+	free_array_of_strings(args);
 	return (0);
 }
 

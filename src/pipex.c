@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 14:24:41 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/19 02:28:44 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,13 @@
 static void	exec_command(char *path, t_shell *shell, char **args, int isparent)
 {
 	if (exec_builtin(args, shell))
-		return ;
+	{
+		free_everything(shell);
+		free_array_of_strings(args);
+		if (path)
+			free(path);
+		exit(0);
+	}
 	if (!path || !shell->env_array || !args)
 	{
 		while (--isparent)
@@ -31,13 +37,7 @@ static void	exec_command(char *path, t_shell *shell, char **args, int isparent)
 		exit(127);
 	}
 	execve(path, args, shell->env_array);
-	if (isparent)
-		wait(NULL);
-	dup2(STDERR_FILENO, STDOUT_FILENO);
-	perror("minishell");
-	free(path);
-	free_array_of_strings(args);
-	exit(1);
+	exit(execve_error(path, args, shell, isparent));
 }
 
 void	check_error(int status, char *message, char **args, char *path)

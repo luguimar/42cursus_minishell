@@ -6,13 +6,13 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:43:50 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 13:56:14 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/19 01:27:37 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	free_env(void *content)
+void	free_env(void *content)
 {
 	t_env	*env;
 
@@ -20,6 +20,7 @@ static void	free_env(void *content)
 	free(env->key);
 	free(env->value);
 	free(env->full);
+	free(env);
 }
 
 void	delete_env_node(t_list **env, char *key)
