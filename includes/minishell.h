@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 05:18:58 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/20 02:21:43 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_env
 
 typedef struct s_shell
 {
+	int		exit_status;
 	char	*input;
 	char	**env_array;
 	t_list	*env;

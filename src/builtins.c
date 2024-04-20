@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 05:09:37 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 04:21:20 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/20 02:36:57 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,6 @@ static int	ft_unset(char **args, t_shell *shell)
 	{
 		if (ft_isalpha(args[i][0]) || args[i][0] == '_')
 			delete_env_node(&shell->env, args[i]);
-		else
-		{
-			ft_putstr_fd("unset: `", 2);
-			ft_putstr_fd(args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-		}
 		i++;
 	}
 	free_array_of_strings(args);
@@ -83,6 +77,7 @@ static int	ft_cd(char **args, t_shell *shell)
 	{
 		ft_putstr_fd("cd: too many arguments\n", 2);
 		free_array_of_strings(args);
+		shell->exit_status = 1;
 		return (1);
 	}
 	if (!args[1])

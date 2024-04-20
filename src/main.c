@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 02:17:01 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/20 02:22:18 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int	main(int argc, char **argv, char **envp)
 	shell.env = NULL;
 	shell.input = NULL;
 	shell.env = NULL;
+	shell.exit_status = 0;
 	env_to_list(&shell, envp);
 	shell.env_array = env_to_array(shell.env);
 	while (1)
