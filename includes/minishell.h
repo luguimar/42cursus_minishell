@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 05:18:58 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/22 19:45:38 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
+# include <signal.h>
 
 typedef struct s_env
 {
@@ -75,5 +76,7 @@ void	check_error(int status, char *message, char **args, char *path);
 int		pipex(int argc, char **argv, t_shell *shell);
 int		get_right_path_aux(char **cmd, char **path, int i, char **right_path);
 int		execve_error(char *path, char **args, t_shell *shell, int isparent);
+
+void	sigset(int a);
 
 #endif
