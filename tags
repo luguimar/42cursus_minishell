@@ -47,7 +47,6 @@ env_to_list	src/envparser.c	/^int	env_to_list(t_shell *shell, char **envp)$/;"	f
 envnew	src/envparser.c	/^t_env	*envnew(char *key, char *value, char *env_i)$/;"	f
 exec_builtin	src/builtins.c	/^int	exec_builtin(char **args, t_shell *shell)$/;"	f
 exec_command	src/pipex.c	/^static void	exec_command(char *path, t_shell *shell, char **args, int isparent)$/;"	f	file:
-exec_test	minishell-tester/test.sh	/^function exec_test()$/;"	f
 execve_error	src/errors.c	/^int	execve_error(char *path, char **args, t_shell *shell, int isparent)$/;"	f
 exit_status	includes/minishell.h	/^	int		exit_status;$/;"	m	struct:s_shell
 free_array_of_strings	lib/libft/free_array_of_strings.c	/^void	free_array_of_strings(char **str)$/;"	f
@@ -147,7 +146,6 @@ isneg	lib/libft/ft_itoa.c	/^char	*isneg(int algcount, int n)$/;"	f
 isquote	lib/libft/quotes.c	/^char	isquote(char *s, int index)$/;"	f
 key	includes/minishell.h	/^	char	*key;$/;"	m	struct:s_env
 last_one	src/pipex_utils.c	/^char	**last_one(char **argv, char **path, char **envp, int i)$/;"	f
-main	exit1.c	/^int	main(void)$/;"	f
 main	src/main.c	/^int	main(int argc, char **argv, char **envp)$/;"	f
 minishell	src/main.c	/^int	minishell(t_shell *shell)$/;"	f
 module	lib/libft/ft_itoa.c	/^long int	module(int n)$/;"	f

@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 02:28:44 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/22 02:48:04 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ char	*get_right_path(char **cmd, char **envp, char *right_path)
 	return (NULL);
 }
 
-void	redirect_files(int i, char *argv[], t_shell *shell)
+static void	redirect_files(int i, int argc, char *argv[], t_shell *shell)
 {
 	int		cid;
 	int		pipefd[2];
@@ -96,18 +96,15 @@ void	redirect_files(int i, char *argv[], t_shell *shell)
 	{
 		args = ft_splitquote_nulls(argv[ft_abs_value(i)], ' ');
 		path = get_right_path(args, shell->env_array, path);
-		//if (i == 2 || i == -3)
-		//	check_error(access(argv[1], R_OK), argv[1], args, path);
 		dup2stdout(pipefd);
 		exec_command(path, shell, args, 1);
 	}
 	else if (cid == -1)
 		check_error(-1, "fork", args, path);
+	else if (i == argc - 1)
+		redirect_files_aux(cid, pipefd, argc, shell);
 	else
-	{
-		dup2stdin(pipefd);
-		waitpid(cid, NULL, WNOHANG);
-	}
+		redirect_files_aux(cid, pipefd, 0, shell);
 }
 
 int	pipex(int argc, char **argv, t_shell *shell)
@@ -121,9 +118,9 @@ int	pipex(int argc, char **argv, t_shell *shell)
 	i = -1;
 	path = NULL;
 	//dup2redirect(fd, argv, shell, i);
-	while (++i < argc - 1)
-		redirect_files(i, argv, shell);
-	args = last_one(argv, &path, shell->env_array, i);
-	exec_command(path, shell, args, 1);
+	while (++i < argc)
+		redirect_files(i, argc, argv, shell);
+	/*args = last_one(argv, &path, shell->env_array, i);
+	exec_command(path, shell, args, 1);*/
 	return (1);
 }

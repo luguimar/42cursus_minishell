@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/17 14:22:42 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/22 02:47:43 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,25 @@ void	heredoc(char *limiter)
 	close (heredoc_fd);
 }
 
+void	redirect_files_aux(int cid, int *pipefd, int argc, t_shell *shell)
+{
+	int		i;
+
+	i = 0;
+	if (argc == 0)
+	{
+		dup2stdin(pipefd);
+		waitpid(cid, NULL, WNOHANG);
+	}
+	else
+	{
+		waitpid(cid, NULL, 0);
+		if (WIFEXITED(shell->proccess_status))
+			shell->exit_status = WEXITSTATUS(shell->proccess_status);
+		//invent a way to wait for every child process to terminate and to avoid zombies
+	}
+}
+/*
 char	**last_one(char **argv, char **path, char **envp, int i)
 {
 	char	**args;
@@ -67,7 +86,7 @@ char	**last_one(char **argv, char **path, char **envp, int i)
 	//check_error(access(argv[argc - 1], W_OK), argv[argc - 1], args, *path);
 	return (args);
 }
-/*
+
 void	dup2redirect(int *fd, char **argv, t_shell *shell, int i)
 {
 	fd[0] = open(argv[1], O_RDONLY);
