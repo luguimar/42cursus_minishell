@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/22 02:29:49 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/23 19:32:50 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@ typedef struct s_shell
 
 //builtins
 int		exec_builtin(char **args, t_shell *shell);
+
+int		ft_echo(char **args);
+
 //cd
 int		ft_cd_case_double_dash(t_shell *shell, char ***args);
 char	*ft_strremoveprev(char *str, char *old, char *new);

@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 05:09:37 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/23 18:55:01 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/04/23 19:34:06 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,10 @@ int	exec_builtin(char **args, t_shell *shell)
 		return (ft_env(new_args, shell));
 	else if (ft_strcmp(new_args[0], "cat") == 0)
 		sigset(2);
-	/*else if (ft_strcmp(new_args[0], "export") == 0)
-		return (ft_export(new_args, shell));
+	//else if (ft_strcmp(new_args[0], "export") == 0)
+	//	return (ft_export(new_args, shell));
 	else if (ft_strcmp(new_args[0], "echo") == 0)
-		return (ft_echo(new_args, shell));*/
+		return (ft_echo(new_args));
 	free_array_of_strings(new_args);
 	return (0);
 }
