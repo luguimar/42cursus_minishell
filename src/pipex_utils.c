@@ -57,9 +57,6 @@ void	heredoc(char *limiter)
 
 void	redirect_files_aux(int cid, int *pipefd, int argc, t_shell *shell)
 {
-	int		i;
-
-	i = 0;
 	if (argc == 0)
 	{
 		dup2stdin(pipefd);

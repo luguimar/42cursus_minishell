@@ -114,13 +114,11 @@ int	pipex(int argc, char **argv, t_shell *shell)
 {
 	int		fd[2];
 	int		i;
-	char	*path;
 	int		original_stdin;
 	//char	**args;
 
 	(void)fd;
 	i = -1;
-	path = NULL;
 	original_stdin = dup(STDIN_FILENO);
 	//dup2redirect(fd, argv, shell, i);
 	while (++i < argc)

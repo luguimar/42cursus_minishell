@@ -78,4 +78,8 @@ int		pipex(int argc, char **argv, t_shell *shell);
 int		get_right_path_aux(char **cmd, char **path, int i, char **right_path);
 int		execve_error(char *path, char **args, t_shell *shell, int isparent);
 
+//signals
+
+void	sigset(int a);
+
 #endif

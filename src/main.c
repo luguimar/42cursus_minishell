@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/22 02:50:51 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/23 18:49:37 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int	main(int argc, char **argv, char **envp)
 	shell.env_array = env_to_array(shell.env);
 	while (1)
 	{
+		sigset(1);
 		shell.input = readline("minishell$>");
 		if (shell.input == NULL)
 			break ;
