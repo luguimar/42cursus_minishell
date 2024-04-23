@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 20:46:24 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/13 02:37:28 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/20 02:01:28 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,27 @@ static int	wordcounter(char *s, char c)
 	return (wordcount);
 }
 
-static void	wordfiller(char *j, char *str, char c)
+static void	wordfiller(char *j, char *str, char c, int k)
 {
 	int	i;
 
 	i = 0;
-	while (inquote(j, i) || (!quote(j, i) && j[i] != c && j[i] != '\0'))
+	if (k != 0)
 	{
-		str[i] = j[i];
-		i++;
+		while (inquote(j - 1, i + 1) || (!quote(j - 1, i + 1) && j[i] != c \
+		&& j[i] != '\0'))
+		{
+			str[i] = j[i];
+			i++;
+		}
+	}
+	else
+	{
+		while (inquote(j, i) || (!quote(j, i) && j[i] != c && j[i] != '\0'))
+		{
+			str[i] = j[i];
+			i++;
+		}
 	}
 	str[i] = '\0';
 }
@@ -63,7 +75,7 @@ static void	strfiller(char *s, char **str, char c)
 				if (is_beginning_wordquote(s, j, c))
 				{
 					nextc = j + 1;
-					wordfiller(s + j, str[k], c);
+					wordfiller(s + j, str[k], c, j);
 					k++;
 				}
 			}

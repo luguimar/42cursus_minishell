@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 05:18:58 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/22 02:29:49 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ typedef struct s_env
 
 typedef struct s_shell
 {
+	int		proccess_status;
+	int		exit_status;
 	char	*input;
 	char	**env_array;
 	t_list	*env;
@@ -67,8 +69,8 @@ void	free_everything(t_shell *shell);
 void	dup2stdout(int *pipefd);
 void	dup2stdin(int *pipefd);
 void	dup2redirect(int *fd, char **argv, t_shell *shell, int i);
-void	redirect_files(int i, char *argv[], t_shell *shell);
 void	heredoc(char *limiter);
+void	redirect_files_aux(int cid, int *pipefd, int argc, t_shell *shell);
 char	*get_right_path(char **cmd, char **envp, char *right_path);
 char	**last_one(char **argv, char **path, char **envp, int i);
 void	check_error(int status, char *message, char **args, char *path);

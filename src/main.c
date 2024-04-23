@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 02:17:01 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/22 02:50:51 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	free_everything(t_shell *shell)
 int	minishell(t_shell *shell)
 {
 	char	**args;
-	int		cid;
+	//int		cid;
 
 	args = ft_split_if_not_in_quote(shell->input, '|');
 	if (args == NULL)
@@ -49,13 +49,13 @@ int	minishell(t_shell *shell)
 			return (0);
 		}
 	}
-	cid = fork();
+	/*cid = fork();
 	if (cid == -1)
 		return (ft_putstr_fd("fork: ", 2), perror(NULL), 1);
-	if (cid == 0)
-		pipex(ft_matrixlen((void **) args), args, shell);
-	else
-		waitpid(cid, NULL, 0);
+	if (cid == 0)*/
+	pipex(ft_matrixlen((void **) args), args, shell);
+	/*else
+		waitpid(cid, NULL, 0);*/
 	free_array_of_strings(args);
 	return (0);
 }
@@ -69,6 +69,7 @@ int	main(int argc, char **argv, char **envp)
 	shell.env = NULL;
 	shell.input = NULL;
 	shell.env = NULL;
+	shell.exit_status = 0;
 	env_to_list(&shell, envp);
 	shell.env_array = env_to_array(shell.env);
 	while (1)
