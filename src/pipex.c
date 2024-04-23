@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/22 02:48:04 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/23 01:23:32 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,8 @@ static void	redirect_files(int i, int argc, char *argv[], t_shell *shell)
 	{
 		args = ft_splitquote_nulls(argv[ft_abs_value(i)], ' ');
 		path = get_right_path(args, shell->env_array, path);
-		dup2stdout(pipefd);
+		if (i != argc - 1)
+			dup2stdout(pipefd);
 		exec_command(path, shell, args, 1);
 	}
 	else if (cid == -1)
@@ -112,7 +113,7 @@ int	pipex(int argc, char **argv, t_shell *shell)
 	int		fd[2];
 	int		i;
 	char	*path;
-	char	**args;
+	//char	**args;
 
 	(void)fd;
 	i = -1;
