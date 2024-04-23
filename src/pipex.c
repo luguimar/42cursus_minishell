@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/23 01:23:32 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/23 02:22:09 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ static void	redirect_files(int i, int argc, char *argv[], t_shell *shell)
 		path = get_right_path(args, shell->env_array, path);
 		if (i != argc - 1)
 			dup2stdout(pipefd);
+		else
+			close(pipefd[1]);
 		exec_command(path, shell, args, 1);
 	}
 	else if (cid == -1)

@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/23 01:43:01 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/23 02:23:13 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	redirect_files_aux(int cid, int *pipefd, int argc, t_shell *shell)
 	}
 	else
 	{
+		close(pipefd[1]);
 		waitpid(cid, &shell->exit_status, 0);
 		if (WIFEXITED(shell->proccess_status))
 			shell->exit_status = WEXITSTATUS(shell->proccess_status);
