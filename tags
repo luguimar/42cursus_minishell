@@ -162,6 +162,7 @@ is_end_wordquote	lib/libft/quotes_utils.c	/^int	is_end_wordquote(char *s, int in
 isneg	lib/libft/ft_itoa.c	/^char	*isneg(int algcount, int n)$/;"	f	typeref:typename:char *
 isquote	lib/libft/quotes.c	/^char	isquote(char *s, int index)$/;"	f	typeref:typename:char
 key	includes/minishell.h	/^	char	*key;$/;"	m	struct:s_env	typeref:typename:char *
+main	exit1.c	/^int	main(void)$/;"	f	typeref:typename:int
 main	src/main.c	/^int	main(int argc, char **argv, char **envp)$/;"	f	typeref:typename:int
 minishell	src/main.c	/^int	minishell(t_shell *shell)$/;"	f	typeref:typename:int
 module	lib/libft/ft_itoa.c	/^long int	module(int n)$/;"	f	typeref:typename:long int

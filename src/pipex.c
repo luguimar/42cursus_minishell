@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/23 02:22:09 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/23 04:39:09 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,14 +115,17 @@ int	pipex(int argc, char **argv, t_shell *shell)
 	int		fd[2];
 	int		i;
 	char	*path;
+	int		original_stdin;
 	//char	**args;
 
 	(void)fd;
 	i = -1;
 	path = NULL;
+	original_stdin = dup(STDIN_FILENO);
 	//dup2redirect(fd, argv, shell, i);
 	while (++i < argc)
 		redirect_files(i, argc, argv, shell);
+	dup2(original_stdin, STDIN_FILENO);
 	/*args = last_one(argv, &path, shell->env_array, i);
 	exec_command(path, shell, args, 1);*/
 	return (1);
