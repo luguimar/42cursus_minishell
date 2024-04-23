@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/23 04:39:09 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/23 21:21:14 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ char	*get_right_path(char **cmd, char **envp, char *right_path)
 	return (NULL);
 }
 
-static void	redirect_files(int i, int argc, char *argv[], t_shell *shell)
+static void	redirect_files(int i, char *argv[], t_shell *shell)
 {
 	int		cid;
 	int		pipefd[2];
@@ -96,7 +96,7 @@ static void	redirect_files(int i, int argc, char *argv[], t_shell *shell)
 	{
 		args = ft_splitquote_nulls(argv[ft_abs_value(i)], ' ');
 		path = get_right_path(args, shell->env_array, path);
-		if (i != argc - 1)
+		if (i != shell->arg_count - 1)
 			dup2stdout(pipefd);
 		else
 			close(pipefd[1]);
@@ -104,10 +104,8 @@ static void	redirect_files(int i, int argc, char *argv[], t_shell *shell)
 	}
 	else if (cid == -1)
 		check_error(-1, "fork", args, path);
-	else if (i == argc - 1)
-		redirect_files_aux(cid, pipefd, argc, shell);
 	else
-		redirect_files_aux(cid, pipefd, 0, shell);
+		redirect_files_aux(cid, pipefd, i, shell);
 }
 
 int	pipex(int argc, char **argv, t_shell *shell)
@@ -116,16 +114,17 @@ int	pipex(int argc, char **argv, t_shell *shell)
 	int		i;
 	char	*path;
 	int		original_stdin;
-	//char	**args;
 
 	(void)fd;
 	i = -1;
 	path = NULL;
 	original_stdin = dup(STDIN_FILENO);
+	shell->pids = malloc(sizeof(int) * argc);
 	//dup2redirect(fd, argv, shell, i);
 	while (++i < argc)
-		redirect_files(i, argc, argv, shell);
+		redirect_files(i, argv, shell);
 	dup2(original_stdin, STDIN_FILENO);
+	free(shell->pids);
 	/*args = last_one(argv, &path, shell->env_array, i);
 	exec_command(path, shell, args, 1);*/
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/22 02:29:49 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/23 21:17:29 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ typedef struct s_shell
 {
 	int		proccess_status;
 	int		exit_status;
+	int		*pids;
+	int		arg_count;
 	char	*input;
 	char	**env_array;
 	t_list	*env;
@@ -70,12 +72,16 @@ void	dup2stdout(int *pipefd);
 void	dup2stdin(int *pipefd);
 void	dup2redirect(int *fd, char **argv, t_shell *shell, int i);
 void	heredoc(char *limiter);
-void	redirect_files_aux(int cid, int *pipefd, int argc, t_shell *shell);
+void	redirect_files_aux(int cid, int *pipefd, int i, t_shell *shell);
 char	*get_right_path(char **cmd, char **envp, char *right_path);
 char	**last_one(char **argv, char **path, char **envp, int i);
 void	check_error(int status, char *message, char **args, char *path);
 int		pipex(int argc, char **argv, t_shell *shell);
 int		get_right_path_aux(char **cmd, char **path, int i, char **right_path);
 int		execve_error(char *path, char **args, t_shell *shell, int isparent);
+
+//signals
+
+void	sigttin_handler(int signum);
 
 #endif

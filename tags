@@ -44,6 +44,7 @@ add_env	src/envparser.c	/^void	add_env(t_shell *shell, char *key, char *value)$/
 algcounter	lib/libft/ft_itoa.c	/^int	algcounter(int n)$/;"	f	typeref:typename:int
 all	Makefile	/^all: ${NAME}$/;"	t
 all	lib/libft/Makefile	/^all:	${NAME}$/;"	t
+arg_count	includes/minishell.h	/^	int		arg_count;$/;"	m	struct:s_shell	typeref:typename:int
 bigger	lib/libft/int_size_utils.c	/^int	bigger(int a, int b)$/;"	f	typeref:typename:int
 change_value	src/envparser.c	/^void	change_value(t_list *env, char *key, char *value)$/;"	f	typeref:typename:void
 check_error	src/pipex.c	/^void	check_error(int status, char *message, char **args, char *path)$/;"	f	typeref:typename:void
@@ -162,22 +163,23 @@ is_end_wordquote	lib/libft/quotes_utils.c	/^int	is_end_wordquote(char *s, int in
 isneg	lib/libft/ft_itoa.c	/^char	*isneg(int algcount, int n)$/;"	f	typeref:typename:char *
 isquote	lib/libft/quotes.c	/^char	isquote(char *s, int index)$/;"	f	typeref:typename:char
 key	includes/minishell.h	/^	char	*key;$/;"	m	struct:s_env	typeref:typename:char *
-main	exit1.c	/^int	main(void)$/;"	f	typeref:typename:int
 main	src/main.c	/^int	main(int argc, char **argv, char **envp)$/;"	f	typeref:typename:int
 minishell	src/main.c	/^int	minishell(t_shell *shell)$/;"	f	typeref:typename:int
 module	lib/libft/ft_itoa.c	/^long int	module(int n)$/;"	f	typeref:typename:long int
 next	lib/libft/libft.h	/^	struct s_list	*next;$/;"	m	struct:s_list	typeref:struct:s_list *
+pids	includes/minishell.h	/^	int		*pids;$/;"	m	struct:s_shell	typeref:typename:int *
 pipex	src/pipex.c	/^int	pipex(int argc, char **argv, t_shell *shell)$/;"	f	typeref:typename:int
 prev	lib/libft/libft.h	/^	struct s_list	*prev;$/;"	m	struct:s_list	typeref:struct:s_list *
 proccess_status	includes/minishell.h	/^	int		proccess_status;$/;"	m	struct:s_shell	typeref:typename:int
 quote	lib/libft/quotes.c	/^char	quote(char *s, int index)$/;"	f	typeref:typename:char
 re	Makefile	/^re: fclean clean all$/;"	t
 re	lib/libft/Makefile	/^re: fclean all$/;"	t
-redirect_files	src/pipex.c	/^static void	redirect_files(int i, int argc, char *argv[], t_shell *shell)$/;"	f	typeref:typename:void	file:
-redirect_files_aux	src/pipex_utils.c	/^void	redirect_files_aux(int cid, int *pipefd, int argc, t_shell *shell)$/;"	f	typeref:typename:void
+redirect_files	src/pipex.c	/^static void	redirect_files(int i, char *argv[], t_shell *shell)$/;"	f	typeref:typename:void	file:
+redirect_files_aux	src/pipex_utils.c	/^void	redirect_files_aux(int cid, int *pipefd, int i, t_shell *shell)$/;"	f	typeref:typename:void
 s_env	includes/minishell.h	/^typedef struct s_env$/;"	s
 s_list	lib/libft/libft.h	/^typedef struct s_list$/;"	s
 s_shell	includes/minishell.h	/^typedef struct s_shell$/;"	s
+sigttin_handler	src/signals.c	/^void	sigttin_handler(int signum)$/;"	f	typeref:typename:void
 smaller	lib/libft/int_size_utils.c	/^int	smaller(int a, int b)$/;"	f	typeref:typename:int
 strfiller	lib/libft/ft_split.c	/^static void	strfiller(char *s, char **str, char c)$/;"	f	typeref:typename:void	file:
 strfiller	lib/libft/ft_split_if_not_in_quote.c	/^static void	strfiller(char *s, char **str, char c)$/;"	f	typeref:typename:void	file:

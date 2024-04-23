@@ -6,13 +6,13 @@
 #    By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/12 19:10:12 by luguimar          #+#    #+#              #
-#    Updated: 2024/04/19 05:19:18 by luguimar         ###   ########.fr        #
+#    Updated: 2024/04/23 20:47:35 by luguimar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRC = src/main.c src/pipex.c src/pipex_utils.c src/envparser.c src/builtins.c src/envparser_extra.c src/cd_utils.c src/cd_utils1.c src/unset_utils.c src/builtins_extra.c src/errors.c src/cd_utils2.c
+SRC = src/main.c src/pipex.c src/pipex_utils.c src/envparser.c src/builtins.c src/envparser_extra.c src/cd_utils.c src/cd_utils1.c src/unset_utils.c src/builtins_extra.c src/errors.c src/cd_utils2.c src/signals.c
 
 OBJS = ${SRC:.c=.o}
 
