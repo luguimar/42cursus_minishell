@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/23 22:00:19 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:47:53 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,32 +55,18 @@ void	heredoc(char *limiter)
 	close (heredoc_fd);
 }
 
-void	redirect_files_aux(int cid, int *pipefd, int i, t_shell *shell)
+void	redirect_files_aux(int cid, int i, t_shell *shell)
 {
 	if (i != shell->arg_count - 1)
-	{
-		dup2stdin(pipefd);
 		shell->pids[i] = cid;
-		//waitpid(cid, NULL, 0);
-		//kill(cid, SIGKILL);
-	}
 	else
 	{
-		close(pipefd[1]);
 		shell->pids[i] = cid;
-		while (i >= 0)
-		{
-			while (!waitpid(shell->pids[i], NULL, WNOHANG))
-			{
-				free(readline(""));
-				kill(shell->pids[i], SIGKILL);
-			}
-			i--;
-		}
+		while (--i >= 0)
+			waitpid(shell->pids[i], NULL, WNOHANG);
 		waitpid(cid, &shell->proccess_status, 0);
 		if (WIFEXITED(shell->proccess_status))
 			shell->exit_status = WEXITSTATUS(shell->proccess_status);
-		//invent a way to wait for every child process to terminate and to avoid zombies
 	}
 }
 /*
