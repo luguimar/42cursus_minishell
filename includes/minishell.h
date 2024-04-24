@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/23 19:32:50 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/04/24 20:55:57 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,9 @@ int		execve_error(char *path, char **args, t_shell *shell, int isparent);
 //signals
 
 void	sigset(int a);
+
+//expand
+
+void	expand(t_shell *shell);
 
 #endif

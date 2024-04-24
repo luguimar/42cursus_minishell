@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 20:01:48 by jduraes-          #+#    #+#             */
-/*   Updated: 2024/04/22 19:56:16 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/04/23 20:25:26 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	sigset(int a)
 	{
 		signal(SIGINT, sighandler);
 		signal(SIGTSTP, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
 	}
 	if (a == 2)
 		signal(SIGINT, cathandler);

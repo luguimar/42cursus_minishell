@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/23 18:49:37 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:30:55 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ int	main(int argc, char **argv, char **envp)
 		shell.input = readline("minishell$>");
 		if (shell.input == NULL)
 			break ;
+		expand(&shell);
 		minishell(&shell);
 		free(shell.input);
 	}
