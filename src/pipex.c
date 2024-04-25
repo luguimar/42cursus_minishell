@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 03:26:25 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 22:31:04 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	exec_command(char *path, t_shell *shell, char **args, int isparent)
 {
-	if (exec_builtin(args, shell))
+	if (exec_builtin(args, shell, 1))
 	{
 		free_everything(shell);
 		free_array_of_strings(args);
@@ -111,6 +111,8 @@ int	pipex(int argc, char **argv, t_shell *shell)
 	int		i;
 	int		original_stdin;
 
+	if (argc == 0)
+		return (1);
 	fds = malloc(sizeof(int *) * argc - 1);
 	if (!fds)
 		return (0);

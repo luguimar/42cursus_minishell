@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 05:09:37 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 19:40:06 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 21:11:12 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,14 @@ static int	ft_cd(char **args, t_shell *shell)
 	return (1);
 }
 
-int	exec_builtin(char **args, t_shell *shell)
+int	exec_builtin(char **args, t_shell *shell, int ispipex)
 {
 	char	**new_args;
 
-	new_args = ft_splitquote(args[0], ' ');
+	if (ispipex)
+		new_args = ft_dup_array_of_strings(args);
+	else
+		new_args = ft_splitquote(args[0], ' ');
 	if (!new_args)
 		return (-1);
 	if (!new_args[0])
@@ -110,9 +113,11 @@ int	exec_builtin(char **args, t_shell *shell)
 	else if (ft_strcmp(new_args[0], "env") == 0)
 		return (ft_env(new_args, shell));
 	/*else if (ft_strcmp(new_args[0], "export") == 0)
-		return (ft_export(new_args, shell));
+		return (ft_export(new_args, shell));*/
 	else if (ft_strcmp(new_args[0], "echo") == 0)
-		return (ft_echo(new_args, shell));*/
+		return (ft_echo(new_args));
+	else if (ft_strcmp(new_args[0], "cat") == 0)
+		sigset(2);
 	free_array_of_strings(new_args);
 	return (0);
 }
