@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 05:09:37 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/20 02:36:57 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 19:40:06 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ static int	ft_unset(char **args, t_shell *shell)
 			delete_env_node(&shell->env, args[i]);
 		i++;
 	}
+	shell->exit_status = 0;
+	free(shell->env_array);
+	shell->env_array = env_to_array(shell->env);
 	free_array_of_strings(args);
 	return (1);
 }
@@ -54,20 +57,15 @@ static int	ft_exit(char **args, t_shell *shell, char **old_args)
 	exit(return_value);
 }
 
-static int	ft_pwd(char **args)
+static int	ft_pwd(char **args, t_shell *shell)
 {
 	char	*pwd;
 
-	if (ft_matrixlen((void **)args) > 1)
-	{
-		ft_putstr_fd("pwd: too many arguments\n", 2);
-		free_array_of_strings(args);
-		return (1);
-	}
 	pwd = getcwd(NULL, 0);
 	ft_putendl_fd(pwd, 1);
 	free(pwd);
 	free_array_of_strings(args);
+	shell->exit_status = 0;
 	return (1);
 }
 
@@ -104,7 +102,7 @@ int	exec_builtin(char **args, t_shell *shell)
 	if (ft_strcmp(new_args[0], "cd") == 0)
 		return (ft_cd(new_args, shell));
 	else if (ft_strcmp(new_args[0], "pwd") == 0)
-		return (ft_pwd(new_args));
+		return (ft_pwd(new_args, shell));
 	else if (ft_strcmp(new_args[0], "exit") == 0)
 		return (ft_exit(new_args, shell, args));
 	else if (ft_strcmp(new_args[0], "unset") == 0)
