@@ -6,7 +6,7 @@
 #    By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/12 19:10:12 by luguimar          #+#    #+#              #
-#    Updated: 2024/04/23 20:47:35 by luguimar         ###   ########.fr        #
+#    Updated: 2024/04/25 19:57:43 by luguimar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,14 @@ clean:
 fclean: clean
 		${MAKE} ${LIBFT_PATH} fclean
 		${RM} ${NAME}
+		${RM} output.log
 
 re: fclean clean all
 
-.PHONY: all clean fclean re
+run: clear all
+	./minishell
+
+leaks: readline.supp all
+	valgrind --suppressions=readline.supp --leak-check=full --show-leak-kinds=all --log-file=output.log ./minishell
+
+.PHONY: all clean fclean re run leaks
