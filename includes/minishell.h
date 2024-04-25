@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/24 20:55:57 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/04/25 19:58:36 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ typedef struct s_shell
 {
 	int		proccess_status;
 	int		exit_status;
+	int		*pids;
+	int		arg_count;
 	char	*input;
 	char	**env_array;
 	t_list	*env;
@@ -36,7 +38,6 @@ typedef struct s_shell
 
 //builtins
 int		exec_builtin(char **args, t_shell *shell);
-
 int		ft_echo(char **args);
 
 //cd
@@ -57,7 +58,7 @@ void	free_env(void *content);
 //env
 int		ft_env(char **args, t_shell *shell);
 
-//envparser
+//parser
 
 int		env_to_list(t_shell *shell, char **envp);
 t_env	*envnew(char *key, char *value, char *env_i);
@@ -66,14 +67,14 @@ void	add_env(t_shell *shell, char *key, char *value);
 void	change_value(t_list *env, char *key, char *value);
 char	*get_env_value(t_list *env, char *key);
 void	free_everything(t_shell *shell);
+void	expand(t_shell *shell);
 
 //pipes
 
-void	dup2stdout(int *pipefd);
-void	dup2stdin(int *pipefd);
+void	dup2pipe(int **fds, int i, t_shell *shell);
 void	dup2redirect(int *fd, char **argv, t_shell *shell, int i);
 void	heredoc(char *limiter);
-void	redirect_files_aux(int cid, int *pipefd, int argc, t_shell *shell);
+void	redirect_files_aux(int cid, int i, t_shell *shell, int ***fds);
 char	*get_right_path(char **cmd, char **envp, char *right_path);
 char	**last_one(char **argv, char **path, char **envp, int i);
 void	check_error(int status, char *message, char **args, char *path);
@@ -84,9 +85,5 @@ int		execve_error(char *path, char **args, t_shell *shell, int isparent);
 //signals
 
 void	sigset(int a);
-
-//expand
-
-void	expand(t_shell *shell);
 
 #endif

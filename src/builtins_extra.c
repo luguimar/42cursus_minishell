@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:58:44 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/20 02:35:33 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 19:46:19 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	ft_env(char **args, t_shell *shell)
 	{
 		ft_putstr_fd("env: too many arguments\n", 2);
 		free_array_of_strings(args);
+		shell->exit_status = 1;
 		return (1);
 	}
 	tmp = shell->env;
@@ -29,6 +30,7 @@ int	ft_env(char **args, t_shell *shell)
 		ft_putstr_fd("\n", 1);
 		tmp = tmp->next;
 	}
+	shell->exit_status = 0;
 	free_array_of_strings(args);
 	return (1);
 }

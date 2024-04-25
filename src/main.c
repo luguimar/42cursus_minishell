@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/24 19:30:55 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/04/25 19:54:45 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,50 @@ void	free_everything(t_shell *shell)
 	}
 	free(shell->env_array);
 	free(shell->input);
+	rl_clear_history();
+}
+
+static int	check_args(char **args)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (args[i])
+	{
+		j = 0;
+		while ((args[i][j] == ' ' || args[i][j] == '\t' || args[i][j] == '\n' \
+		|| args[i][j] == '\v' || args[i][j] == '\f' || args[i][j] == '\r') \
+		&& args[i][j])
+			j++;
+		if (!args[i][j])
+		{
+			free_array_of_strings(args);
+			ft_putstr_fd("minishell: syntax error near unexpected token `|'\n" \
+			, 2);
+			return (0);
+		}
+		i++;
+	}
+	return (1);
 }
 
 int	minishell(t_shell *shell)
 {
 	char	**args;
-	//int		cid;
 
+	if (shell->input[0] == '|' || shell->input[ft_strlen \
+	(shell->input) - 1] == '|')
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+		return (0);
+	}
 	args = ft_split_if_not_in_quote(shell->input, '|');
 	if (args == NULL)
 		return (1);
+	if (!check_args(args))
+		return (0);
+	shell->arg_count = ft_matrixlen((void **) args);
 	if (ft_matrixlen((void **) args) == 1)
 	{
 		if (exec_builtin(args, shell))
@@ -49,20 +83,14 @@ int	minishell(t_shell *shell)
 			return (0);
 		}
 	}
-	/*cid = fork();
-	if (cid == -1)
-		return (ft_putstr_fd("fork: ", 2), perror(NULL), 1);
-	if (cid == 0)*/
-	pipex(ft_matrixlen((void **) args), args, shell);
-	/*else
-		waitpid(cid, NULL, 0);*/
+	pipex(shell->arg_count, args, shell);
 	free_array_of_strings(args);
 	return (0);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_shell	shell;
+	t_shell				shell;
 
 	(void)argc;
 	(void)argv;
@@ -78,6 +106,7 @@ int	main(int argc, char **argv, char **envp)
 		shell.input = readline("minishell$>");
 		if (shell.input == NULL)
 			break ;
+		add_history(shell.input);
 		expand(&shell);
 		minishell(&shell);
 		free(shell.input);

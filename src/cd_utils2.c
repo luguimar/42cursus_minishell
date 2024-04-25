@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 05:09:34 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 05:37:13 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 19:42:03 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,6 @@ int	ft_cd_case_dash(t_shell *shell, char **args)
 		ft_cd_case_dash_aux(&path);
 	if (path)
 		printf("%s\n", path);
+	shell->exit_status = 0;
 	return (free_array_of_strings(args), 1);
 }
