@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 04:34:01 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 08:02:14 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ int	main(int argc, char **argv, char **envp)
 		shell.input = readline("minishell$>");
 		if (shell.input == NULL)
 			break ;
+		add_history(shell.input);
 		minishell(&shell);
 		free(shell.input);
 	}
