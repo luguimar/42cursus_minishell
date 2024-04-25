@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/24 17:21:06 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 03:18:41 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,27 +89,20 @@ static void	redirect_files(int i, char *argv[], t_shell *shell, int **fds)
 
 	args = NULL;
 	path = NULL;
-	check_error(pipe(fds[i]), "pipe", args, path);
+	if (i < shell->arg_count - 1)
+		check_error(pipe(fds[i]), "pipe", args, path);
 	cid = fork();
 	if (cid == 0)
 	{
 		args = ft_splitquote_nulls(argv[ft_abs_value(i)], ' ');
 		path = get_right_path(args, shell->env_array, path);
-		if (i == 0)
-			dup2stdout(fds[i]);
-		else if (i != shell->arg_count - 1)
-		{
-			dup2stdin(fds[i - 1]);
-			dup2stdout(fds[i]);
-		}
-		else
-			dup2stdin(fds[i - 1]);
+		dup2pipe(fds, i, shell);
 		exec_command(path, shell, args, 1);
 	}
 	else if (cid == -1)
 		check_error(-1, "fork", args, path);
 	else if (i == shell->arg_count - 1)
-		redirect_files_aux(cid, i, shell);
+		redirect_files_aux(cid, i, shell, &fds);
 }
 
 int	pipex(int argc, char **argv, t_shell *shell)
@@ -118,7 +111,7 @@ int	pipex(int argc, char **argv, t_shell *shell)
 	int		i;
 	int		original_stdin;
 
-	fds = malloc(sizeof(int *) * argc);
+	fds = malloc(sizeof(int *) * argc - 1);
 	if (!fds)
 		return (0);
 	i = -1;
@@ -131,7 +124,7 @@ int	pipex(int argc, char **argv, t_shell *shell)
 	while (++i < argc)
 		redirect_files(i, argv, shell, fds);
 	dup2(original_stdin, STDIN_FILENO);
-	free_array_of_ints(fds, argc - 1);
+	free_array_of_ints(fds, argc);
 	free(shell->pids);
 	/*args = last_one(argv, &path, shell->env_array, i);
 	exec_command(path, shell, args, 1);*/

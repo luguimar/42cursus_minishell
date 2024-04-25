@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/24 16:44:52 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 01:19:45 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,10 @@ void	free_everything(t_shell *shell);
 
 //pipes
 
-void	dup2stdout(int *pipefd);
-void	dup2stdin(int *pipefd);
+void	dup2pipe(int **fds, int i, t_shell *shell);
 void	dup2redirect(int *fd, char **argv, t_shell *shell, int i);
 void	heredoc(char *limiter);
-void	redirect_files_aux(int cid, int i, t_shell *shell);
+void	redirect_files_aux(int cid, int i, t_shell *shell, int ***fds);
 char	*get_right_path(char **cmd, char **envp, char *right_path);
 char	**last_one(char **argv, char **path, char **envp, int i);
 void	check_error(int status, char *message, char **args, char *path);

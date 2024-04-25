@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/23 21:15:39 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 03:07:58 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ int	minishell(t_shell *shell)
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell				shell;
-	struct sigaction	sa;
 
 	(void)argc;
 	(void)argv;
@@ -74,9 +73,6 @@ int	main(int argc, char **argv, char **envp)
 	shell.exit_status = 0;
 	env_to_list(&shell, envp);
 	shell.env_array = env_to_array(shell.env);
-	sa.sa_handler = &sigttin_handler;
-	sa.sa_flags = SA_RESTART;
-	sigaction(SIGTTIN, &sa, NULL);
 	while (1)
 	{
 		shell.input = readline("minishell$>");

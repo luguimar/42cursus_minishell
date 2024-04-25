@@ -6,22 +6,39 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/24 16:47:53 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 03:16:56 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	dup2stdout(int *pipefd)
+void	dup2pipe(int **fds, int i, t_shell *shell)
 {
-	close(pipefd[0]);
-	dup2(pipefd[1], STDOUT_FILENO);
-}
+	int	j;
 
-void	dup2stdin(int *pipefd)
-{
-	close(pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
+	j = -1;
+	while (++j < i - 1)
+	{
+		close(fds[j][0]);
+		close(fds[j][1]);
+	}
+	if (i == 0 && i != shell->arg_count - 1)
+	{
+		dup2(fds[i][1], STDOUT_FILENO);
+		close(fds[i][0]);
+	}
+	else if (i == shell->arg_count - 1 && i != 0)
+	{
+		dup2(fds[i - 1][0], STDIN_FILENO);
+		close(fds[i - 1][1]);
+	}
+	else if (i != 0 && i != shell->arg_count - 1)
+	{
+		dup2(fds[i - 1][0], STDIN_FILENO);
+		dup2(fds[i][1], STDOUT_FILENO);
+		close(fds[i - 1][1]);
+		close(fds[i][0]);
+	}
 }
 
 int	get_right_path_aux(char **cmd, char **path, int i, char **right_path)
@@ -55,16 +72,27 @@ void	heredoc(char *limiter)
 	close (heredoc_fd);
 }
 
-void	redirect_files_aux(int cid, int i, t_shell *shell)
+void	redirect_files_aux(int cid, int i, t_shell *shell, int ***fds)
 {
+	int	j;
+
+	j = i;
+	if (j == shell->arg_count - 1)
+	{
+		while (--j >= 0)
+		{
+			close((*fds)[j][0]);
+			close((*fds)[j][1]);
+		}
+	}
 	if (i != shell->arg_count - 1)
 		shell->pids[i] = cid;
 	else
 	{
 		shell->pids[i] = cid;
-		while (--i >= 0)
-			waitpid(shell->pids[i], NULL, WNOHANG);
 		waitpid(cid, &shell->proccess_status, 0);
+		while (--i >= 0)
+			waitpid(shell->pids[i], NULL, 0);
 		if (WIFEXITED(shell->proccess_status))
 			shell->exit_status = WEXITSTATUS(shell->proccess_status);
 	}
