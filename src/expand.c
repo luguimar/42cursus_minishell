@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 18:28:57 by jduraes-          #+#    #+#             */
-/*   Updated: 2024/04/25 23:16:19 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 23:37:24 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,15 @@ void	expand(t_shell *shell)
 		if (args[i][0] == '$' || (args[i][0] == '\'' && args[i][1] == '$' \
 		&& args[i][ft_strlen(args[i] - 1)] == '\''))
 		{
-			newarg = expand_aux(args[i], shell->env);
+			if ((args[i][0] == '\'' && args[i][1] == '$' && args[i][2] == '?' \
+			&& args[i][3] == '\'' && args[i][4] == '\0') || \
+			(args[i][0] == '$' && args[i][1] == '?' && args[i][2] == '\0'))
+			{
+				newarg = ft_itoa(shell->exit_status);
+				free(args[i]);
+			}
+			else
+				newarg = expand_aux(args[i], shell->env);
 			if (newarg == NULL)
 				newarg = ft_strdup("");
 			args[i] = ft_strdup(newarg);
