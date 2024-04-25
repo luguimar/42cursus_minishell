@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 05:18:58 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 01:19:45 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@ typedef struct s_env
 
 typedef struct s_shell
 {
+	int		proccess_status;
+	int		exit_status;
+	int		*pids;
+	int		arg_count;
 	char	*input;
 	char	**env_array;
 	t_list	*env;
@@ -64,16 +68,19 @@ void	free_everything(t_shell *shell);
 
 //pipes
 
-void	dup2stdout(int *pipefd);
-void	dup2stdin(int *pipefd);
+void	dup2pipe(int **fds, int i, t_shell *shell);
 void	dup2redirect(int *fd, char **argv, t_shell *shell, int i);
-void	redirect_files(int i, char *argv[], t_shell *shell);
 void	heredoc(char *limiter);
+void	redirect_files_aux(int cid, int i, t_shell *shell, int ***fds);
 char	*get_right_path(char **cmd, char **envp, char *right_path);
 char	**last_one(char **argv, char **path, char **envp, int i);
 void	check_error(int status, char *message, char **args, char *path);
 int		pipex(int argc, char **argv, t_shell *shell);
 int		get_right_path_aux(char **cmd, char **path, int i, char **right_path);
 int		execve_error(char *path, char **args, t_shell *shell, int isparent);
+
+//signals
+
+void	sigttin_handler(int signum);
 
 #endif

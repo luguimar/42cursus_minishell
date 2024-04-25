@@ -1,34 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_extra.c                                   :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 13:58:44 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/20 02:35:33 by luguimar         ###   ########.fr       */
+/*   Created: 2024/04/23 20:45:08 by luguimar          #+#    #+#             */
+/*   Updated: 2024/04/23 20:50:43 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	ft_env(char **args, t_shell *shell)
+void	sigttin_handler(int signum)
 {
-	t_list	*tmp;
+	char	*line;
 
-	if (ft_matrixlen((void **)args) > 1)
-	{
-		ft_putstr_fd("env: too many arguments\n", 2);
-		free_array_of_strings(args);
-		return (1);
-	}
-	tmp = shell->env;
-	while (tmp)
-	{
-		ft_putstr_fd(((t_env *)tmp->content)->full, 1);
-		ft_putstr_fd("\n", 1);
-		tmp = tmp->next;
-	}
-	free_array_of_strings(args);
-	return (1);
+	(void)signum;
+	line = readline(NULL);
+	free(line);
 }

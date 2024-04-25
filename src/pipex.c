@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 02:28:44 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 03:26:25 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,49 +81,52 @@ char	*get_right_path(char **cmd, char **envp, char *right_path)
 	return (NULL);
 }
 
-void	redirect_files(int i, char *argv[], t_shell *shell)
+static void	redirect_files(int i, char *argv[], t_shell *shell, int **fds)
 {
 	int		cid;
-	int		pipefd[2];
 	char	*path;
 	char	**args;
 
 	args = NULL;
 	path = NULL;
-	check_error(pipe(pipefd), "pipe", args, path);
+	if (i < shell->arg_count - 1)
+		check_error(pipe(fds[i]), "pipe", args, path);
 	cid = fork();
 	if (cid == 0)
 	{
 		args = ft_splitquote_nulls(argv[ft_abs_value(i)], ' ');
 		path = get_right_path(args, shell->env_array, path);
-		//if (i == 2 || i == -3)
-		//	check_error(access(argv[1], R_OK), argv[1], args, path);
-		dup2stdout(pipefd);
+		dup2pipe(fds, i, shell);
 		exec_command(path, shell, args, 1);
 	}
 	else if (cid == -1)
 		check_error(-1, "fork", args, path);
 	else
-	{
-		dup2stdin(pipefd);
-		waitpid(cid, NULL, WNOHANG);
-	}
+		redirect_files_aux(cid, i, shell, &fds);
 }
 
 int	pipex(int argc, char **argv, t_shell *shell)
 {
-	int		fd[2];
+	int		**fds;
 	int		i;
-	char	*path;
-	char	**args;
+	int		original_stdin;
 
-	(void)fd;
+	fds = malloc(sizeof(int *) * argc - 1);
+	if (!fds)
+		return (0);
 	i = -1;
-	path = NULL;
-	//dup2redirect(fd, argv, shell, i);
 	while (++i < argc - 1)
-		redirect_files(i, argv, shell);
-	args = last_one(argv, &path, shell->env_array, i);
-	exec_command(path, shell, args, 1);
+		fds[i] = malloc(sizeof(int) * 2);
+	original_stdin = dup(STDIN_FILENO);
+	shell->pids = malloc(sizeof(int) * argc);
+	//dup2redirect(fd, argv, shell, i);
+	i = -1;
+	while (++i < argc)
+		redirect_files(i, argv, shell, fds);
+	dup2(original_stdin, STDIN_FILENO);
+	free_array_of_ints(fds, argc - 1);
+	free(shell->pids);
+	/*args = last_one(argv, &path, shell->env_array, i);
+	exec_command(path, shell, args, 1);*/
 	return (1);
 }
