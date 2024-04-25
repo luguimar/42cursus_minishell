@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 04:34:01 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 19:20:03 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	free_everything(t_shell *shell)
 	}
 	free(shell->env_array);
 	free(shell->input);
+	rl_clear_history();
 }
 
 static int	check_args(char **args)
@@ -104,6 +105,7 @@ int	main(int argc, char **argv, char **envp)
 		shell.input = readline("minishell$>");
 		if (shell.input == NULL)
 			break ;
+		add_history(shell.input);
 		minishell(&shell);
 		free(shell.input);
 	}

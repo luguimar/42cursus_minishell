@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:16:47 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 04:49:07 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 19:41:11 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	ft_cd_case_double_dash(t_shell *shell, char ***args)
 		change_value(shell->env, "PWD", \
 			ft_strdup(get_env_value(shell->env, "HOME")));
 	free_array_of_strings(*args);
+	shell->exit_status = 0;
 	return (1);
 }
 
@@ -116,5 +117,6 @@ int	ft_cd_normal(char **args, t_shell *shell)
 	else
 		free(path);
 	free_array_of_strings(args);
+	shell->exit_status = 0;
 	return (1);
 }
