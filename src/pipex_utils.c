@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 03:16:56 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 03:24:27 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,9 @@ void	redirect_files_aux(int cid, int i, t_shell *shell, int ***fds)
 			close((*fds)[j][1]);
 		}
 	}
-	if (i != shell->arg_count - 1)
-		shell->pids[i] = cid;
-	else
+	shell->pids[i] = cid;
+	if (i == shell->arg_count - 1)
 	{
-		shell->pids[i] = cid;
 		waitpid(cid, &shell->proccess_status, 0);
 		while (--i >= 0)
 			waitpid(shell->pids[i], NULL, 0);

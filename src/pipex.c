@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 03:18:41 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/25 03:26:25 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ static void	redirect_files(int i, char *argv[], t_shell *shell, int **fds)
 	}
 	else if (cid == -1)
 		check_error(-1, "fork", args, path);
-	else if (i == shell->arg_count - 1)
+	else
 		redirect_files_aux(cid, i, shell, &fds);
 }
 
@@ -115,7 +115,7 @@ int	pipex(int argc, char **argv, t_shell *shell)
 	if (!fds)
 		return (0);
 	i = -1;
-	while (++i < argc)
+	while (++i < argc - 1)
 		fds[i] = malloc(sizeof(int) * 2);
 	original_stdin = dup(STDIN_FILENO);
 	shell->pids = malloc(sizeof(int) * argc);
@@ -124,7 +124,7 @@ int	pipex(int argc, char **argv, t_shell *shell)
 	while (++i < argc)
 		redirect_files(i, argv, shell, fds);
 	dup2(original_stdin, STDIN_FILENO);
-	free_array_of_ints(fds, argc);
+	free_array_of_ints(fds, argc - 1);
 	free(shell->pids);
 	/*args = last_one(argv, &path, shell->env_array, i);
 	exec_command(path, shell, args, 1);*/
