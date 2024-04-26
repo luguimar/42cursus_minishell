@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 22:28:37 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/26 06:18:55 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	main(int argc, char **argv, char **envp)
 		if (shell.input == NULL)
 			break ;
 		add_history(shell.input);
-		expand(&shell);
+		expand(&shell.input, &shell);
 		minishell(&shell);
 		free(shell.input);
 	}

@@ -6,87 +6,102 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 18:28:57 by jduraes-          #+#    #+#             */
-/*   Updated: 2024/04/25 23:37:24 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/26 08:58:23 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	freenull(char **str)
-{
-	free(*str);
-	*str = NULL;
-}
-
-static char	*expand_aux(char *key, t_list *env)
+static int	expand_aux_aux(char ***keyandmore, t_shell *shell, int i)
 {
 	char	*value;
-	char	*newkey;
-	t_list	*tmp;
-	t_env	*env_var;
+	int		keylen;
+	char	*prev;
+	char	*extra;
+	char	*key;
 
-	tmp = env;
-	if (key[0] == '\'')
-		newkey = ft_substr(key, 2, ft_strlen(key) - 1);
-	else
-		newkey = ft_substr(key, 1, ft_strlen(key) - 1);
-	free(key);
-	while (tmp->next)
+	keylen = 0;
+	value = NULL;
+	if ((**keyandmore)[i] == '?')
 	{
-		env_var = (t_env *)tmp->content;
-		if (ft_strncmp(env_var->key, newkey, ft_strlen(newkey)) == 0)
-		{
-			value = ft_strdup(env_var->value);
-			free(newkey);
-			return (value);
-		}
-		tmp = tmp->next;
+		keylen = 1;
+		value = ft_itoa(shell->exit_status);
+		prev = ft_substr(**keyandmore, 0, i - 1);
+		extra = ft_substr(**keyandmore, i + keylen, ft_strlen(**keyandmore) - i \
+			- keylen);
+		free(**keyandmore);
+		**keyandmore = ft_strjoinfreeall(prev, value);
+		**keyandmore = ft_strjoinfreeall(**keyandmore, extra);
+		return (1);
 	}
-	free(newkey);
-	return (NULL);
+	else
+	{
+		while ((**keyandmore)[i + keylen] != '\0' && !ft_is_special_char \
+		((**keyandmore)[i + keylen]))
+			keylen++;
+		if (keylen == 0)
+			return (0);
+		key = ft_substr(**keyandmore, i, keylen);
+		if (get_env_value(shell->env, key) != NULL)
+			value = ft_strdup(get_env_value(shell->env, key));
+		prev = ft_substr(**keyandmore, 0, i - 1);
+		extra = ft_substr(**keyandmore, i + keylen, ft_strlen(**keyandmore) - i \
+			- keylen);
+		free(**keyandmore);
+		if (value == NULL)
+			**keyandmore = ft_strjoinfreeall(prev, extra);
+		else
+		{
+			**keyandmore = ft_strjoinfreeall(prev, value);
+			**keyandmore = ft_strjoinfreeall(**keyandmore, extra);
+		}
+		free(key);
+		return (1);
+	}
 }
 
-void	expand(t_shell *shell)
+static int	expand_aux(char **input, t_shell *shell, int j)
 {
-	char	*newarg;
-	char	**args;
 	int		i;
+	int		count;
 
 	i = 0;
-	if (ft_strlen(shell->input) == 0)
-		return ;
-	args = ft_split(shell->input, ' ');
-	newarg = NULL;
-	while (args[i] != NULL)
+	count = 0;
+	while ((*input)[i] != '\0' && count <= j)
 	{
-		if (args[i][0] == '$' || (args[i][0] == '\'' && args[i][1] == '$' \
-		&& args[i][ft_strlen(args[i] - 1)] == '\''))
-		{
-			if ((args[i][0] == '\'' && args[i][1] == '$' && args[i][2] == '?' \
-			&& args[i][3] == '\'' && args[i][4] == '\0') || \
-			(args[i][0] == '$' && args[i][1] == '?' && args[i][2] == '\0'))
-			{
-				newarg = ft_itoa(shell->exit_status);
-				free(args[i]);
-			}
-			else
-				newarg = expand_aux(args[i], shell->env);
-			if (newarg == NULL)
-				newarg = ft_strdup("");
-			args[i] = ft_strdup(newarg);
-			freenull(&newarg);
-		}
+		if ((*input)[i] == '$' && inquote(*input, i) != '\'')
+			count++;
 		i++;
 	}
-	i = 0;
-	newarg = ft_strdup(args[i++]);
-	free(args[i - 1]);
-	while (args[i] != NULL)
+	if ((*input)[i - 1] == '$' && inquote(*input, i - 1) != '\'')
+		return (expand_aux_aux(&input, shell, i));
+	else
+		return (0);
+}
+
+void	expand(char **input, t_shell *shell)
+{
+	int		j;
+	int		dollar_count;
+
+	j = 0;
+	dollar_count = 0;
+	while ((*input)[j] != '\0')
 	{
-		newarg = ft_strjoinfree(newarg, " ");
-		newarg = ft_strjoinfreeall(newarg, args[i++]);
+		if ((*input)[j] == '$' && inquote(*input, j) != '\'')
+			dollar_count++;
+		j++;
 	}
-	free(shell->input);
-	shell->input = newarg;
-	free(args);
+	if (dollar_count == 0)
+		return ;
+	j = 0;
+	while (j < dollar_count)
+	{
+		if (expand_aux(input, shell, j))
+		{
+			j--;
+			dollar_count--;
+		}
+		j++;
+	}
 }
