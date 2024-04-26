@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 01:19:45 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/26 06:18:48 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ typedef struct s_shell
 }				t_shell;
 
 //builtins
-int		exec_builtin(char **args, t_shell *shell);
+int		exec_builtin(char **args, t_shell *shell, int ispipex);
+int		ft_echo(char **args);
 //cd
 int		ft_cd_case_double_dash(t_shell *shell, char ***args);
 char	*ft_strremoveprev(char *str, char *old, char *new);
@@ -56,7 +57,7 @@ void	free_env(void *content);
 //env
 int		ft_env(char **args, t_shell *shell);
 
-//envparser
+//parser
 
 int		env_to_list(t_shell *shell, char **envp);
 t_env	*envnew(char *key, char *value, char *env_i);
@@ -65,6 +66,7 @@ void	add_env(t_shell *shell, char *key, char *value);
 void	change_value(t_list *env, char *key, char *value);
 char	*get_env_value(t_list *env, char *key);
 void	free_everything(t_shell *shell);
+void	expand(char **input, t_shell *shell);
 
 //pipes
 
@@ -81,6 +83,6 @@ int		execve_error(char *path, char **args, t_shell *shell, int isparent);
 
 //signals
 
-void	sigttin_handler(int signum);
+void	sigset(int a);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: luguimar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/12 15:40:48 by luguimar          #+#    #+#              #
-#    Updated: 2024/04/24 16:39:07 by luguimar         ###   ########.fr        #
+#    Updated: 2024/04/26 02:26:53 by luguimar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ PART2 = ft_itoa.c ft_strjoin.c ft_split.c ft_striteri.c ft_strmapi.c ft_substr.c
 
 BONUS = ft_lstnew.c ft_lstadd_front.c ft_lstadd_back.c ft_lstdelone.c ft_lstclear.c ft_lstiter.c ft_lstmap.c ft_lstsize.c ft_lstlast.c
 
-EXTRA = ft_putnbr_base_fd.c ft_printf.c get_next_line.c get_next_line_utils.c free_array_of_strings.c ft_splitquote.c quotes.c quotes_utils.c ft_matrixlen.c ft_abs_value.c ft_atol.c ft_strcmp.c int_size_utils.c ft_split_if_not_in_quote.c ft_isint.c free_array_of_ints.c
+EXTRA = ft_putnbr_base_fd.c ft_printf.c get_next_line.c get_next_line_utils.c free_array_of_strings.c ft_splitquote.c quotes.c quotes_utils.c ft_matrixlen.c ft_abs_value.c ft_atol.c ft_strcmp.c int_size_utils.c ft_split_if_not_in_quote.c ft_isint.c free_array_of_ints.c ft_dup_array_of_strings.c ft_is_special_char.c ft_splitstr.c
 
 SRC = ${PART1} ${PART2} ${BONUS} ${EXTRA}
 

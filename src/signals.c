@@ -3,20 +3,48 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/23 20:45:08 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/23 20:50:43 by luguimar         ###   ########.fr       */
+/*   Created: 2024/04/19 20:01:48 by jduraes-          #+#    #+#             */
+/*   Updated: 2024/04/23 20:25:26 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	sigttin_handler(int signum)
+static void	sighandler(int sig)
 {
-	char	*line;
+	if (sig == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+	else
+		return ;
+}
 
-	(void)signum;
-	line = readline(NULL);
-	free(line);
+static void	cathandler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+	}
+	else
+		return ;
+}
+
+void	sigset(int a)
+{
+	if (a == 1)
+	{
+		signal(SIGINT, sighandler);
+		signal(SIGTSTP, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	if (a == 2)
+		signal(SIGINT, cathandler);
 }
