@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:10:31 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 19:43:41 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/27 07:03:15 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int	ft_cd_aux(char **args, t_shell *shell)
 	else if (args[1][0] == '~')
 		return (ft_cd_case_tild(shell, &args));
 	else if (args[1][0] == '/')
-		ft_cd_case_slash(shell, &args);
+		return (ft_cd_case_slash(shell, &args));
 	else
 		return (ft_cd_aux_extra(shell, &args));
 	return (0);
