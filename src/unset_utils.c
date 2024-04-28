@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:43:50 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 01:27:37 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/28 08:32:10 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	free_env(void *content)
 	free(env->key);
 	free(env->value);
 	free(env->full);
+	free(env->export_version);
 	free(env);
 }
 
