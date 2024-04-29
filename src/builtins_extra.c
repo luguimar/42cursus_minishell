@@ -6,36 +6,34 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:58:44 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/28 08:37:19 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/29 04:45:12 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static t_list	*ft_envsort(t_list *env)
+static void	ft_envsort(t_list *env)
 {
-	t_list	*sorted;
 	t_list	*tmp;
-	t_list	*tmp2;
-	t_env	*tmp_env;
-	t_env	*tmp_env2;
+	int		swapped;
 
-	sorted = NULL;
 	tmp = env;
-	while (tmp)
+	swapped = 0;
+	while (tmp->next)
 	{
-		tmp2 = env;
-		while (tmp2)
+		if (ft_strcmp(((t_env *)tmp->content)->key, \
+			((t_env *)tmp->next->content)->key) > 0)
 		{
-			tmp_env = (t_env *)tmp->content;
-			tmp_env2 = (t_env *)tmp2->content;
-			if (ft_strcmp(tmp_env->key, tmp_env2->key) < 0)
-				ft_lstadd_back(&sorted, ft_lstnew(tmp_env2));
-			tmp2 = tmp2->next;
+			ft_lstswap(tmp, tmp->next);
+			swapped = 1;
 		}
 		tmp = tmp->next;
+		if (!tmp->next && swapped)
+		{
+			tmp = env;
+			swapped = 0;
+		}
 	}
-	return (sorted);
 }
 
 static void	print_sorted_env(t_list *env)
@@ -43,7 +41,13 @@ static void	print_sorted_env(t_list *env)
 	t_list	*exported;
 	t_list	*tmp;
 
-	exported = ft_envsort(env);
+	exported = ft_lstdup(env);
+	ft_envsort(exported);
+	if (!exported)
+	{
+		ft_putstr_fd("failed to sort env", 2);
+		return ;
+	}
 	tmp = exported;
 	while (exported)
 	{
@@ -51,8 +55,7 @@ static void	print_sorted_env(t_list *env)
 		ft_putstr_fd("\n", 1);
 		exported = exported->next;
 	}
-	while (tmp)
-		ft_lstdelone(&tmp, tmp, free_env);
+	ft_lstclear(&tmp, &ft_nothing);
 }
 
 int	ft_export(char **args, t_shell *shell)
@@ -64,6 +67,7 @@ int	ft_export(char **args, t_shell *shell)
 	char	*tmp2;
 
 	i = 0;
+	new_env = NULL;
 	if (ft_matrixlen((void **)args) == 1)
 	{
 		print_sorted_env(shell->env);
@@ -74,6 +78,15 @@ int	ft_export(char **args, t_shell *shell)
 	while (args[++i])
 	{
 		j = 0;
+		if (ft_isdigit(args[i][j]) || args[i][j] == '=')
+		{
+			ft_putstr_fd("export: `", 2);
+			ft_putstr_fd(args[i], 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
+			shell->exit_status = 1;
+			free_array_of_strings(args);
+			return (1);
+		}
 		while (!ft_is_special_char(args[i][j]))
 			j++;
 		if (args[i][j] == '=' && args[i][j + 1] != '\0')
@@ -81,12 +94,9 @@ int	ft_export(char **args, t_shell *shell)
 			tmp = ft_substr(args[i], 0, j);
 			tmp2 = ft_substr(args[i], j + 1, ft_strlen(args[i]) - j - 1);
 			if (!change_value(shell->env, tmp, tmp2))
-			{
-				new_env = envnew(ft_substr(args[i], 0, j), ft_substr \
-					(args[i], j + 1, ft_strlen(args[i]) - j - 1), args[i], 0);
-				free(tmp2);
-			}
-			free(tmp);
+				new_env = envnew(tmp, tmp2, args[i], 1);
+			else
+				free(tmp);
 		}
 		else if (args[i][j] != '=' && args[i][j] != '\0' \
 		&& ft_is_special_char(args[i][j]))
@@ -103,15 +113,16 @@ int	ft_export(char **args, t_shell *shell)
 			tmp = ft_substr(args[i], 0, j);
 			tmp2 = ft_strdup("");
 			if (!change_value(shell->env, tmp, tmp2))
-			{
-				new_env = envnew(ft_substr(args[i], 0, j), ft_strdup(""), \
-					args[i], 1);
-				free(tmp2);
-			}
-			free(tmp);
+				new_env = envnew(tmp, tmp2, args[i], 1);
+			else
+				free(tmp);
 		}
-		else
-			new_env = envnew(ft_strdup(args[i]), ft_strdup(""), args[i], 2);
+		else if (get_env_value(shell->env, args[i]) == NULL)
+		{
+			tmp = ft_strdup(args[i]);
+			tmp2 = ft_strdup("");
+			new_env = envnew(tmp, tmp2, args[i], 2);
+		}
 	}
 	shell->exit_status = 0;
 	if (new_env)
@@ -134,8 +145,11 @@ int	ft_env(char **args, t_shell *shell)
 	tmp = shell->env;
 	while (tmp)
 	{
-		ft_putstr_fd(((t_env *)tmp->content)->full, 1);
-		ft_putstr_fd("\n", 1);
+		if (((t_env *)tmp->content)->is_just_exported == 0)
+		{
+			ft_putstr_fd(((t_env *)tmp->content)->full, 1);
+			ft_putstr_fd("\n", 1);
+		}
 		tmp = tmp->next;
 	}
 	shell->exit_status = 0;
