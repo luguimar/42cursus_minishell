@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:40:24 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/27 03:44:58 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/29 02:54:05 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,5 +109,8 @@ char				**ft_dup_array_of_strings(char **array);
 int					ft_is_special_char(char c);
 char				**ft_splitstr(char *str, char *split);
 int					ft_quote_count(char *str);
+void				ft_lstswap(t_list *lst1, t_list *lst2);
+void				ft_nothing(void *content);
+t_list				*ft_lstdup(t_list *lst);
 
 #endif

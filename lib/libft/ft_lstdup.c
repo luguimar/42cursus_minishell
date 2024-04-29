@@ -1,41 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset_utils.c                                      :+:      :+:    :+:   */
+/*   ft_lstdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 13:43:50 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/28 08:32:10 by luguimar         ###   ########.fr       */
+/*   Created: 2024/04/29 02:40:46 by luguimar          #+#    #+#             */
+/*   Updated: 2024/04/29 02:46:36 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "libft.h"
 
-void	free_env(void *content)
+t_list	*ft_lstdup(t_list *lst)
 {
-	t_env	*env;
+	t_list	*new_lst;
+	t_list	*new_elem;
 
-	env = (t_env *)content;
-	free(env->key);
-	free(env->value);
-	free(env->full);
-	free(env->export_version);
-	free(env);
-}
-
-void	delete_env_node(t_list **env, char *key)
-{
-	t_list	*tmp;
-
-	tmp = *env;
-	while (tmp)
+	new_lst = NULL;
+	while (lst)
 	{
-		if (!ft_strcmp(((t_env *)tmp->content)->key, key))
+		new_elem = ft_lstnew(lst->content);
+		if (!new_elem)
 		{
-			ft_lstdelone(env, tmp, free_env);
-			return ;
+			ft_lstclear(&new_lst, &ft_nothing);
+			return (NULL);
 		}
-		tmp = tmp->next;
+		ft_lstadd_back(&new_lst, new_elem);
+		lst = lst->next;
 	}
+	return (new_lst);
 }

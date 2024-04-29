@@ -1,31 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear.c                                      :+:      :+:    :+:   */
+/*   ft_lstswap.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/10 14:38:04 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/29 02:45:22 by luguimar         ###   ########.fr       */
+/*   Created: 2024/04/29 02:02:45 by luguimar          #+#    #+#             */
+/*   Updated: 2024/04/29 02:03:22 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_nothing(void *content)
+void	ft_lstswap(t_list *lst1, t_list *lst2)
 {
-	(void)content;
-}
+	void	*tmp;
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
-{
-	t_list	*temp;
-
-	while (*lst)
-	{
-		temp = (*lst)->next;
-		del((*lst)->content);
-		free(*lst);
-		*lst = temp;
-	}
+	tmp = lst1->content;
+	lst1->content = lst2->content;
+	lst2->content = tmp;
 }

@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 05:09:37 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 21:11:12 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/28 08:26:26 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,8 @@ int	exec_builtin(char **args, t_shell *shell, int ispipex)
 		return (ft_unset(new_args, shell));
 	else if (ft_strcmp(new_args[0], "env") == 0)
 		return (ft_env(new_args, shell));
-	/*else if (ft_strcmp(new_args[0], "export") == 0)
-		return (ft_export(new_args, shell));*/
+	else if (ft_strcmp(new_args[0], "export") == 0)
+		return (ft_export(new_args, shell));
 	else if (ft_strcmp(new_args[0], "echo") == 0)
 		return (ft_echo(new_args));
 	else if (ft_strcmp(new_args[0], "cat") == 0)
