@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 05:09:37 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/28 08:26:26 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/30 23:40:40 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ static int	ft_unset(char **args, t_shell *shell)
 	return (1);
 }
 
-static int	ft_exit(char **args, t_shell *shell, char **old_args)
+int	ft_exit(char **args, t_shell *shell, char **old_args)
 {
 	int	return_value;
 
 	return_value = 0;
-	if (ft_matrixlen((void **)args) > 2)
+	if (args && ft_matrixlen((void **)args) > 2)
 	{
 		ft_putstr_fd("exit: too many arguments\n", 2);
 		free_array_of_strings(args);
@@ -43,17 +43,19 @@ static int	ft_exit(char **args, t_shell *shell, char **old_args)
 	}
 	free_everything(shell);
 	printf("exit\n");
-	if (args[1] && ft_isint(args[1]))
+	if (args && args[1] && ft_isint(args[1]))
 		return_value = ft_atoi(args[1]);
-	else if (args[1])
+	else if (args && args[1])
 	{
 		ft_putstr_fd("exit: ", 2);
 		ft_putstr_fd(args[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
 		return_value = 2;
 	}
-	free_array_of_strings(args);
-	free_array_of_strings(old_args);
+	if (args)
+		free_array_of_strings(args);
+	if (old_args)
+		free_array_of_strings(old_args);
 	exit(return_value);
 }
 
@@ -116,8 +118,6 @@ int	exec_builtin(char **args, t_shell *shell, int ispipex)
 		return (ft_export(new_args, shell));
 	else if (ft_strcmp(new_args[0], "echo") == 0)
 		return (ft_echo(new_args));
-	else if (ft_strcmp(new_args[0], "cat") == 0)
-		sigset(2);
 	free_array_of_strings(new_args);
 	return (0);
 }
