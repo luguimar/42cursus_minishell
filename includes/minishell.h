@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/28 08:28:43 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/05/01 03:03:38 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_shell
 //builtins
 int		exec_builtin(char **args, t_shell *shell, int ispipex);
 int		ft_echo(char **args);
+int		ft_exit(char **args, t_shell *shell, char **old_args);
 //cd
 int		ft_cd_case_double_dash(t_shell *shell, char ***args);
 char	*ft_strremoveprev(char *str, char *old, char *new);
@@ -59,7 +60,6 @@ void	delete_env_node(t_list **env, char *key);
 void	free_env(void *content);
 //env
 int		ft_env(char **args, t_shell *shell);
-
 int		ft_export(char **args, t_shell *shell);
 
 //parser
@@ -85,9 +85,12 @@ void	check_error(int status, char *message, char **args, char *path);
 int		pipex(int argc, char **argv, t_shell *shell);
 int		get_right_path_aux(char **cmd, char **path, int i, char **right_path);
 int		execve_error(char *path, char **args, t_shell *shell, int isparent);
+char	*ft_getdirs(char *cmd);
+int		get_right_path_aux2(char **cmd, char **right_path);
 
 //signals
 
-void	sigset(int a);
+void	main_handler(int signum);
+void	sigint_parent(int signum);
 
 #endif

@@ -6,11 +6,33 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 03:24:27 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/05/01 03:04:28 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+char	*ft_getdirs(char *cmd)
+{
+	char	*pwd;
+	char	*path;
+
+	pwd = getcwd(NULL, 0);
+	if ((cmd[0] == '.' && cmd[1] == '/') || (cmd[0] == '.' \
+	&& cmd[1] == '.' && cmd[2] == '/'))
+	{
+		path = ft_strjoinfree(pwd, "/");
+		path = ft_strjoinfree(path, cmd);
+		path = ft_cd_check_for_dots(path);
+	}
+	else
+	{
+		path = ft_strdup(cmd);
+		path = ft_cd_check_for_dots(path);
+		free(pwd);
+	}
+	return (path);
+}
 
 void	dup2pipe(int **fds, int i, t_shell *shell)
 {
@@ -41,6 +63,19 @@ void	dup2pipe(int **fds, int i, t_shell *shell)
 	}
 }
 
+int	get_right_path_aux2(char **cmd, char **right_path)
+{
+	if (cmd && ft_strchr(cmd[0], '/'))
+	{
+		*right_path = ft_getdirs(cmd[0]);
+		if (access(*right_path, F_OK) == 0)
+			return (1);
+		free(*right_path);
+		right_path = NULL;
+	}
+	return (0);
+}
+
 int	get_right_path_aux(char **cmd, char **path, int i, char **right_path)
 {
 	*right_path = ft_strjoin(path[i], "/");
@@ -53,6 +88,35 @@ int	get_right_path_aux(char **cmd, char **path, int i, char **right_path)
 	return (0);
 }
 
+void	redirect_files_aux(int cid, int i, t_shell *shell, int ***fds)
+{
+	int	j;
+
+	j = i;
+	signal(SIGINT, sigint_parent);
+	if (j == shell->arg_count - 1)
+	{
+		while (--j >= 0)
+		{
+			close((*fds)[j][0]);
+			close((*fds)[j][1]);
+		}
+	}
+	shell->pids[i] = cid;
+	if (i == shell->arg_count - 1)
+	{
+		waitpid(cid, &shell->proccess_status, 0);
+		while (--i >= 0)
+			waitpid(shell->pids[i], NULL, 0);
+		if (WIFEXITED(shell->proccess_status))
+			shell->exit_status = WEXITSTATUS(shell->proccess_status);
+		else if (WIFSIGNALED(shell->proccess_status))
+			shell->exit_status = 128 + WTERMSIG(shell->proccess_status);
+		if (shell->exit_status == 131)
+			ft_putstr_fd("Quit (core dumped)\n", 1);
+	}
+}
+/*
 void	heredoc(char *limiter)
 {
 	int		heredoc_fd;
@@ -72,30 +136,6 @@ void	heredoc(char *limiter)
 	close (heredoc_fd);
 }
 
-void	redirect_files_aux(int cid, int i, t_shell *shell, int ***fds)
-{
-	int	j;
-
-	j = i;
-	if (j == shell->arg_count - 1)
-	{
-		while (--j >= 0)
-		{
-			close((*fds)[j][0]);
-			close((*fds)[j][1]);
-		}
-	}
-	shell->pids[i] = cid;
-	if (i == shell->arg_count - 1)
-	{
-		waitpid(cid, &shell->proccess_status, 0);
-		while (--i >= 0)
-			waitpid(shell->pids[i], NULL, 0);
-		if (WIFEXITED(shell->proccess_status))
-			shell->exit_status = WEXITSTATUS(shell->proccess_status);
-	}
-}
-/*
 char	**last_one(char **argv, char **path, char **envp, int i)
 {
 	char	**args;

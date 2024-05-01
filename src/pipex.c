@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 22:31:04 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/05/01 03:01:45 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,23 +69,23 @@ char	*get_right_path(char **cmd, char **envp, char *right_path)
 		return (NULL);
 	path = ft_split(envp[i] + 5, ':');
 	i = -1;
-	while (cmd && path[++i] && *cmd[0] != '/')
+	while (cmd && path[++i] && !ft_strchr(cmd[0], '/'))
 	{
 		if (get_right_path_aux(cmd, path, i, &right_path))
 			return (right_path);
 		free(right_path);
 	}
 	free_array_of_strings(path);
-	if (cmd && *cmd[0] == '/' && access(*cmd, F_OK) == 0)
-		return (ft_strdup(*cmd));
+	if (get_right_path_aux2(cmd, &right_path))
+		return (right_path);
 	return (NULL);
 }
 
 static void	redirect_files(int i, char *argv[], t_shell *shell, int **fds)
 {
-	int		cid;
-	char	*path;
-	char	**args;
+	int					cid;
+	char				*path;
+	char				**args;
 
 	args = NULL;
 	path = NULL;
@@ -94,6 +94,8 @@ static void	redirect_files(int i, char *argv[], t_shell *shell, int **fds)
 	cid = fork();
 	if (cid == 0)
 	{
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
 		args = ft_splitquote_nulls(argv[ft_abs_value(i)], ' ');
 		path = get_right_path(args, shell->env_array, path);
 		dup2pipe(fds, i, shell);

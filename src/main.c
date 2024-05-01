@@ -6,11 +6,12 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/26 06:18:55 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/05/01 01:46:42 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include <signal.h>
 
 void	free_everything(t_shell *shell)
 {
@@ -102,10 +103,11 @@ int	main(int argc, char **argv, char **envp)
 	shell.env_array = env_to_array(shell.env);
 	while (1)
 	{
-		sigset(1);
+		signal(SIGINT, main_handler);
+		signal(SIGQUIT, SIG_IGN);
 		shell.input = readline("minishell$>");
 		if (shell.input == NULL)
-			break ;
+			ft_exit(NULL, &shell, NULL);
 		add_history(shell.input);
 		expand(&shell.input, &shell);
 		minishell(&shell);
