@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 10:04:45 by luguimar          #+#    #+#             */
-/*   Updated: 2024/05/03 09:11:12 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/05/03 23:49:07 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,15 @@ static int	redirects_input(t_shell *shell, int *i, int **fds, int in)
 	if (in)
 	{
 		if (k != 0)
-		{
-			close(fds[k - 1][1]);
-			close(fds[k][0]);
-		}
+			close(fds[k - 1][0]);
 		fd = open(file, O_RDONLY);
-		dup2(fd, 0);
 		if (fd == -1)
 		{
 			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(file, 2);
 			ft_putstr_fd(": No such file or directory\n", 2);
 			free(file);
-			return (1);
+			return (-1);
 		}
 	}
 	else
@@ -63,13 +59,13 @@ static int	redirects_input(t_shell *shell, int *i, int **fds, int in)
 			ft_putstr_fd(file, 2);
 			ft_putstr_fd(": No such file or directory\n", 2);
 			free(file);
-			return (1);
+			return (-1);
 		}
 		close(fd);
 	}
 	free(file);
 	*i = j;
-	return (0);
+	return (fd);
 }
 
 static int	redirects_heredoc(t_shell *shell, int *i, int **fds, int out)
@@ -102,11 +98,16 @@ static int	redirects_heredoc(t_shell *shell, int *i, int **fds, int out)
 	if (out)
 	{
 		if (k != 0)
-		{
-			close(fds[k - 1][1]);
-			close(fds[k][0]);
-		}
+			close(fds[k - 1][0]);
 		fd = open(".here_doc", O_RDWR | O_TRUNC | O_CREAT, 0664);
+		if (fd == -1)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(".here_doc", 2);
+			ft_putstr_fd(": failed to open\n", 2);
+			free(terminator);
+			return (-1);
+		}
 		ft_putchar_fd('>', 1);
 		line = get_next_line(0);
 		if (line && ft_strcmp(line, terminator) != 0)
@@ -119,12 +120,14 @@ static int	redirects_heredoc(t_shell *shell, int *i, int **fds, int out)
 			if (line && ft_strcmp(line, terminator) != 0)
 				write(fd, line, ft_strlen(line));
 		}
-		dup2(fd, 0);
 		free(line);
 		free(terminator);
+		close(fd);
+		fd = open(".here_doc", O_RDONLY);
 	}
 	else
 	{
+		fd = -1;
 		line = get_next_line(0);
 		while (line && ft_strcmp(line, terminator) != 0)
 		{
@@ -135,7 +138,7 @@ static int	redirects_heredoc(t_shell *shell, int *i, int **fds, int out)
 		free(terminator);
 	}
 	*i = j;
-	return (0);
+	return (fd);
 }
 
 static int	redirects_in_extra(t_shell *shell, int last_input, int **fds)
@@ -157,10 +160,9 @@ static int	redirects_in_extra(t_shell *shell, int last_input, int **fds)
 		i++;
 	}
 	if (shell->input[i + 1] == '<')
-		redirects_heredoc(shell, &i, fds, 1);
+		return (redirects_heredoc(shell, &i, fds, 1));
 	else
-		redirects_input(shell, &i, fds, 1);
-	return (0);
+		return (redirects_input(shell, &i, fds, 1));
 }
 
 static int	redirects_in_handler(t_shell *shell, int i, int **fds)
@@ -189,10 +191,9 @@ static int	redirects_in_handler(t_shell *shell, int i, int **fds)
 		j++;
 	}
 	if (last_input == 0)
-		return (0);
+		return (-1);
 	else
-		redirects_in_extra(shell, last_input, fds);
-	return (1);
+		return (redirects_in_extra(shell, last_input, fds));
 }
 
 static int	redirects_output(t_shell *shell, int *i, int **fds, int out)
@@ -223,10 +224,7 @@ static int	redirects_output(t_shell *shell, int *i, int **fds, int out)
 	if (out)
 	{
 		if (k != shell->arg_count - 1)
-		{
-			close(fds[k + 1][0]);
 			close(fds[k][1]);
-		}
 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
 		{
@@ -234,9 +232,8 @@ static int	redirects_output(t_shell *shell, int *i, int **fds, int out)
 			ft_putstr_fd(file, 2);
 			ft_putstr_fd(": No such file or directory\n", 2);
 			free(file);
-			return (1);
+			return (-1);
 		}
-		dup2(fd, 1);
 	}
 	else
 	{
@@ -247,13 +244,13 @@ static int	redirects_output(t_shell *shell, int *i, int **fds, int out)
 			ft_putstr_fd(file, 2);
 			ft_putstr_fd(": No such file or directory\n", 2);
 			free(file);
-			return (1);
+			return (-1);
 		}
 		close(fd);
 	}
 	free(file);
 	*i = j;
-	return (0);
+	return (fd);
 }
 
 static int	redirects_append(t_shell *shell, int *i, int **fds, int out)
@@ -284,10 +281,7 @@ static int	redirects_append(t_shell *shell, int *i, int **fds, int out)
 	if (out)
 	{
 		if (k != shell->arg_count - 1)
-		{
-			close(fds[k + 1][0]);
 			close(fds[k][1]);
-		}
 		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd == -1)
 		{
@@ -295,9 +289,8 @@ static int	redirects_append(t_shell *shell, int *i, int **fds, int out)
 			ft_putstr_fd(file, 2);
 			ft_putstr_fd(": No such file or directory\n", 2);
 			free(file);
-			return (1);
+			return (-1);
 		}
-		dup2(fd, 1);
 	}
 	else
 	{
@@ -308,13 +301,13 @@ static int	redirects_append(t_shell *shell, int *i, int **fds, int out)
 			ft_putstr_fd(file, 2);
 			ft_putstr_fd(": No such file or directory\n", 2);
 			free(file);
-			return (1);
+			return (-1);
 		}
 		close(fd);
 	}
 	free(file);
 	*i = j;
-	return (0);
+	return (fd);
 }
 
 static int	redirects_out_handler_extra(t_shell *shell, int last_output, int **fds)
@@ -336,10 +329,9 @@ static int	redirects_out_handler_extra(t_shell *shell, int last_output, int **fd
 		i++;
 	}
 	if (shell->input[i + 1] == '>')
-		redirects_append(shell, &i, fds, 1);
+		return (redirects_append(shell, &i, fds, 1));
 	else
-		redirects_output(shell, &i, fds, 1);
-	return (0);
+		return (redirects_output(shell, &i, fds, 1));
 }
 
 static int	redirects_out_handler(t_shell *shell, int i, int **fds)
@@ -369,10 +361,9 @@ static int	redirects_out_handler(t_shell *shell, int i, int **fds)
 		j++;
 	}
 	if (last_output == 0)
-		return (0);
+		return (-1);
 	else
-		redirects_out_handler_extra(shell, last_output, fds);
-	return (1);
+		return (redirects_out_handler_extra(shell, last_output, fds));
 }
 
 char	*remove_redirects(char **new_input, char **args)
@@ -412,25 +403,65 @@ char	*remove_redirects(char **new_input, char **args)
 
 int	redirects_handler(t_shell *shell, int i, int **fds, char **args)
 {
-	int		in;
-	int		out;
+	int		file_in;
+	int		file_out;
 	char	*new_input;
 
-	in = 0;
-	out = 0;
 	new_input = NULL;
-	in = redirects_in_handler(shell, i, fds);
-	out = redirects_out_handler(shell, i, fds);
+	file_in = redirects_in_handler(shell, i, fds);
+	file_out = redirects_out_handler(shell, i, fds);
 	while (remove_redirects(&new_input, args))
 	{
-		free(shell->input);
+		free(*args);
 		*args = new_input;
 	}
-	if (in && !out)
-		return (1);
-	else if (out && !in)
-		return (2);
-	else if (in && out)
-		return (3);
+	if (i == 0 && i != shell->arg_count - 1)
+	{
+		if (file_out == -1)
+			dup2(fds[i][1], STDOUT_FILENO);
+		else
+		{
+			close(fds[i][1]);
+			dup2(file_out, STDOUT_FILENO);
+		}
+		close(fds[i][0]);
+	}
+	else if (i == shell->arg_count - 1 && i != 0)
+	{
+		if (file_in == -1)
+			dup2(fds[i - 1][0], STDIN_FILENO);
+		else
+		{
+			close(fds[i - 1][0]);
+			dup2(file_in, STDIN_FILENO);
+		}
+		close(fds[i - 1][1]);
+	}
+	else if (i != 0 && i != shell->arg_count - 1)
+	{
+		if (file_in == -1)
+			dup2(fds[i - 1][0], STDIN_FILENO);
+		else
+		{
+			close(fds[i - 1][0]);
+			dup2(file_in, STDIN_FILENO);
+		}
+		if (file_out == -1)
+			dup2(fds[i][1], STDOUT_FILENO);
+		else
+		{
+			close(fds[i][1]);
+			dup2(file_out, STDOUT_FILENO);
+		}
+		close(fds[i - 1][1]);
+		close(fds[i][0]);
+	}
+	else if (i == 0 && i == shell->arg_count - 1)
+	{
+		if (file_out != -1)
+			dup2(file_out, STDOUT_FILENO);
+		if (file_in != -1)
+			dup2(file_in, STDIN_FILENO);
+	}
 	return (0);
 }

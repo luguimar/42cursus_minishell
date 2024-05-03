@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/05/03 08:09:19 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/05/04 00:36:03 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,23 +43,6 @@ void	dup2pipe(int **fds, int i, t_shell *shell, char **args)
 	{
 		close(fds[j][0]);
 		close(fds[j][1]);
-	}
-	if (i == 0 && i != shell->arg_count - 1)
-	{
-		dup2(fds[i][1], STDOUT_FILENO);
-		close(fds[i][0]);
-	}
-	else if (i == shell->arg_count - 1 && i != 0)
-	{
-		dup2(fds[i - 1][0], STDIN_FILENO);
-		close(fds[i - 1][1]);
-	}
-	else if (i != 0 && i != shell->arg_count - 1)
-	{
-		dup2(fds[i - 1][0], STDIN_FILENO);
-		dup2(fds[i][1], STDOUT_FILENO);
-		close(fds[i - 1][1]);
-		close(fds[i][0]);
 	}
 	redirects_handler(shell, i, fds, args);
 }
@@ -116,6 +99,7 @@ void	redirect_files_aux(int cid, int i, t_shell *shell, int ***fds)
 		if (shell->exit_status == 131)
 			ft_putstr_fd("Quit (core dumped)\n", 1);
 	}
+	unlink(".here_doc");
 }
 /*
 void	heredoc(char *limiter)
