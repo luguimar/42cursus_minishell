@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/05/01 03:03:38 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/05/03 09:21:18 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	expand(char **input, t_shell *shell);
 
 //pipes
 
-void	dup2pipe(int **fds, int i, t_shell *shell);
+void	dup2pipe(int **fds, int i, t_shell *shell, char **args);
 void	dup2redirect(int *fd, char **argv, t_shell *shell, int i);
 void	heredoc(char *limiter);
 void	redirect_files_aux(int cid, int i, t_shell *shell, int ***fds);
@@ -92,5 +92,9 @@ int		get_right_path_aux2(char **cmd, char **right_path);
 
 void	main_handler(int signum);
 void	sigint_parent(int signum);
+
+//redirects
+
+int		redirects_handler(t_shell *shell, int i, int **fds, char **args);
 
 #endif
