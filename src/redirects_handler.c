@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 10:04:45 by luguimar          #+#    #+#             */
-/*   Updated: 2024/05/03 23:49:07 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/05/16 21:18:20 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ static int	redirects_in_handler(t_shell *shell, int i, int **fds)
 		if (is_c_not_in_quotes(shell->input, j, '|'))
 			last_input++;
 	}
-	last_input = 0;
+	last_input = -1;
 	while (shell->input[j] && !is_c_not_in_quotes(shell->input, j, '|'))
 	{
 		if (is_c_not_in_quotes(shell->input, j, '<'))
@@ -190,7 +190,7 @@ static int	redirects_in_handler(t_shell *shell, int i, int **fds)
 		}
 		j++;
 	}
-	if (last_input == 0)
+	if (last_input == -1)
 		return (-1);
 	else
 		return (redirects_in_extra(shell, last_input, fds));
@@ -350,6 +350,7 @@ static int	redirects_out_handler(t_shell *shell, int i, int **fds)
 		if (is_c_not_in_quotes(shell->input, j, '|'))
 			k++;
 	}
+	last_output = -1;
 	while (shell->input[j] && !is_c_not_in_quotes(shell->input, j, '|'))
 	{
 		if (is_c_not_in_quotes(shell->input, j, '>'))
@@ -360,7 +361,7 @@ static int	redirects_out_handler(t_shell *shell, int i, int **fds)
 		}
 		j++;
 	}
-	if (last_output == 0)
+	if (last_output == -1)
 		return (-1);
 	else
 		return (redirects_out_handler_extra(shell, last_output, fds));
@@ -425,6 +426,8 @@ int	redirects_handler(t_shell *shell, int i, int **fds, char **args)
 			dup2(file_out, STDOUT_FILENO);
 		}
 		close(fds[i][0]);
+		if (file_in != -1)
+			dup2(file_in, STDIN_FILENO);
 	}
 	else if (i == shell->arg_count - 1 && i != 0)
 	{
@@ -436,6 +439,8 @@ int	redirects_handler(t_shell *shell, int i, int **fds, char **args)
 			dup2(file_in, STDIN_FILENO);
 		}
 		close(fds[i - 1][1]);
+		if (file_out != -1)
+			dup2(file_out, STDOUT_FILENO);
 	}
 	else if (i != 0 && i != shell->arg_count - 1)
 	{
