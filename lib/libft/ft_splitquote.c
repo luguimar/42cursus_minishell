@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 20:46:24 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/27 03:45:56 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/05/03 01:25:16 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static void	ft_remove_quotes_aux(char *str, char *new)
 	new[j] = '\0';
 }
 
-static char	*ft_remove_quotes(char *str)
+char	*ft_remove_quotes(char *str)
 {
 	int		quote_count;
 	char	*new;
