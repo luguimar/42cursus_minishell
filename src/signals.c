@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 20:01:48 by jduraes-          #+#    #+#             */
-/*   Updated: 2024/04/23 20:25:26 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/04/30 22:51:39 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,31 @@ static void	cathandler(int sig)
 		return ;
 }
 
+static void	dumphandler(int sig)
+{
+	t_shell	*shell;
+
+	shell = getshell(0);
+	if (sig == SIGQUIT)
+		kill(shell->pids[shell->arg_count - 1], SIGQUIT);
+	else
+		return ;
+}
+
+static void	cdumphandler(int sig)
+{
+	//t_shell	*shell;
+
+	//shell = getshell(0);
+	if (sig == SIGQUIT)
+	{
+		write(1, "Quit (core dumped)\n", 19);
+		//kill(shell->pids[shell->arg_count - 1], SIGQUIT);
+	}
+	else
+		return ;
+}
+
 void	sigset(int a)
 {
 	if (a == 1)
@@ -47,4 +72,8 @@ void	sigset(int a)
 	}
 	if (a == 2)
 		signal(SIGINT, cathandler);
+	if (a == 3)
+		signal(SIGQUIT, cdumphandler);
+	if (a == 4)
+	    signal(SIGINT, dumphandler);
 }

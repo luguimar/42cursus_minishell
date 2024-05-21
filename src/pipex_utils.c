@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 03:24:27 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/30 22:53:01 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ void	redirect_files_aux(int cid, int i, t_shell *shell, int ***fds)
 		}
 	}
 	shell->pids[i] = cid;
+	sigset(4);
+	getshell(shell);
 	if (i == shell->arg_count - 1)
 	{
 		waitpid(cid, &shell->proccess_status, 0);

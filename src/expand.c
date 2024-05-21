@@ -5,75 +5,46 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/24 18:28:57 by jduraes-          #+#    #+#             */
-/*   Updated: 2024/04/24 20:57:55 by jduraes-         ###   ########.fr       */
+/*   Created: 2024/05/21 19:58:13 by jduraes-          #+#    #+#             */
+/*   Updated: 2024/05/21 21:53:18 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void freenull(char **str)
+static char	*expand_aux(char *key, t_shell *shell)
 {
-    free(*str);
-    *str = NULL;
-}
-
-static char	*expand_aux(char *key, t_list *env)
-{
-	char    *value;
-	char 	*newkey;
-	t_list    *tmp;
-	t_env		*env_var;
-
-	tmp = env;
-	if (key[0] == '\'')
-		newkey = ft_substr(key, 2, ft_strlen(key) - 1);
+	if (get_env_value(shell->env, key) != NULL)
+		return (ft_strdup(get_env_value(shell->env, key)));
 	else
-		newkey = ft_substr(key, 1, ft_strlen(key) - 1);
-	free(key);
-	while (tmp->next)
-	{
-		env_var = (t_env *)tmp->content;
-		if (ft_strncmp(env_var->key, newkey, ft_strlen(newkey)) == 0)
-		{
-			value = ft_strdup(env_var->value);
-			return (value);
-		}
-		tmp = tmp->next;
-	}
-	return (NULL);
+		return (NULL);
 }
 
-void	expand(t_shell *shell)
+void	expand(char **inputt, t_shell *shell)
 {
-	char	*newarg;
-	char	**args;
-	int		i;
+	int	i;
+	int	s;
+	char	*new;
+	char	*input;
 
 	i = 0;
-	args = ft_split(shell->input, ' ');
-	newarg = NULL; 
-	while (args[i] != NULL)
+	s = 0;
+	input = ft_strdup(*inputt);
+	while (input[i] != '\0')
 	{
-		if (args[i][0] == '$' || (args[i][0] == '\'' && args[i][1] == '$' && args[i][ft_strlen(args[i] - 1)] == '\''))
+		if (input[i] == '$' && inquote(input, i) != '\'')
 		{
-			newarg = expand_aux(args[i], shell->env);
-			if (newarg == NULL)
-			    newarg = ft_strdup("\n");
-			args[i] = ft_strdup(newarg);
+			while (input[i + 1 + s] != '\0' && \
+				!ft_is_special_char(input[i + 1 + s]))
+				s++;
+			if (s)
+			{
+				new = ft_strjoin(ft_substr(input, 0, i), \
+					expand_aux(ft_substr(input, i + 1, s), shell));
+				*inputt = ft_strjoin(new, \
+					ft_substr(input, i + s + 1, ft_strlen(input) - (i + s)));
+			}
 		}
 		i++;
 	}
-	if (newarg == NULL)
-		return ;
-	i = 0;
-	freenull(&newarg);
-	newarg = ft_strdup(args[i++]);
-	while (args[i] != NULL)
-	{
-		newarg = ft_strjoinfree(newarg, " ");
-		newarg = ft_strjoinfreeall(newarg, args[i++]);
-	}
-	free(shell->input);
-	shell->input = newarg;
 }

@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 19:54:45 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/04/30 21:45:01 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ int	minishell(t_shell *shell)
 {
 	char	**args;
 
-	if (shell->input[0] == '|' || shell->input[ft_strlen \
-	(shell->input) - 1] == '|')
+	if (shell->input[0] == '|' || (ft_strlen(shell->input) != 0 && \
+	shell->input[ft_strlen(shell->input) - 1] == '|'))
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
 		return (0);
@@ -77,7 +77,7 @@ int	minishell(t_shell *shell)
 	shell->arg_count = ft_matrixlen((void **) args);
 	if (ft_matrixlen((void **) args) == 1)
 	{
-		if (exec_builtin(args, shell))
+		if (exec_builtin(args, shell, 0))
 		{
 			free_array_of_strings(args);
 			return (0);
@@ -86,6 +86,15 @@ int	minishell(t_shell *shell)
 	pipex(shell->arg_count, args, shell);
 	free_array_of_strings(args);
 	return (0);
+}
+
+t_shell	*getshell(t_shell *shell)
+{
+	static t_shell	*new;
+
+	if (shell)
+		new = shell;
+	return (new);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -107,7 +116,8 @@ int	main(int argc, char **argv, char **envp)
 		if (shell.input == NULL)
 			break ;
 		add_history(shell.input);
-		expand(&shell);
+		expand(&shell.input, &shell);
+		getshell(&shell);
 		minishell(&shell);
 		free(shell.input);
 	}

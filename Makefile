@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+         #
+#    By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/12 19:10:12 by luguimar          #+#    #+#              #
-#    Updated: 2024/04/25 20:02:26 by jduraes-         ###   ########.fr        #
+#    Updated: 2024/04/26 05:07:20 by luguimar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,14 @@ clean:
 fclean: clean
 		${MAKE} ${LIBFT_PATH} fclean
 		${RM} ${NAME}
+		${RM} output.log
 
 re: fclean clean all
 
-.PHONY: all clean fclean re
+run: clear all
+	./minishell
+
+leaks: readline.supp all
+	valgrind -s --suppressions=readline.supp --leak-check=full --show-leak-kinds=all ./minishell #--log-file=output.log 
+
+.PHONY: all clean fclean re run leaks

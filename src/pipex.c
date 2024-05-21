@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 03:26:25 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/04/30 22:51:45 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	exec_command(char *path, t_shell *shell, char **args, int isparent)
 {
-	if (exec_builtin(args, shell))
+	if (exec_builtin(args, shell, 1))
 	{
 		free_everything(shell);
 		free_array_of_strings(args);
@@ -92,6 +92,7 @@ static void	redirect_files(int i, char *argv[], t_shell *shell, int **fds)
 	if (i < shell->arg_count - 1)
 		check_error(pipe(fds[i]), "pipe", args, path);
 	cid = fork();
+	sigset(3);
 	if (cid == 0)
 	{
 		args = ft_splitquote_nulls(argv[ft_abs_value(i)], ' ');
@@ -111,6 +112,8 @@ int	pipex(int argc, char **argv, t_shell *shell)
 	int		i;
 	int		original_stdin;
 
+	if (argc == 0)
+		return (1);
 	fds = malloc(sizeof(int *) * argc - 1);
 	if (!fds)
 		return (0);

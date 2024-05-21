@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 19:06:03 by jduraes-          #+#    #+#             */
-/*   Updated: 2024/04/23 20:12:55 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/04/25 23:33:58 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,12 @@ int	ft_echo(char **args)
 	}
 	while (args[i])
 	{
-		ft_putstr_fd(args[i++], 1);
-		if (args[i + 1])
+		ft_putstr_fd(args[i], 1);
+		if (args[i++ + 1])
 			ft_putchar_fd(' ', 1);
 	}
 	if (!n)
 		ft_putchar_fd('\n', 1);
+	free_array_of_strings(args);
 	return (1);
 }
