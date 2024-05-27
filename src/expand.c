@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:58:13 by jduraes-          #+#    #+#             */
-/*   Updated: 2024/05/27 18:17:32 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/05/27 18:19:46 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ static void	expandqm(char **input, char *key, int i, int *s)
 			ft_substr(*input, i + *s + 1, ft_strlen(*input) - (i + *s)));
 		free(*input);
 		*s = 0;
-		*input = ft_strdup(new);
-		free(new);
+		*input = new;
 	}
 	else
 		*s = 0;
