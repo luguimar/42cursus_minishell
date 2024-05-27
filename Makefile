@@ -51,6 +51,6 @@ run: clear all
 	./minishell
 
 leaks: readline.supp all
-	valgrind -s --suppressions=readline.supp --leak-check=full --show-leak-kinds=all ./minishell #--log-file=output.log 
+	valgrind -s --suppressions=readline.supp --leak-check=full --show-leak-kinds=all ./minishell --log-file=output.log 
 
 .PHONY: all clean fclean re run leaks

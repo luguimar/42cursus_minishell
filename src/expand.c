@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:58:13 by jduraes-          #+#    #+#             */
-/*   Updated: 2024/05/23 21:36:40 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/05/27 17:26:12 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,21 @@ static char	*expand_aux(char *key, t_shell *shell)
 		return (value);
 	}
 	else
+	{
+		free(key);
 		return (NULL);
+	}
 }
 
-static char	*expandqm(char **input, char *key, int *i, int *s)
+static char	*expandqm(char **input, char *key, int i, int *s)
 {
 	char	*new;
 
 	if (key)
 	{
-		new = ft_strjoinfreeall(ft_substr(*input, 0, *i), key);
+		new = ft_strjoinfreeall(ft_substr(*input, 0, i), key);
 		new = ft_strjoinfreeall(new, \
-			ft_substr(*input, *i + *s + 1, ft_strlen(*input) - (*i + *s)));
+			ft_substr(*input, i + *s + 1, ft_strlen(*input) - (i + *s)));
 		free(*input);
 		*s = 0;
 		*input = ft_strdup(new);
@@ -47,33 +50,31 @@ static char	*expandqm(char **input, char *key, int *i, int *s)
 	}
 }
 
-void	expand(char **inputt, t_shell *shell, int i, int s)
+void	expand(char **input, t_shell *shell, int i, int s)
 {
-	char	*input;
+	char	*tinput;
 
-	input = ft_strdup(*inputt);
-	while (input[++i] != '\0')
+	tinput = ft_strdup(*input);
+	while (tinput[++i] != '\0')
 	{
-		if (input[i] == '$' && inquote(input, i) != '\'')
+		if (tinput[i] == '$' && inquote(tinput, i) != '\'')
 		{
-			while (input[i + 1 + s] != '\0' && \
-				!ft_is_special_char(input[i + 1 + s]))
+			while (tinput[i + 1 + s] != '\0'
+				&& !ft_is_special_char(tinput[i + 1 + s]))
 				s++;
 			if (s)
 			{
-				free(*inputt);
-				*inputt = expandqm(&input, \
-					expand_aux(ft_substr(input, i + 1, s), shell), &i, &s);
+				free(*input);
+				*input = expandqm(&tinput, \
+					expand_aux(ft_substr(tinput, i + 1, s), shell), i, &s);
 			}
-			else if (input[i + 1] == '?')
+			else if (s++ == 0 && tinput[i + 1] == '?' && tinput[i] != '\0')
 			{
-				s++;
-				free(*inputt);
-				*inputt = expandqm(&input, \
-					ft_itoa(shell->exit_status), &i, &s);
+				free(*input);
+				*input = expandqm(&tinput, \
+					ft_itoa(shell->exit_status), i, &s);
 			}
 		}
 	}
-	if (input)
-		free(input);
+	free(tinput);
 }
