@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 20:01:48 by jduraes-          #+#    #+#             */
-/*   Updated: 2024/04/30 22:51:39 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/06/04 20:40:01 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ static void	dumphandler(int sig)
 
 	shell = getshell(0);
 	if (sig == SIGQUIT)
+	{
 		kill(shell->pids[shell->arg_count - 1], SIGQUIT);
+	}
 	else
 		return ;
 }
@@ -75,5 +77,5 @@ void	sigset(int a)
 	if (a == 3)
 		signal(SIGQUIT, cdumphandler);
 	if (a == 4)
-	    signal(SIGINT, dumphandler);
+		signal(SIGINT, dumphandler);
 }

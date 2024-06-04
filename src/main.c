@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/05/27 18:13:22 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/06/04 19:59:28 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ void	free_everything(t_shell *shell)
 			free(tmp);
 		}
 	}
-	free(shell->env_array);
-	free(shell->input);
+	if (shell->env_array)
+		free(shell->env_array);
+	if (shell->input)
+		free(shell->input);
 	rl_clear_history();
 }
 
@@ -113,8 +115,14 @@ int	main(int argc, char **argv, char **envp)
 	{
 		sigset(1);
 		shell.input = readline("minishell$>");
-		if (shell.input == NULL)
-			break ;
+		/*if (shell.input == NULL)
+			break ;*/
+		if (!(shell.input))
+		{
+			write(1, "exit\n", 5);
+			free_everything(&shell);
+			return (0);
+		}
 		add_history(shell.input);
 		expand(&shell, -1, 0);
 		getshell(&shell);

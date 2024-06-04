@@ -122,14 +122,11 @@ int	pipex(int argc, char **argv, t_shell *shell)
 		fds[i] = malloc(sizeof(int) * 2);
 	original_stdin = dup(STDIN_FILENO);
 	shell->pids = malloc(sizeof(int) * argc);
-	//dup2redirect(fd, argv, shell, i);
 	i = -1;
 	while (++i < argc)
 		redirect_files(i, argv, shell, fds);
 	dup2(original_stdin, STDIN_FILENO);
 	free_array_of_ints(fds, argc - 1);
 	free(shell->pids);
-	/*args = last_one(argv, &path, shell->env_array, i);
-	exec_command(path, shell, args, 1);*/
 	return (1);
 }
