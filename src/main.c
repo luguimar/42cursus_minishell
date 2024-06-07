@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/04 19:59:28 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/06/07 18:15:55 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ int	main(int argc, char **argv, char **envp)
 			return (0);
 		}
 		add_history(shell.input);
-		expand(&shell, -1, 0);
+		expand(&(shell.input), &shell, -1, 0);
 		getshell(&shell);
 		minishell(&shell);
 		free(shell.input);

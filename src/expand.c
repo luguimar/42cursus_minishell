@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:58:13 by jduraes-          #+#    #+#             */
-/*   Updated: 2024/05/27 18:19:46 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/06/07 18:23:27 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void	expandqm(char **input, char *key, int i, int *s)
 		*s = 0;
 }
 
-void	expand(t_shell *shell, int i, int s)
+/*void	expand(t_shell *shell, int i, int s)
 {
 	while (shell->input[++i] != '\0')
 	{
@@ -70,5 +70,29 @@ void	expand(t_shell *shell, int i, int s)
 			}
 		}
 	}
-}
+}*/
 
+void	expand(char **input, t_shell *shell, int i, int s)
+{
+	while ((*input)[++i] != '\0')
+	{
+		if ((*input)[i] == '$' && inquote(*input, i) != '\'')
+		{
+			while ((*input)[i + 1 + s] != '\0'
+				&& !ft_is_special_char((*input)[i + 1 + s]))
+				s++;
+			if (s)
+			{
+				expandqm(input, \
+					expand_aux(ft_substr(*input, i + 1, s), \
+						shell), i, &s);
+			}
+			else if ((*input)[i + 1] == '?' && (*input)[i] != '\0')
+			{
+				s++;
+				expandqm(input, \
+					ft_itoa(shell->exit_status), i, &s);
+			}
+		}
+	}
+}
