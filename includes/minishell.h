@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/05/03 09:21:18 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/11 20:47:23 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	add_env(t_shell *shell, char *key, char *value);
 int		change_value(t_list *env, char *key, char *value);
 char	*get_env_value(t_list *env, char *key);
 void	free_everything(t_shell *shell);
-void	expand(char **input, t_shell *shell);
+void	expand(char **input, t_shell *shell, int i, int s);
 
 //pipes
 

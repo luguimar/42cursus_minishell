@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 10:04:45 by luguimar          #+#    #+#             */
-/*   Updated: 2024/05/16 21:18:20 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/12 15:19:22 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static int	redirects_input(t_shell *shell, int *i, int **fds, int in)
 	int		fd;
 
 	k = 0;
+	j = 0;
 	while (j < *i)
 	{
 		if (is_c_not_in_quotes(shell->input, j, '|'))
