@@ -51,9 +51,12 @@ exec_builtin	src/builtins.c	/^int	exec_builtin(char **args, t_shell *shell, int 
 exec_command	src/pipex.c	/^static void	exec_command(char *path, t_shell *shell, char **args, int isparent)$/;"	f	file:
 execve_error	src/errors.c	/^int	execve_error(char *path, char **args, t_shell *shell, int isparent)$/;"	f
 exit_status	includes/minishell.h	/^	int		exit_status;$/;"	m	struct:s_shell
-expand	src/expand.c	/^void	expand(char **input, t_shell *shell)$/;"	f
-expand_aux	src/expand.c	/^static int	expand_aux(char **input, t_shell *shell, int j)$/;"	f	file:
-expand_aux_aux	src/expand.c	/^static int	expand_aux_aux(char ***keyandmore, t_shell *shell, int i)$/;"	f	file:
+expand	src/expand.c	/^void	expand(char **input, t_shell *shell, int i, int s)$/;"	f
+expand	src/expandold.c	/^void	expand(char **input, t_shell *shell)$/;"	f
+expand_aux	src/expand.c	/^static char	*expand_aux(char *key, t_shell *shell)$/;"	f	file:
+expand_aux	src/expandold.c	/^static int	expand_aux(char **input, t_shell *shell, int j)$/;"	f	file:
+expand_aux_aux	src/expandold.c	/^static int	expand_aux_aux(char ***keyandmore, t_shell *shell, int i)$/;"	f	file:
+expandqm	src/expand.c	/^static void	expandqm(char **input, char *key, int *i, int *s)$/;"	f	file:
 export_version	includes/minishell.h	/^	char	*export_version;$/;"	m	struct:s_env
 free_array_of_ints	lib/libft/free_array_of_ints.c	/^void	free_array_of_ints(int **array, int size)$/;"	f
 free_array_of_strings	lib/libft/free_array_of_strings.c	/^void	free_array_of_strings(char **str)$/;"	f

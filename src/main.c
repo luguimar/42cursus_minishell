@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/05/01 01:46:42 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/12 11:37:48 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,16 @@ static int	check_args(char **args)
 int	minishell(t_shell *shell)
 {
 	char	**args;
+	int		i;
 
+	i = -1;
 	if (shell->input[0] == '|' || (ft_strlen(shell->input) != 0 && \
 	shell->input[ft_strlen(shell->input) - 1] == '|'))
-	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
-		return (0);
-	}
+		return (ft_putstr_fd \
+		("minishell: syntax error near unexpected token `|'\n", 2), 0);
 	args = ft_split_if_not_in_quote(shell->input, '|');
+	while (args[++i])
+		expand(&args[i], shell, -1, 0);
 	if (args == NULL)
 		return (1);
 	if (!check_args(args))
@@ -79,10 +81,7 @@ int	minishell(t_shell *shell)
 	if (ft_matrixlen((void **) args) == 1)
 	{
 		if (exec_builtin(args, shell, 0))
-		{
-			free_array_of_strings(args);
-			return (0);
-		}
+			return (free_array_of_strings(args), 0);
 	}
 	pipex(shell->arg_count, args, shell);
 	free_array_of_strings(args);
@@ -109,7 +108,6 @@ int	main(int argc, char **argv, char **envp)
 		if (shell.input == NULL)
 			ft_exit(NULL, &shell, NULL);
 		add_history(shell.input);
-		expand(&shell.input, &shell);
 		minishell(&shell);
 		free(shell.input);
 	}
