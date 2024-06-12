@@ -6,7 +6,7 @@
 #    By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/12 19:10:12 by luguimar          #+#    #+#              #
-#    Updated: 2024/05/03 09:20:53 by luguimar         ###   ########.fr        #
+#    Updated: 2024/06/12 15:17:16 by luguimar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,6 @@ run: clear all
 	./minishell
 
 leaks: readline.supp all
-	valgrind -s --suppressions=readline.supp --leak-check=full --show-leak-kinds=all --log-file=output.log ./minishell
+	valgrind -s --suppressions=readline.supp --leak-check=full --show-leak-kinds=all ./minishell #--log-file=output.log 
 
 .PHONY: all clean fclean re run leaks
