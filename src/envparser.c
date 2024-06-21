@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 23:50:43 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/28 08:25:37 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/21 07:48:26 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,14 @@ t_env	*envnew(char *key, char *value, char *env_i, int is_just_exported)
 	new->is_just_exported = is_just_exported;
 	new->export_version = ft_strdup("declare -x ");
 	new->export_version = ft_strjoinfree(new->export_version, key);
-	if (!is_just_exported)
-	{
-		new->export_version = ft_strjoinfree(new->export_version, "=\"");
-		new->export_version = ft_strjoinfree(new->export_version, value);
-		new->export_version = ft_strjoinfree(new->export_version, "\"");
-	}
-	else if (is_just_exported == 1)
-		new->export_version = ft_strjoinfree(new->export_version, "=\"\"");
+	//if (!is_just_exported)
+	//{
+	new->export_version = ft_strjoinfree(new->export_version, "=\"");
+	new->export_version = ft_strjoinfree(new->export_version, value);
+	new->export_version = ft_strjoinfree(new->export_version, "\"");
+	//}
+	//else if (is_just_exported == 1)
+	//new->export_version = ft_strjoinfree(new->export_version, "=\"\"");
 	if (!new->full)
 		return (NULL);
 	return (new);

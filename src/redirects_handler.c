@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 10:04:45 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/12 15:19:22 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/21 04:59:39 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -423,8 +423,8 @@ int	redirects_handler(t_shell *shell, int i, int **fds, char **args)
 			dup2(fds[i][1], STDOUT_FILENO);
 		else
 		{
-			close(fds[i][1]);
 			dup2(file_out, STDOUT_FILENO);
+			close(fds[i][1]);
 		}
 		close(fds[i][0]);
 		if (file_in != -1)
@@ -436,8 +436,8 @@ int	redirects_handler(t_shell *shell, int i, int **fds, char **args)
 			dup2(fds[i - 1][0], STDIN_FILENO);
 		else
 		{
-			close(fds[i - 1][0]);
 			dup2(file_in, STDIN_FILENO);
+			close(fds[i - 1][0]);
 		}
 		close(fds[i - 1][1]);
 		if (file_out != -1)
@@ -449,15 +449,15 @@ int	redirects_handler(t_shell *shell, int i, int **fds, char **args)
 			dup2(fds[i - 1][0], STDIN_FILENO);
 		else
 		{
-			close(fds[i - 1][0]);
 			dup2(file_in, STDIN_FILENO);
+			close(fds[i - 1][0]);
 		}
 		if (file_out == -1)
 			dup2(fds[i][1], STDOUT_FILENO);
 		else
 		{
-			close(fds[i][1]);
 			dup2(file_out, STDOUT_FILENO);
+			close(fds[i][1]);
 		}
 		close(fds[i - 1][1]);
 		close(fds[i][0]);

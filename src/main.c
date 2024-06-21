@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/12 11:37:48 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/21 04:51:21 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ int	minishell(t_shell *shell)
 {
 	char	**args;
 	int		i;
+	int		orig_stdout;
+	int		orig_stdin;
 
 	i = -1;
 	if (shell->input[0] == '|' || (ft_strlen(shell->input) != 0 && \
@@ -80,8 +82,23 @@ int	minishell(t_shell *shell)
 	shell->arg_count = ft_matrixlen((void **) args);
 	if (ft_matrixlen((void **) args) == 1)
 	{
+		orig_stdout = dup(STDOUT_FILENO);
+		orig_stdin = dup(STDIN_FILENO);
 		if (exec_builtin(args, shell, 0))
+		{
+			dup2(orig_stdout, STDOUT_FILENO);
+			dup2(orig_stdin, STDIN_FILENO);
+			close(orig_stdout);
+			close(orig_stdin);
 			return (free_array_of_strings(args), 0);
+		}
+		else
+		{
+			dup2(orig_stdout, STDOUT_FILENO);
+			dup2(orig_stdin, STDIN_FILENO);
+			close(orig_stdout);
+			close(orig_stdin);
+		}
 	}
 	pipex(shell->arg_count, args, shell);
 	free_array_of_strings(args);

@@ -1,0 +1,18 @@
+solve redirects on builtins and heredoc before pipes
+solve export
+solve null env
+solve norminette
+solve unprotected mallocs
+solve leaks
+solve null pwd
+solve exit codes on builtins
+solve exit codes on signals
+solve exit codes on heredoc
+apply expand on heredoc
+solve + sign in exit command
+check errors in sintax
+
+
+cat << 
+$(shuf -i 1-100 -n 100 | tr "\n" " ")
+cat | cat | coisa

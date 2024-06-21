@@ -6,13 +6,13 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/05/03 08:30:10 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/21 04:52:31 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	exec_command(char *path, t_shell *shell, char **args, int isparent)
+static void	exec_command(char *path, t_shell *shell, char **args)
 {
 	if (exec_builtin(args, shell, 1))
 	{
@@ -24,8 +24,6 @@ static void	exec_command(char *path, t_shell *shell, char **args, int isparent)
 	}
 	if (!path || !shell->env_array || !args)
 	{
-		while (--isparent)
-			wait(NULL);
 		dup2(STDERR_FILENO, STDOUT_FILENO);
 		if (args)
 			ft_printf("%s: command not found\n", args[0]);
@@ -37,7 +35,7 @@ static void	exec_command(char *path, t_shell *shell, char **args, int isparent)
 		exit(127);
 	}
 	execve(path, args, shell->env_array);
-	exit(execve_error(path, args, shell, isparent));
+	exit(execve_error(path, args, shell));
 }
 
 void	check_error(int status, char *message, char **args, char *path)
@@ -99,7 +97,7 @@ static void	redirect_files(int i, char *argv[], t_shell *shell, int **fds)
 		dup2pipe(fds, i, shell, &(argv[i]));
 		args = ft_splitquote_nulls(argv[i], ' ');
 		path = get_right_path(args, shell->env_array, path);
-		exec_command(path, shell, args, 1);
+		exec_command(path, shell, args);
 	}
 	else if (cid == -1)
 		check_error(-1, "fork", args, path);
@@ -111,7 +109,7 @@ int	pipex(int argc, char **argv, t_shell *shell)
 {
 	int		**fds;
 	int		i;
-	int		original_stdin;
+//	int		original_stdin;
 
 	if (argc == 0)
 		return (1);
@@ -121,12 +119,13 @@ int	pipex(int argc, char **argv, t_shell *shell)
 	i = -1;
 	while (++i < argc - 1)
 		fds[i] = malloc(sizeof(int) * 2);
-	original_stdin = dup(STDIN_FILENO);
+	//original_stdin = dup(STDIN_FILENO);
 	shell->pids = malloc(sizeof(int) * argc);
 	i = -1;
 	while (++i < argc)
 		redirect_files(i, argv, shell, fds);
-	dup2(original_stdin, STDIN_FILENO);
+	//dup2(original_stdin, STDIN_FILENO);
+	//close(original_stdin);
 	free_array_of_ints(fds, argc - 1);
 	free(shell->pids);
 	return (1);

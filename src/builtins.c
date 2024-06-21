@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 05:09:37 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/30 23:40:40 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/21 03:23:56 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,10 @@ int	exec_builtin(char **args, t_shell *shell, int ispipex)
 	if (ispipex)
 		new_args = ft_dup_array_of_strings(args);
 	else
+	{
+		redirects_handler(shell, 0, NULL, args);
 		new_args = ft_splitquote(args[0], ' ');
+	}
 	if (!new_args)
 		return (-1);
 	if (!new_args[0])
