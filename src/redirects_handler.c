@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 10:04:45 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/21 04:59:39 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/22 00:20:08 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,7 @@ static int	redirects_append(t_shell *shell, int *i, int **fds, int out)
 {
 	int		j;
 	int		k;
+	int		l;
 	char	*file;
 	int		fd;
 
@@ -283,26 +284,46 @@ static int	redirects_append(t_shell *shell, int *i, int **fds, int out)
 	{
 		if (k != shell->arg_count - 1)
 			close(fds[k][1]);
+		if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(file);
+			free(file);
+			free_everything(shell);
+			l = -1;
+			while (++l < shell->arg_count - 1)
+				free(fds[l]);
+			exit(1);
+		}
 		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd == -1)
 		{
 			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(file, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			perror(file);
 			free(file);
-			return (-1);
+			exit(1);
 		}
 	}
 	else
 	{
+		if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(file);
+			free(file);
+			free_everything(shell);
+			l = -1;
+			while (++l < shell->arg_count - 1)
+				free(fds[l]);
+			exit(1);
+		}
 		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd == -1)
 		{
 			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(file, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			perror(file);
 			free(file);
-			return (-1);
+			exit(1);
 		}
 		close(fd);
 	}
