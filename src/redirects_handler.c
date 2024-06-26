@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 10:04:45 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/12 15:19:22 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/26 20:33:09 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,9 @@ static int	redirects_input(t_shell *shell, int *i, int **fds, int in)
 
 static int	redirects_heredoc(t_shell *shell, int *i, int **fds, int out)
 {
-	char	*line;
 	int		j;
 	int		k;
-	char	*terminator;
+	char	*heredoc_name;
 	int		fd;
 
 	j = 0;
@@ -93,51 +92,24 @@ static int	redirects_heredoc(t_shell *shell, int *i, int **fds, int out)
 	&& !is_c_not_in_quotes(shell->input, j, '|') && !is_c_not_in_quotes(shell \
 	->input, j, '<') && !is_c_not_in_quotes(shell->input, j, '>'))
 		j++;
-	terminator = ft_substr(shell->input, *i, j - *i);
-	terminator = ft_remove_quotes(terminator);
-	terminator = ft_strjoinfree(terminator, "\n");
 	if (out)
 	{
 		if (k != 0)
 			close(fds[k - 1][0]);
-		fd = open(".here_doc", O_RDWR | O_TRUNC | O_CREAT, 0664);
+		heredoc_name = ft_strjoinfree2(".heredoc", ft_itoa(k));
+		fd = open(heredoc_name, O_RDONLY);
 		if (fd == -1)
 		{
 			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(".here_doc", 2);
+			ft_putstr_fd(heredoc_name, 2);
 			ft_putstr_fd(": failed to open\n", 2);
-			free(terminator);
+			free(heredoc_name);
 			return (-1);
 		}
-		ft_putchar_fd('>', 1);
-		line = get_next_line(0);
-		if (line && ft_strcmp(line, terminator) != 0)
-			write(fd, line, ft_strlen(line));
-		while (line && ft_strcmp(line, terminator) != 0)
-		{
-			free(line);
-			ft_putchar_fd('>', 1);
-			line = get_next_line(0);
-			if (line && ft_strcmp(line, terminator) != 0)
-				write(fd, line, ft_strlen(line));
-		}
-		free(line);
-		free(terminator);
-		close(fd);
-		fd = open(".here_doc", O_RDONLY);
+		free(heredoc_name);
 	}
 	else
-	{
 		fd = -1;
-		line = get_next_line(0);
-		while (line && ft_strcmp(line, terminator) != 0)
-		{
-			free(line);
-			line = get_next_line(0);
-		}
-		free(line);
-		free(terminator);
-	}
 	*i = j;
 	return (fd);
 }
@@ -258,6 +230,7 @@ static int	redirects_append(t_shell *shell, int *i, int **fds, int out)
 {
 	int		j;
 	int		k;
+	int		l;
 	char	*file;
 	int		fd;
 
@@ -283,26 +256,46 @@ static int	redirects_append(t_shell *shell, int *i, int **fds, int out)
 	{
 		if (k != shell->arg_count - 1)
 			close(fds[k][1]);
+		if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(file);
+			free(file);
+			free_everything(shell);
+			l = -1;
+			while (++l < shell->arg_count - 1)
+				free(fds[l]);
+			exit(1);
+		}
 		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd == -1)
 		{
 			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(file, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			perror(file);
 			free(file);
-			return (-1);
+			exit(1);
 		}
 	}
 	else
 	{
+		if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(file);
+			free(file);
+			free_everything(shell);
+			l = -1;
+			while (++l < shell->arg_count - 1)
+				free(fds[l]);
+			exit(1);
+		}
 		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd == -1)
 		{
 			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(file, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			perror(file);
 			free(file);
-			return (-1);
+			exit(1);
 		}
 		close(fd);
 	}
@@ -423,8 +416,8 @@ int	redirects_handler(t_shell *shell, int i, int **fds, char **args)
 			dup2(fds[i][1], STDOUT_FILENO);
 		else
 		{
-			close(fds[i][1]);
 			dup2(file_out, STDOUT_FILENO);
+			close(fds[i][1]);
 		}
 		close(fds[i][0]);
 		if (file_in != -1)
@@ -436,8 +429,8 @@ int	redirects_handler(t_shell *shell, int i, int **fds, char **args)
 			dup2(fds[i - 1][0], STDIN_FILENO);
 		else
 		{
-			close(fds[i - 1][0]);
 			dup2(file_in, STDIN_FILENO);
+			close(fds[i - 1][0]);
 		}
 		close(fds[i - 1][1]);
 		if (file_out != -1)
@@ -449,15 +442,15 @@ int	redirects_handler(t_shell *shell, int i, int **fds, char **args)
 			dup2(fds[i - 1][0], STDIN_FILENO);
 		else
 		{
-			close(fds[i - 1][0]);
 			dup2(file_in, STDIN_FILENO);
+			close(fds[i - 1][0]);
 		}
 		if (file_out == -1)
 			dup2(fds[i][1], STDOUT_FILENO);
 		else
 		{
-			close(fds[i][1]);
 			dup2(file_out, STDOUT_FILENO);
+			close(fds[i][1]);
 		}
 		close(fds[i - 1][1]);
 		close(fds[i][0]);

@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/11 20:47:23 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/26 07:18:36 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,9 @@ typedef struct s_shell
 	int		proccess_status;
 	int		exit_status;
 	int		*pids;
+	int		**redir_fds;
 	int		arg_count;
+	int		*heredocs;
 	char	*input;
 	char	**env_array;
 	t_list	*env;
@@ -84,7 +86,7 @@ char	**last_one(char **argv, char **path, char **envp, int i);
 void	check_error(int status, char *message, char **args, char *path);
 int		pipex(int argc, char **argv, t_shell *shell);
 int		get_right_path_aux(char **cmd, char **path, int i, char **right_path);
-int		execve_error(char *path, char **args, t_shell *shell, int isparent);
+int		execve_error(char *path, char **args, t_shell *shell);
 char	*ft_getdirs(char *cmd);
 int		get_right_path_aux2(char **cmd, char **right_path);
 
@@ -96,5 +98,6 @@ void	sigint_parent(int signum);
 //redirects
 
 int		redirects_handler(t_shell *shell, int i, int **fds, char **args);
+int		heredocs(char *arg, int count, t_shell *shell);
 
 #endif

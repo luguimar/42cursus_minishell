@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:58:44 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/29 04:45:12 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/21 08:11:47 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	ft_export(char **args, t_shell *shell)
 			tmp = ft_substr(args[i], 0, j);
 			tmp2 = ft_substr(args[i], j + 1, ft_strlen(args[i]) - j - 1);
 			if (!change_value(shell->env, tmp, tmp2))
-				new_env = envnew(tmp, tmp2, args[i], 1);
+				new_env = envnew(tmp, tmp2, args[i], 0);
 			else
 				free(tmp);
 		}

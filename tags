@@ -68,8 +68,8 @@ env_to_array	src/envparser.c	/^char	**env_to_array(t_list *env)$/;"	f	typeref:ty
 env_to_list	src/envparser.c	/^int	env_to_list(t_shell *shell, char **envp)$/;"	f	typeref:typename:int
 envnew	src/envparser.c	/^t_env	*envnew(char *key, char *value, char *env_i, int is_just_exported)$/;"	f	typeref:typename:t_env *
 exec_builtin	src/builtins.c	/^int	exec_builtin(char **args, t_shell *shell, int ispipex)$/;"	f	typeref:typename:int
-exec_command	src/pipex.c	/^static void	exec_command(char *path, t_shell *shell, char **args, int isparent)$/;"	f	typeref:typename:void	file:
-execve_error	src/errors.c	/^int	execve_error(char *path, char **args, t_shell *shell, int isparent)$/;"	f	typeref:typename:int
+exec_command	src/pipex.c	/^static void	exec_command(char *path, t_shell *shell, char **args)$/;"	f	typeref:typename:void	file:
+execve_error	src/errors.c	/^int	execve_error(char *path, char **args, t_shell *shell)$/;"	f	typeref:typename:int
 exit_status	includes/minishell.h	/^	int		exit_status;$/;"	m	struct:s_shell	typeref:typename:int
 expand	src/expand.c	/^void	expand(char **input, t_shell *shell, int i, int s)$/;"	f	typeref:typename:void
 expand	src/expandold.c	/^void	expand(char **input, t_shell *shell)$/;"	f	typeref:typename:void
@@ -180,6 +180,8 @@ get_right_path_aux	src/pipex_utils.c	/^int	get_right_path_aux(char **cmd, char *
 get_right_path_aux2	src/pipex_utils.c	/^int	get_right_path_aux2(char **cmd, char **right_path)$/;"	f	typeref:typename:int
 get_stash	lib/libft/get_next_line.c	/^static char	*get_stash(int fd, char *stash)$/;"	f	typeref:typename:char *	file:
 has_open_quote	lib/libft/quotes_utils.c	/^char	has_open_quote(char *s, int index)$/;"	f	typeref:typename:char
+heredocs	includes/minishell.h	/^	int		*heredocs;$/;"	m	struct:s_shell	typeref:typename:int *
+heredocs	src/heredoc.c	/^int	heredocs(char *arg, int count, t_shell *shell)$/;"	f	typeref:typename:int
 input	includes/minishell.h	/^	char	*input;$/;"	m	struct:s_shell	typeref:typename:char *
 inquote	lib/libft/quotes.c	/^char	inquote(char *s, int index)$/;"	f	typeref:typename:char
 is_beginning_quote	lib/libft/quotes.c	/^int	is_beginning_quote(char *s, int index)$/;"	f	typeref:typename:int
@@ -206,6 +208,7 @@ proccess_status	includes/minishell.h	/^	int		proccess_status;$/;"	m	struct:s_she
 quote	lib/libft/quotes.c	/^char	quote(char *s, int index)$/;"	f	typeref:typename:char
 re	Makefile	/^re: fclean clean all$/;"	t
 re	lib/libft/Makefile	/^re: fclean all$/;"	t
+redir_fds	includes/minishell.h	/^	int		**redir_fds;$/;"	m	struct:s_shell	typeref:typename:int **
 redirect_files	src/pipex.c	/^static void	redirect_files(int i, char *argv[], t_shell *shell, int **fds)$/;"	f	typeref:typename:void	file:
 redirect_files_aux	src/pipex_utils.c	/^void	redirect_files_aux(int cid, int i, t_shell *shell, int ***fds)$/;"	f	typeref:typename:void
 redirects_append	src/redirects_handler.c	/^static int	redirects_append(t_shell *shell, int *i, int **fds, int out)$/;"	f	typeref:typename:int	file:
