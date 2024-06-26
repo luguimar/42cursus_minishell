@@ -10,7 +10,7 @@ solve exit codes on signals
 solve exit codes on heredoc
 apply expand on heredoc
 solve + sign in exit command
-check errors in sintax
+check errors in sintax and check all syntax 
 
 
 cat < $USER
@@ -26,8 +26,10 @@ Redirects:
 Exit codes quando faltam permicoes nos ficheiros, quando os ficheiros nao existem
 Dar exit quando e pipex da erro de ficheiro
 mudar o exit code quando da erro de ficheiro num builtin sem ser pipex e sem dar exit
-deixar de dar rerirect simplesmente quando testa se um unico argumento e builtin solitario
+deixar de dar rerirect simplesmente quando testa se um unico argumento e builtin solitario, check
 fazer o heredoc antes de executar os comandos e antes do expand e fazer o resto dos redirects com o expand
 fazer o expand no heredoc
 leaks nos child processes quando o commando nao e executado e o processo da exit
 ver exit codes no caso de falha a abrir ficheiro, falha de permicoes, ficheiro nao encontrado, etc
+
+testar bem exports

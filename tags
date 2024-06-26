@@ -180,6 +180,8 @@ get_right_path_aux	src/pipex_utils.c	/^int	get_right_path_aux(char **cmd, char *
 get_right_path_aux2	src/pipex_utils.c	/^int	get_right_path_aux2(char **cmd, char **right_path)$/;"	f	typeref:typename:int
 get_stash	lib/libft/get_next_line.c	/^static char	*get_stash(int fd, char *stash)$/;"	f	typeref:typename:char *	file:
 has_open_quote	lib/libft/quotes_utils.c	/^char	has_open_quote(char *s, int index)$/;"	f	typeref:typename:char
+heredocs	includes/minishell.h	/^	int		*heredocs;$/;"	m	struct:s_shell	typeref:typename:int *
+heredocs	src/heredoc.c	/^int	heredocs(char *arg, int count, t_shell *shell)$/;"	f	typeref:typename:int
 input	includes/minishell.h	/^	char	*input;$/;"	m	struct:s_shell	typeref:typename:char *
 inquote	lib/libft/quotes.c	/^char	inquote(char *s, int index)$/;"	f	typeref:typename:char
 is_beginning_quote	lib/libft/quotes.c	/^int	is_beginning_quote(char *s, int index)$/;"	f	typeref:typename:int

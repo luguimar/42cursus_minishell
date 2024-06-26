@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/21 04:51:21 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/26 07:20:44 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,20 @@ int	minishell(t_shell *shell)
 		return (ft_putstr_fd \
 		("minishell: syntax error near unexpected token `|'\n", 2), 0);
 	args = ft_split_if_not_in_quote(shell->input, '|');
-	while (args[++i])
-		expand(&args[i], shell, -1, 0);
 	if (args == NULL)
 		return (1);
+	shell->arg_count = ft_matrixlen((void **) args);
+	shell->heredocs = malloc(sizeof(int) * (shell->arg_count + 1));
+	if (shell->heredocs == NULL)
+		return (1);
+	shell->heredocs[shell->arg_count] = -1;
+	while (args[++i])
+	{
+		heredocs(args[i], i, shell);
+		expand(&args[i], shell, -1, 0);
+	}
 	if (!check_args(args))
 		return (0);
-	shell->arg_count = ft_matrixlen((void **) args);
 	if (ft_matrixlen((void **) args) == 1)
 	{
 		orig_stdout = dup(STDOUT_FILENO);
@@ -101,6 +108,7 @@ int	minishell(t_shell *shell)
 		}
 	}
 	pipex(shell->arg_count, args, shell);
+//funcao para dar unlink aos heredocs
 	free_array_of_strings(args);
 	return (0);
 }
