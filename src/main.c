@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/26 07:20:44 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/26 23:40:33 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int	minishell(t_shell *shell)
 		}
 	}
 	pipex(shell->arg_count, args, shell);
-//funcao para dar unlink aos heredocs
+	heredoc_unlink(shell);
 	free_array_of_strings(args);
 	return (0);
 }

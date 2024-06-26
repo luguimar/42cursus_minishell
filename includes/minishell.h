@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/26 07:18:36 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/26 23:39:14 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,8 @@ void	sigint_parent(int signum);
 
 //redirects
 
-int		redirects_handler(t_shell *shell, int i, int **fds, char **args);
+int		redirects_handler(t_shell *shell, int i, int **fds, char **args, int is_pipex);
 int		heredocs(char *arg, int count, t_shell *shell);
+int		heredoc_unlink(t_shell *shell);
 
 #endif

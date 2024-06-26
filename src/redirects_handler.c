@@ -6,13 +6,13 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 10:04:45 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/26 20:33:09 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/26 23:30:13 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	redirects_input(t_shell *shell, int *i, int **fds, int in)
+static int	redirects_input(t_shell *shell, int *i, int **fds, int in, int is_pipex)
 {
 	int		j;
 	int		k;
@@ -41,35 +41,90 @@ static int	redirects_input(t_shell *shell, int *i, int **fds, int in)
 	{
 		if (k != 0)
 			close(fds[k - 1][0]);
+		if (access(file, F_OK) != 0 || access(file, R_OK) != 0)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(file);
+			free(file);
+			free_everything(shell);
+			k = -1;
+			while (++k < shell->arg_count - 1)
+				free(fds[k]);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
+		}
 		fd = open(file, O_RDONLY);
 		if (fd == -1)
 		{
 			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(file, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			perror(file);
 			free(file);
-			return (-1);
+			free_everything(shell);
+			k = -1;
+			while (++k < shell->arg_count - 1)
+				free(fds[k]);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
 		}
+		free(file);
 	}
 	else
 	{
+		if (access(file, F_OK) != 0 || access(file, R_OK) != 0)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(file);
+			free(file);
+			free_everything(shell);
+			k = -1;
+			while (++k < shell->arg_count - 1)
+				free(fds[k]);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
+		}
 		fd = open(file, O_RDONLY);
 		if (fd == -1)
 		{
 			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(file, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			perror(file);
 			free(file);
-			return (-1);
+			free_everything(shell);
+			k = -1;
+			while (++k < shell->arg_count - 1)
+				free(fds[k]);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
 		}
+		free(file);
 		close(fd);
+		fd = -1;
 	}
 	free(file);
 	*i = j;
 	return (fd);
 }
 
-static int	redirects_heredoc(t_shell *shell, int *i, int **fds, int out)
+static int	redirects_heredoc(t_shell *shell, int *i, int **fds, int out, int is_pipex)
 {
 	int		j;
 	int		k;
@@ -97,14 +152,42 @@ static int	redirects_heredoc(t_shell *shell, int *i, int **fds, int out)
 		if (k != 0)
 			close(fds[k - 1][0]);
 		heredoc_name = ft_strjoinfree2(".heredoc", ft_itoa(k));
+		if (heredoc_name == NULL)
+			return (-1);
+		if (access(heredoc_name, F_OK) != 0 || access(heredoc_name, R_OK) == -1)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(heredoc_name);
+			free(heredoc_name);
+			free_everything(shell);
+			k = -1;
+			while (++k < shell->arg_count - 1)
+				free(fds[k]);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
+		}
 		fd = open(heredoc_name, O_RDONLY);
 		if (fd == -1)
 		{
 			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(heredoc_name, 2);
-			ft_putstr_fd(": failed to open\n", 2);
+			perror(heredoc_name);
 			free(heredoc_name);
-			return (-1);
+			free_everything(shell);
+			k = -1;
+			while (++k < shell->arg_count - 1)
+				free(fds[k]);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
 		}
 		free(heredoc_name);
 	}
@@ -114,7 +197,7 @@ static int	redirects_heredoc(t_shell *shell, int *i, int **fds, int out)
 	return (fd);
 }
 
-static int	redirects_in_extra(t_shell *shell, int last_input, int **fds)
+static int	redirects_in_extra(t_shell *shell, int last_input, int **fds, int is_pipex)
 {
 	int	i;
 
@@ -126,19 +209,19 @@ static int	redirects_in_extra(t_shell *shell, int last_input, int **fds)
 		if (is_c_not_in_quotes(shell->input, i, '<'))
 		{
 			if (shell->input[i + 1] == '<')
-				redirects_heredoc(shell, &i, fds, 0);
+				redirects_heredoc(shell, &i, fds, 0, is_pipex);
 			else
-				redirects_input(shell, &i, fds, 0);
+				redirects_input(shell, &i, fds, 0, is_pipex);
 		}
 		i++;
 	}
 	if (shell->input[i + 1] == '<')
-		return (redirects_heredoc(shell, &i, fds, 1));
+		return (redirects_heredoc(shell, &i, fds, 1, is_pipex));
 	else
-		return (redirects_input(shell, &i, fds, 1));
+		return (redirects_input(shell, &i, fds, 1, is_pipex));
 }
 
-static int	redirects_in_handler(t_shell *shell, int i, int **fds)
+static int	redirects_in_handler(t_shell *shell, int i, int **fds, int is_pipex)
 {
 	int		last_input;
 	int		j;
@@ -166,13 +249,14 @@ static int	redirects_in_handler(t_shell *shell, int i, int **fds)
 	if (last_input == -1)
 		return (-1);
 	else
-		return (redirects_in_extra(shell, last_input, fds));
+		return (redirects_in_extra(shell, last_input, fds, is_pipex));
 }
 
-static int	redirects_output(t_shell *shell, int *i, int **fds, int out)
+static int	redirects_output(t_shell *shell, int *i, int **fds, int out, int is_pipex)
 {
 	int		j;
 	int		k;
+	int		l;
 	char	*file;
 	int		fd;
 
@@ -198,35 +282,80 @@ static int	redirects_output(t_shell *shell, int *i, int **fds, int out)
 	{
 		if (k != shell->arg_count - 1)
 			close(fds[k][1]);
+		if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(file);
+			free(file);
+			free_everything(shell);
+			l = -1;
+			while (++l < shell->arg_count - 1)
+				free(fds[l]);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
+		}
 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
 		{
 			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(file, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			perror(file);
 			free(file);
-			return (-1);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
 		}
 	}
 	else
 	{
+		if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(file);
+			free(file);
+			free_everything(shell);
+			l = -1;
+			while (++l < shell->arg_count - 1)
+				free(fds[l]);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
+		}
 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
 		{
 			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(file, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			perror(file);
 			free(file);
-			return (-1);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
 		}
 		close(fd);
+		fd = -1;
 	}
 	free(file);
 	*i = j;
 	return (fd);
 }
 
-static int	redirects_append(t_shell *shell, int *i, int **fds, int out)
+static int	redirects_append(t_shell *shell, int *i, int **fds, int out, int is_pipex)
 {
 	int		j;
 	int		k;
@@ -265,7 +394,13 @@ static int	redirects_append(t_shell *shell, int *i, int **fds, int out)
 			l = -1;
 			while (++l < shell->arg_count - 1)
 				free(fds[l]);
-			exit(1);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
 		}
 		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd == -1)
@@ -273,7 +408,13 @@ static int	redirects_append(t_shell *shell, int *i, int **fds, int out)
 			ft_putstr_fd("minishell: ", 2);
 			perror(file);
 			free(file);
-			exit(1);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
 		}
 	}
 	else
@@ -287,7 +428,13 @@ static int	redirects_append(t_shell *shell, int *i, int **fds, int out)
 			l = -1;
 			while (++l < shell->arg_count - 1)
 				free(fds[l]);
-			exit(1);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
 		}
 		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd == -1)
@@ -295,16 +442,23 @@ static int	redirects_append(t_shell *shell, int *i, int **fds, int out)
 			ft_putstr_fd("minishell: ", 2);
 			perror(file);
 			free(file);
-			exit(1);
+			if (is_pipex)
+				exit(1);
+			else
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
 		}
 		close(fd);
+		fd = -1;
 	}
 	free(file);
 	*i = j;
 	return (fd);
 }
 
-static int	redirects_out_handler_extra(t_shell *shell, int last_output, int **fds)
+static int	redirects_out_handler_extra(t_shell *shell, int last_output, int **fds, int is_pipex)
 {
 	int	i;
 
@@ -316,19 +470,19 @@ static int	redirects_out_handler_extra(t_shell *shell, int last_output, int **fd
 		if (is_c_not_in_quotes(shell->input, i, '>'))
 		{
 			if (shell->input[i + 1] == '>')
-				redirects_append(shell, &i, fds, 0);
+				redirects_append(shell, &i, fds, 0, is_pipex);
 			else
-				redirects_output(shell, &i, fds, 0);
+				redirects_output(shell, &i, fds, 0, is_pipex);
 		}
 		i++;
 	}
 	if (shell->input[i + 1] == '>')
-		return (redirects_append(shell, &i, fds, 1));
+		return (redirects_append(shell, &i, fds, 1, is_pipex));
 	else
-		return (redirects_output(shell, &i, fds, 1));
+		return (redirects_output(shell, &i, fds, 1, is_pipex));
 }
 
-static int	redirects_out_handler(t_shell *shell, int i, int **fds)
+static int	redirects_out_handler(t_shell *shell, int i, int **fds, int is_pipex)
 {
 	int		j;
 	int		k;
@@ -358,7 +512,7 @@ static int	redirects_out_handler(t_shell *shell, int i, int **fds)
 	if (last_output == -1)
 		return (-1);
 	else
-		return (redirects_out_handler_extra(shell, last_output, fds));
+		return (redirects_out_handler_extra(shell, last_output, fds, is_pipex));
 }
 
 char	*remove_redirects(char **new_input, char **args)
@@ -396,15 +550,15 @@ char	*remove_redirects(char **new_input, char **args)
 	return (NULL);
 }
 
-int	redirects_handler(t_shell *shell, int i, int **fds, char **args)
+int	redirects_handler(t_shell *shell, int i, int **fds, char **args, int is_pipex)
 {
 	int		file_in;
 	int		file_out;
 	char	*new_input;
 
 	new_input = NULL;
-	file_in = redirects_in_handler(shell, i, fds);
-	file_out = redirects_out_handler(shell, i, fds);
+	file_in = redirects_in_handler(shell, i, fds, is_pipex);
+	file_out = redirects_out_handler(shell, i, fds, is_pipex);
 	while (remove_redirects(&new_input, args))
 	{
 		free(*args);

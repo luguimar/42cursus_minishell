@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/21 05:19:15 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/26 20:51:41 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	dup2pipe(int **fds, int i, t_shell *shell, char **args)
 		close(fds[j][0]);
 		close(fds[j][1]);
 	}
-	redirects_handler(shell, i, fds, args);
+	redirects_handler(shell, i, fds, args, 1);
 }
 
 int	get_right_path_aux2(char **cmd, char **right_path)

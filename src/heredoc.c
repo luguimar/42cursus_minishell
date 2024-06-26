@@ -6,11 +6,32 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 04:01:49 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/26 20:17:34 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/26 23:56:13 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	heredoc_unlink(t_shell *shell)
+{
+	int		i;
+	char	*heredoc_name;
+
+	i = 0;
+	while (shell->heredocs[i] != -1)
+	{
+		if (shell->heredocs[i] == 0)
+		{
+			i++;
+			continue ;
+		}
+		heredoc_name = ft_strjoin(".heredoc", ft_itoa(i));
+		unlink(heredoc_name);
+		free(heredoc_name);
+		i++;
+	}
+	return (0);
+}
 
 int	heredocs(char *arg, int count, t_shell *shell)
 {
@@ -25,7 +46,8 @@ int	heredocs(char *arg, int count, t_shell *shell)
 	i = -1;
 	shell->heredocs[count] = 0;
 	while (arg[++i])
-		if (arg[i] == '<' && arg[i + 1] == '<')
+		if (is_c_not_in_quotes(arg, i, '<') && \
+		is_c_not_in_quotes(arg, i + 1, '<'))
 			shell->heredocs[count]++;
 	if (shell->heredocs[count] == 0)
 		return (0);
@@ -37,10 +59,12 @@ int	heredocs(char *arg, int count, t_shell *shell)
 		j = i - 1;
 		while (arg[++j])
 		{
-			if (arg[j] == '<' && arg[j + 1] == '<')
+			if (is_c_not_in_quotes(arg, j, '<') && \
+			is_c_not_in_quotes(arg, j + 1, '<'))
 			{
 				j++;
-				while (arg[++j] && (arg[j] == ' ' || arg[j] == '\t'))
+				while (arg[++j] && (is_c_not_in_quotes(arg, j, ' ') || \
+				is_c_not_in_quotes(arg, j, '\t')))
 					;
 				k = j;
 				while (arg[k] && !is_c_not_in_quotes(arg, k, ' ') && \
@@ -65,10 +89,12 @@ int	heredocs(char *arg, int count, t_shell *shell)
 		free(line);
 	}
 	free(eof);
-	while (arg[j] && !(arg[j] == '<' && arg[j + 1] == '<'))
+	while (arg[j] && !(is_c_not_in_quotes(arg, j, '<') && \
+	is_c_not_in_quotes(arg, j + 1, '<')))
 		j++;
 	j++;
-	while (arg[++j] && (arg[j] == ' '))
+	while (arg[++j] && (is_c_not_in_quotes(arg, j, ' ') || \
+	is_c_not_in_quotes(arg, j, '\t')))
 		;
 	k = j;
 	while (arg[k] && !is_c_not_in_quotes(arg, k, ' ') && \
