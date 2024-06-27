@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/26 23:40:33 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/27 06:12:02 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,31 +35,6 @@ void	free_everything(t_shell *shell)
 	rl_clear_history();
 }
 
-static int	check_args(char **args)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (args[i])
-	{
-		j = 0;
-		while ((args[i][j] == ' ' || args[i][j] == '\t' || args[i][j] == '\n' \
-		|| args[i][j] == '\v' || args[i][j] == '\f' || args[i][j] == '\r') \
-		&& args[i][j])
-			j++;
-		if (!args[i][j])
-		{
-			free_array_of_strings(args);
-			ft_putstr_fd("minishell: syntax error near unexpected token `|'\n" \
-			, 2);
-			return (0);
-		}
-		i++;
-	}
-	return (1);
-}
-
 int	minishell(t_shell *shell)
 {
 	char	**args;
@@ -68,6 +43,7 @@ int	minishell(t_shell *shell)
 	int		orig_stdin;
 
 	i = -1;
+	shell->input = ft_strtrim(shell->input, " \t\n\v\f\r");
 	if (shell->input[0] == '|' || (ft_strlen(shell->input) != 0 && \
 	shell->input[ft_strlen(shell->input) - 1] == '|'))
 		return (ft_putstr_fd \
@@ -85,8 +61,6 @@ int	minishell(t_shell *shell)
 		heredocs(args[i], i, shell);
 		expand(&args[i], shell, -1, 0);
 	}
-	if (!check_args(args))
-		return (0);
 	if (ft_matrixlen((void **) args) == 1)
 	{
 		orig_stdout = dup(STDOUT_FILENO);

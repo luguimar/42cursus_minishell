@@ -53,7 +53,6 @@ all	lib/libft/Makefile	/^all:	${NAME}$/;"	t
 arg_count	includes/minishell.h	/^	int		arg_count;$/;"	m	struct:s_shell	typeref:typename:int
 bigger	lib/libft/int_size_utils.c	/^int	bigger(int a, int b)$/;"	f	typeref:typename:int
 change_value	src/envparser.c	/^int	change_value(t_list *env, char *key, char *value)$/;"	f	typeref:typename:int
-check_args	src/main.c	/^static int	check_args(char **args)$/;"	f	typeref:typename:int	file:
 check_error	src/pipex.c	/^void	check_error(int status, char *message, char **args, char *path)$/;"	f	typeref:typename:void
 checktype	lib/libft/ft_printf.c	/^int	checktype(int ch, va_list args)$/;"	f	typeref:typename:int
 clean	Makefile	/^clean:$/;"	t
@@ -173,6 +172,7 @@ ft_toupper	lib/libft/ft_toupper.c	/^int	ft_toupper(int c)$/;"	f	typeref:typename
 ft_unset	src/builtins.c	/^static int	ft_unset(char **args, t_shell *shell)$/;"	f	typeref:typename:int	file:
 full	includes/minishell.h	/^	char	*full;$/;"	m	struct:s_env	typeref:typename:char *
 get_env_value	src/envparser_extra.c	/^char	*get_env_value(t_list *env, char *key)$/;"	f	typeref:typename:char *
+get_file_name	src/redirects_handler_old.c	/^static char	*get_file_name(t_shell *shell, char **args, int i)$/;"	f	typeref:typename:char *	file:
 get_line	lib/libft/get_next_line.c	/^static char	*get_line(char *stash)$/;"	f	typeref:typename:char *	file:
 get_next_line	lib/libft/get_next_line.c	/^char	*get_next_line(int fd)$/;"	f	typeref:typename:char *
 get_right_path	src/pipex.c	/^char	*get_right_path(char **cmd, char **envp, char *right_path)$/;"	f	typeref:typename:char *
@@ -215,16 +215,21 @@ re	lib/libft/Makefile	/^re: fclean all$/;"	t
 redir_fds	includes/minishell.h	/^	int		**redir_fds;$/;"	m	struct:s_shell	typeref:typename:int **
 redirect_files	src/pipex.c	/^static void	redirect_files(int i, char *argv[], t_shell *shell, int **fds)$/;"	f	typeref:typename:void	file:
 redirect_files_aux	src/pipex_utils.c	/^void	redirect_files_aux(int cid, int i, t_shell *shell, int ***fds)$/;"	f	typeref:typename:void
+redirect_input	src/redirects_handler_old.c	/^static int	redirect_input(t_shell *shell, char **args, int i, int is_pipex)$/;"	f	typeref:typename:int	file:
+redirect_output	src/redirects_handler_old.c	/^static int	redirect_output(t_shell *shell, char **args, int i, int is_pipex)$/;"	f	typeref:typename:int	file:
 redirects_append	src/redirects_handler.c	/^static int	redirects_append(t_shell *shell, int *i, int **fds, int out, int is_pipex)$/;"	f	typeref:typename:int	file:
 redirects_handler	src/redirects_handler.c	/^int	redirects_handler(t_shell *shell, int i, int **fds, char **args, int is_pipex)$/;"	f	typeref:typename:int
+redirects_handler	src/redirects_handler_old.c	/^int	redirects_handler(t_shell *shell, int i, int **fds, char **args, int is_pipex)$/;"	f	typeref:typename:int
 redirects_heredoc	src/redirects_handler.c	/^static int	redirects_heredoc(t_shell *shell, int *i, int **fds, int out, int is_pipex)$/;"	f	typeref:typename:int	file:
 redirects_in_extra	src/redirects_handler.c	/^static int	redirects_in_extra(t_shell *shell, int last_input, int **fds, int is_pipex)$/;"	f	typeref:typename:int	file:
 redirects_in_handler	src/redirects_handler.c	/^static int	redirects_in_handler(t_shell *shell, int i, int **fds, int is_pipex)$/;"	f	typeref:typename:int	file:
 redirects_input	src/redirects_handler.c	/^static int	redirects_input(t_shell *shell, int *i, int **fds, int in, int is_pipex)$/;"	f	typeref:typename:int	file:
+redirects_main_handler	src/redirects_handler_old.c	/^static int	redirects_main_handler(t_shell *shell, char **args, int *file_in, int *file_out, int /;"	f	typeref:typename:int	file:
 redirects_out_handler	src/redirects_handler.c	/^static int	redirects_out_handler(t_shell *shell, int i, int **fds, int is_pipex)$/;"	f	typeref:typename:int	file:
 redirects_out_handler_extra	src/redirects_handler.c	/^static int	redirects_out_handler_extra(t_shell *shell, int last_output, int **fds, int is_pipex)$/;"	f	typeref:typename:int	file:
 redirects_output	src/redirects_handler.c	/^static int	redirects_output(t_shell *shell, int *i, int **fds, int out, int is_pipex)$/;"	f	typeref:typename:int	file:
 remove_redirects	src/redirects_handler.c	/^char	*remove_redirects(char **new_input, char **args)$/;"	f	typeref:typename:char *
+remove_redirects	src/redirects_handler_old.c	/^char	*remove_redirects(char **new_input, char **args)$/;"	f	typeref:typename:char *
 run	Makefile	/^run: clear all$/;"	t
 s_env	includes/minishell.h	/^typedef struct s_env$/;"	s
 s_list	lib/libft/libft.h	/^typedef struct s_list$/;"	s

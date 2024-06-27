@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/27 03:18:22 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/27 06:37:42 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,18 @@ int	get_right_path_aux2(char **cmd, char **right_path)
 			exit(126);
 		}
 		if (access(*right_path, F_OK) == 0)
-			return (1);
+		{
+			if (access(*right_path, X_OK) == 0)
+				return (1);
+			else
+			{
+				free(*right_path);
+				*right_path = NULL;
+				ft_putstr_fd("minishell: ", 2);
+				perror(*cmd);
+				exit(126);
+			}
+		}
 		free(*right_path);
 		right_path = NULL;
 		ft_putstr_fd("minishell: ", 2);
@@ -79,6 +90,7 @@ int	get_right_path_aux(char **cmd, char **path, int i, char **right_path)
 	*right_path = ft_strjoinfree(*right_path, *cmd);
 	if (access(*right_path, F_OK) == 0)
 	{
+
 		free_array_of_strings(path);
 		return (1);
 	}

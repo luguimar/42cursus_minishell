@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 10:04:45 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/27 03:23:54 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/27 10:10:55 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static int	redirects_input(t_shell *shell, int *i, int **fds, int in, int is_pip
 		j++;
 	file = ft_substr(shell->input, *i, j - *i);
 	file = ft_remove_quotes(file);
+	file = ft_getdirs(file);
 	if (in)
 	{
 		if (k != 0)
@@ -277,6 +278,7 @@ static int	redirects_output(t_shell *shell, int *i, int **fds, int out, int is_p
 		j++;
 	file = ft_substr(shell->input, *i, j - *i);
 	file = ft_remove_quotes(file);
+	file = ft_getdirs(file);
 	if (out)
 	{
 		if (k != shell->arg_count - 1)
@@ -380,6 +382,7 @@ static int	redirects_append(t_shell *shell, int *i, int **fds, int out, int is_p
 		j++;
 	file = ft_substr(shell->input, *i, j - *i);
 	file = ft_remove_quotes(file);
+	file = ft_getdirs(file);
 	if (out)
 	{
 		if (k != shell->arg_count - 1)
@@ -513,6 +516,102 @@ static int	redirects_out_handler(t_shell *shell, int i, int **fds, int is_pipex)
 	else
 		return (redirects_out_handler_extra(shell, last_output, fds, is_pipex));
 }
+
+/*static void	redirects_master_handler(t_shell *shell, int i, int **fds, int is_pipex, int *file_in, int *file_out)
+{
+	int		j;
+	int		k;
+	int		last_output;
+	int		last_input;
+
+	j = -1;
+	k = 0;
+	while (shell->input[++j])
+	{
+		if (k == i)
+			break ;
+		if (is_c_not_in_quotes(shell->input, j, '|'))
+			k++;
+	}
+	last_output = -1;
+	while (shell->input[j] && !is_c_not_in_quotes(shell->input, j, '|'))
+	{
+		if (is_c_not_in_quotes(shell->input, j, '>'))
+		{
+			last_output = j;
+			if (shell->input[j + 1] == '>')
+				j++;
+		}
+		j++;
+	}
+	k = 0;
+	j = -1;
+	while (shell->input[++j])
+	{
+		if (k == i)
+			break ;
+		if (is_c_not_in_quotes(shell->input, j, '|'))
+			k++;
+	}
+	last_input = -1;
+	while (shell->input[j] && !is_c_not_in_quotes(shell->input, j, '|'))
+	{
+		if (is_c_not_in_quotes(shell->input, j, '<'))
+		{
+			last_input = j;
+			if (shell->input[j + 1] == '<')
+				j++;
+		}
+		j++;
+	}
+	j = -1;
+	k = 0;
+	while (shell->input[++j])
+	{
+		if (k == i)
+			break ;
+		if (is_c_not_in_quotes(shell->input, j, '|'))
+			k++;
+	}
+	while (shell->input[j] && !is_c_not_in_quotes(shell->input, j, '|'))
+	{
+		if (is_c_not_in_quotes(shell->input, j, '>'))
+		{
+			if (j == last_output)
+			{
+				if (shell->input[j + 1] == '>')
+					*file_out = redirects_append(shell, &j, fds, 1, is_pipex);
+				else
+					*file_out = redirects_output(shell, &j, fds, 1, is_pipex);
+			}
+			else
+			{
+				if (shell->input[j + 1] == '>')
+					redirects_append(shell, &j, fds, 0, is_pipex);
+				else
+					redirects_output(shell, &j, fds, 0, is_pipex);
+			}
+		}
+		else if (is_c_not_in_quotes(shell->input, j, '<'))
+		{
+			if (j == last_input)
+			{
+				if (shell->input[j + 1] == '<')
+					*file_in = redirects_heredoc(shell, &j, fds, 1, is_pipex);
+				else
+					*file_in = redirects_input(shell, &j, fds, 1, is_pipex);
+			}
+			else
+			{
+				if (shell->input[j + 1] == '<')
+					redirects_heredoc(shell, &j, fds, 0, is_pipex);
+				else
+					redirects_input(shell, &j, fds, 0, is_pipex);
+			}
+		}
+		j++;
+	}
+}*/
 
 char	*remove_redirects(char **new_input, char **args)
 {
