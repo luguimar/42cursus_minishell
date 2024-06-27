@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/26 23:39:14 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/27 02:29:07 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 
 typedef struct s_env
 {
@@ -100,5 +101,9 @@ void	sigint_parent(int signum);
 int		redirects_handler(t_shell *shell, int i, int **fds, char **args, int is_pipex);
 int		heredocs(char *arg, int count, t_shell *shell);
 int		heredoc_unlink(t_shell *shell);
+
+//file_utils
+int		is_directory(char *path);
+int		path_exists(char *path);
 
 #endif

@@ -188,9 +188,11 @@ inquote	lib/libft/quotes.c	/^char	inquote(char *s, int index)$/;"	f	typeref:type
 is_beginning_quote	lib/libft/quotes.c	/^int	is_beginning_quote(char *s, int index)$/;"	f	typeref:typename:int
 is_beginning_wordquote	lib/libft/quotes_utils.c	/^int	is_beginning_wordquote(char *s, int index, char c)$/;"	f	typeref:typename:int
 is_c_not_in_quotes	lib/libft/quotes_utils.c	/^int	is_c_not_in_quotes(char *s, int index, char c)$/;"	f	typeref:typename:int
+is_directory	src/file_utils.c	/^int	is_directory(char *path)$/;"	f	typeref:typename:int
 is_end_quote	lib/libft/quotes.c	/^int	is_end_quote(char *s, int index)$/;"	f	typeref:typename:int
 is_end_wordquote	lib/libft/quotes_utils.c	/^int	is_end_wordquote(char *s, int index, char c)$/;"	f	typeref:typename:int
 is_just_exported	includes/minishell.h	/^	int		is_just_exported;$/;"	m	struct:s_env	typeref:typename:int
+is_just_quotes	lib/libft/ft_splitquote.c	/^int	is_just_quotes(char *str, int i)$/;"	f	typeref:typename:int
 isneg	lib/libft/ft_itoa.c	/^char	*isneg(int algcount, int n)$/;"	f	typeref:typename:char *
 isquote	lib/libft/quotes.c	/^char	isquote(char *s, int index)$/;"	f	typeref:typename:char
 key	includes/minishell.h	/^	char	*key;$/;"	m	struct:s_env	typeref:typename:char *
@@ -201,6 +203,7 @@ main_handler	src/signals.c	/^void	main_handler(int signum)$/;"	f	typeref:typenam
 minishell	src/main.c	/^int	minishell(t_shell *shell)$/;"	f	typeref:typename:int
 module	lib/libft/ft_itoa.c	/^long int	module(int n)$/;"	f	typeref:typename:long int
 next	lib/libft/libft.h	/^	struct s_list	*next;$/;"	m	struct:s_list	typeref:struct:s_list *
+path_exists	src/file_utils.c	/^int	path_exists(char *path)$/;"	f	typeref:typename:int
 pids	includes/minishell.h	/^	int		*pids;$/;"	m	struct:s_shell	typeref:typename:int *
 pipex	src/pipex.c	/^int	pipex(int argc, char **argv, t_shell *shell)$/;"	f	typeref:typename:int
 prev	lib/libft/libft.h	/^	struct s_list	*prev;$/;"	m	struct:s_list	typeref:struct:s_list *

@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:40:24 by luguimar          #+#    #+#             */
-/*   Updated: 2024/05/03 01:25:36 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/27 04:02:55 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,5 +113,6 @@ void				ft_lstswap(t_list *lst1, t_list *lst2);
 void				ft_nothing(void *content);
 t_list				*ft_lstdup(t_list *lst);
 char				*ft_remove_quotes(char *str);
+int					is_just_quotes(char *str, int i);
 
 #endif

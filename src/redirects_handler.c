@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 10:04:45 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/26 23:30:13 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/27 03:23:54 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,6 @@ static int	redirects_input(t_shell *shell, int *i, int **fds, int in, int is_pip
 		close(fd);
 		fd = -1;
 	}
-	free(file);
 	*i = j;
 	return (fd);
 }

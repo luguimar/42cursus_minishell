@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/26 20:51:41 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/27 03:18:22 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,23 @@ int	get_right_path_aux2(char **cmd, char **right_path)
 	if (cmd && ft_strchr(cmd[0], '/'))
 	{
 		*right_path = ft_getdirs(cmd[0]);
+		if (is_directory(*right_path))
+		{
+			free(*right_path);
+			*right_path = NULL;
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(*cmd, 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+			exit(126);
+		}
 		if (access(*right_path, F_OK) == 0)
 			return (1);
 		free(*right_path);
 		right_path = NULL;
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd[0], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		exit(127);
 	}
 	return (0);
 }
