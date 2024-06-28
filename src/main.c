@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/27 06:12:02 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/28 19:29:37 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	shell.env = NULL;
 	shell.input = NULL;
-	shell.env = NULL;
+	shell.env_array = NULL;
 	shell.exit_status = 0;
 	env_to_list(&shell, envp);
 	shell.env_array = env_to_array(shell.env);
@@ -103,7 +103,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		signal(SIGINT, main_handler);
 		signal(SIGQUIT, SIG_IGN);
-		shell.input = readline("minishell$>");
+		shell.input = readline("minishell$> ");
 		if (shell.input == NULL)
 			ft_exit(NULL, &shell, NULL);
 		add_history(shell.input);

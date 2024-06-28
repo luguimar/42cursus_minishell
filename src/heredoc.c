@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 04:01:49 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/26 23:56:13 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/28 17:22:41 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int	heredocs(char *arg, int count, t_shell *shell)
 	line = get_next_line(0);
 	while (line && ft_strcmp(line, eof))
 	{
-		expand(&line, shell, -1, 0);
+		expand_heredoc(&line, shell, -1, 0);
 		write(fd, line, ft_strlen(line));
 		free(line);
 		ft_putstr_fd("> ", 1);

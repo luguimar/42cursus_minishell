@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 05:09:37 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/28 09:02:05 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/28 19:09:37 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,11 @@ static int	ft_pwd(char **args, t_shell *shell)
 	char	*pwd;
 
 	pwd = getcwd(NULL, 0);
-	ft_putendl_fd(pwd, 1);
-	free(pwd);
+	if (pwd)
+	{
+		ft_putendl_fd(pwd, 1);
+		free(pwd);
+	}
 	free_array_of_strings(args);
 	shell->exit_status = 0;
 	return (1);

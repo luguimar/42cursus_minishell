@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 09:09:59 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/28 08:57:18 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/28 13:18:03 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ static int	redirect_input(t_shell *shell, char **args, int i, int is_pipex)
 	arg_nr = 0;
 	while (args[arg_nr])
 		arg_nr++;
-	arg_nr = shell->arg_count - arg_nr - 1;
+	arg_nr = shell->arg_count - arg_nr;
 	is_heredoc = 0;
 	if (args[0][i + 1] == args[0][i])
 	{
@@ -234,6 +234,8 @@ static int	redirects_main_handler(t_shell *shell, char **args, int *file_in, int
 			if (*file_in != -1)
 				close(*file_in);
 			*file_in = redirect_input(shell, args, i, is_pipex);
+			if ((*args)[i + 1] == (*args)[i])
+				i++;
 			if (*file_in == -1)
 				return (-1);
 		}
@@ -242,6 +244,8 @@ static int	redirects_main_handler(t_shell *shell, char **args, int *file_in, int
 			if (*file_out != -1)
 				close(*file_out);
 			*file_out = redirect_output(shell, args, i, is_pipex);
+			if ((*args)[i + 1] == (*args)[i])
+				i++;
 			if (*file_out == -1)
 				return (-1);
 		}
