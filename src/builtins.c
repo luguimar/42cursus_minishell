@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 05:09:37 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/27 06:24:03 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/28 09:02:05 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	ft_exit(char **args, t_shell *shell, char **old_args)
 	return_value = 0;
 	if (args && ft_matrixlen((void **)args) > 2)
 	{
+		shell->exit_status = 1;
 		ft_putstr_fd("exit: too many arguments\n", 2);
 		free_array_of_strings(args);
 		return (1);

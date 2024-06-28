@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:16:47 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/25 19:41:11 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/28 09:03:42 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ int	ft_cd_normal(char **args, t_shell *shell)
 		perror(path);
 		free(path);
 		free_array_of_strings(args);
+		shell->exit_status = 1;
 		return (1);
 	}
 	if (get_env_value(shell->env, "OLDPWD"))
