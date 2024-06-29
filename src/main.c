@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/26 07:20:44 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/28 19:29:37 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,31 +35,6 @@ void	free_everything(t_shell *shell)
 	rl_clear_history();
 }
 
-static int	check_args(char **args)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (args[i])
-	{
-		j = 0;
-		while ((args[i][j] == ' ' || args[i][j] == '\t' || args[i][j] == '\n' \
-		|| args[i][j] == '\v' || args[i][j] == '\f' || args[i][j] == '\r') \
-		&& args[i][j])
-			j++;
-		if (!args[i][j])
-		{
-			free_array_of_strings(args);
-			ft_putstr_fd("minishell: syntax error near unexpected token `|'\n" \
-			, 2);
-			return (0);
-		}
-		i++;
-	}
-	return (1);
-}
-
 int	minishell(t_shell *shell)
 {
 	char	**args;
@@ -68,6 +43,7 @@ int	minishell(t_shell *shell)
 	int		orig_stdin;
 
 	i = -1;
+	shell->input = ft_strtrim(shell->input, " \t\n\v\f\r");
 	if (shell->input[0] == '|' || (ft_strlen(shell->input) != 0 && \
 	shell->input[ft_strlen(shell->input) - 1] == '|'))
 		return (ft_putstr_fd \
@@ -85,8 +61,6 @@ int	minishell(t_shell *shell)
 		heredocs(args[i], i, shell);
 		expand(&args[i], shell, -1, 0);
 	}
-	if (!check_args(args))
-		return (0);
 	if (ft_matrixlen((void **) args) == 1)
 	{
 		orig_stdout = dup(STDOUT_FILENO);
@@ -108,7 +82,7 @@ int	minishell(t_shell *shell)
 		}
 	}
 	pipex(shell->arg_count, args, shell);
-//funcao para dar unlink aos heredocs
+	heredoc_unlink(shell);
 	free_array_of_strings(args);
 	return (0);
 }
@@ -121,7 +95,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	shell.env = NULL;
 	shell.input = NULL;
-	shell.env = NULL;
+	shell.env_array = NULL;
 	shell.exit_status = 0;
 	env_to_list(&shell, envp);
 	shell.env_array = env_to_array(shell.env);
@@ -129,7 +103,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		signal(SIGINT, main_handler);
 		signal(SIGQUIT, SIG_IGN);
-		shell.input = readline("minishell$>");
+		shell.input = readline("minishell$> ");
 		if (shell.input == NULL)
 			ft_exit(NULL, &shell, NULL);
 		add_history(shell.input);

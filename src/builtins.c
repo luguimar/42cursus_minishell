@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 05:09:37 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/21 23:21:36 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/28 19:09:37 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	ft_exit(char **args, t_shell *shell, char **old_args)
 	return_value = 0;
 	if (args && ft_matrixlen((void **)args) > 2)
 	{
+		shell->exit_status = 1;
 		ft_putstr_fd("exit: too many arguments\n", 2);
 		free_array_of_strings(args);
 		return (1);
@@ -64,8 +65,11 @@ static int	ft_pwd(char **args, t_shell *shell)
 	char	*pwd;
 
 	pwd = getcwd(NULL, 0);
-	ft_putendl_fd(pwd, 1);
-	free(pwd);
+	if (pwd)
+	{
+		ft_putendl_fd(pwd, 1);
+		free(pwd);
+	}
 	free_array_of_strings(args);
 	shell->exit_status = 0;
 	return (1);
@@ -101,7 +105,7 @@ int	exec_builtin(char **args, t_shell *shell, int ispipex)
 	}
 	else
 	{
-		new_args = ft_splitquote(args[0], ' ');
+		new_args = ft_splitquote_nulls(args[0], ' ');
 		if (!new_args)
 			return (-1);
 		if (ft_strcmp(new_args[0], "cd") && ft_strcmp \
@@ -114,7 +118,7 @@ int	exec_builtin(char **args, t_shell *shell, int ispipex)
 			return (0);
 		}
 		free_array_of_strings(new_args);
-		redirects_handler(shell, 0, NULL, args);
+		redirects_handler(shell, 0, NULL, args, 0);
 		new_args = ft_splitquote(args[0], ' ');
 	}
 	if (!new_args)

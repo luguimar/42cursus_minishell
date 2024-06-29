@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/26 07:18:36 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/28 17:21:22 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 
 typedef struct s_env
 {
@@ -74,6 +75,7 @@ int		change_value(t_list *env, char *key, char *value);
 char	*get_env_value(t_list *env, char *key);
 void	free_everything(t_shell *shell);
 void	expand(char **input, t_shell *shell, int i, int s);
+void	expand_heredoc(char **input, t_shell *shell, int i, int s);
 
 //pipes
 
@@ -97,7 +99,12 @@ void	sigint_parent(int signum);
 
 //redirects
 
-int		redirects_handler(t_shell *shell, int i, int **fds, char **args);
+int		redirects_handler(t_shell *shell, int i, int **fds, char **args, int is_pipex);
 int		heredocs(char *arg, int count, t_shell *shell);
+int		heredoc_unlink(t_shell *shell);
+
+//file_utils
+int		is_directory(char *path);
+int		path_exists(char *path);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:10:31 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/27 07:03:15 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/28 19:27:20 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	ft_cd_case_dotdot(t_shell *shell, char ***args)
 	char	*pwd;
 
 	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		return (free_array_of_strings(*args), 1);
 	i = ft_strlen(pwd);
 	while (i > 1 && pwd[--i] != '/')
 		;
@@ -84,6 +86,9 @@ int	ft_cd_case_tild(t_shell *shell, char ***args)
 		return (free_array_of_strings(*args), 1);
 	}
 	pwd = getcwd(NULL, 0);
+	shell->exit_status = 0;
+	if (!pwd)
+		return (free_array_of_strings(*args), 1);
 	path = ft_strjoin(get_env_value(shell->env, "HOME"), (*args)[1] + 1);
 	path = ft_cd_check_for_dots(path);
 	if (chdir(path) == -1)

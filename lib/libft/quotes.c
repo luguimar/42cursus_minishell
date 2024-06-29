@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 12:55:47 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/12 19:06:21 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/27 05:27:03 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ char	inquote(char *s, int index)
 			break ;
 		if (i != 0 && ((s[i - 1] == '\"' || s[i - 1] == '\'') \
 		&& (i == 1 || s[i - 2] != '\\') && quote == '\0' && \
-		(i == 1 || !has_open_quote(s, i - 2))))
+		(i == 1 || !has_open_quote(s, i - 2)) && !is_just_quotes \
+		(s, i - 1)))
 			quote = s[i - 1];
 		else if (s[i] == quote && s[i - 1] != '\\')
 			quote = '\0';

@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 21:18:14 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/21 05:19:15 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/27 06:37:42 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	dup2pipe(int **fds, int i, t_shell *shell, char **args)
 		close(fds[j][0]);
 		close(fds[j][1]);
 	}
-	redirects_handler(shell, i, fds, args);
+	redirects_handler(shell, i, fds, args, 1);
 }
 
 int	get_right_path_aux2(char **cmd, char **right_path)
@@ -52,10 +52,34 @@ int	get_right_path_aux2(char **cmd, char **right_path)
 	if (cmd && ft_strchr(cmd[0], '/'))
 	{
 		*right_path = ft_getdirs(cmd[0]);
+		if (is_directory(*right_path))
+		{
+			free(*right_path);
+			*right_path = NULL;
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(*cmd, 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+			exit(126);
+		}
 		if (access(*right_path, F_OK) == 0)
-			return (1);
+		{
+			if (access(*right_path, X_OK) == 0)
+				return (1);
+			else
+			{
+				free(*right_path);
+				*right_path = NULL;
+				ft_putstr_fd("minishell: ", 2);
+				perror(*cmd);
+				exit(126);
+			}
+		}
 		free(*right_path);
 		right_path = NULL;
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd[0], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		exit(127);
 	}
 	return (0);
 }
@@ -66,6 +90,7 @@ int	get_right_path_aux(char **cmd, char **path, int i, char **right_path)
 	*right_path = ft_strjoinfree(*right_path, *cmd);
 	if (access(*right_path, F_OK) == 0)
 	{
+
 		free_array_of_strings(path);
 		return (1);
 	}

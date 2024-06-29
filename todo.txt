@@ -18,6 +18,10 @@ cat <<
 $(shuf -i 1-100 -n 100 | tr "\n" " ")
 cat | cat | coisa
 
+minishell$><infile cat | echo \"co'i'sa\"> outfile
+minishell$>cat outfile
+\co'i'sa\
+
 
 
 
@@ -33,3 +37,4 @@ leaks nos child processes quando o commando nao e executado e o processo da exit
 ver exit codes no caso de falha a abrir ficheiro, falha de permicoes, ficheiro nao encontrado, etc
 
 testar bem exports
+testar leaks a executar ficheiros com caminho relativo

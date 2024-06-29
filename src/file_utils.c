@@ -1,38 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isint.c                                         :+:      :+:    :+:   */
+/*   file_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/18 23:56:54 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/28 08:59:22 by luguimar         ###   ########.fr       */
+/*   Created: 2024/06/27 02:21:10 by luguimar          #+#    #+#             */
+/*   Updated: 2024/06/27 02:28:54 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/minishell.h"
 
-int	ft_isint(const char *str)
+int	path_exists(char *path)
 {
-	int	i;
+	struct stat	*buf;
 
-	i = 0;
-	if (str[i] == '-' || str[i] == '+')
-		i++;
-	while (str[i])
+	buf = malloc(sizeof(struct stat));
+	if (stat(path, buf) == -1)
 	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		i++;
-	}
-	if (ft_strlen(str) > 11)
+		free(buf);
 		return (0);
-	if (ft_strlen(str) == 11 && str[0] != '-')
-		return (0);
-	if (ft_strlen(str) == 11 && str[0] == '-')
-	{
-		if (ft_atol(str) < -2147483648)
-			return (0);
 	}
+	free(buf);
 	return (1);
+}
+
+int	is_directory(char *path)
+{
+	struct stat	*buf;
+
+	buf = malloc(sizeof(struct stat));
+	if (stat(path, buf) == -1)
+	{
+		free(buf);
+		return (0);
+	}
+	if (S_ISDIR(buf->st_mode))
+	{
+		free(buf);
+		return (1);
+	}
+	free(buf);
+	return (0);
 }
