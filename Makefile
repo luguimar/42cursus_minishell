@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+         #
+#    By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/12 19:10:12 by luguimar          #+#    #+#              #
-#    Updated: 2024/06/27 02:21:45 by luguimar         ###   ########.fr        #
+#    Updated: 2024/06/29 20:05:41 by jduraes-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,7 @@ re: fclean clean all
 run: clear all
 	./minishell
 
-leaks: readline.supp all
+leaks: all readline.supp all
 	valgrind -s --suppressions=readline.supp --leak-check=full --show-leak-kinds=all ./minishell #--log-file=output.log 
 
 .PHONY: all clean fclean re run leaks

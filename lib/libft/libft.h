@@ -114,5 +114,6 @@ void				ft_nothing(void *content);
 t_list				*ft_lstdup(t_list *lst);
 char				*ft_remove_quotes(char *str);
 int					is_just_quotes(char *str, int i);
+char				*ft_strtrimfree(char const *s1, char const *set);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:07:51 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/27 03:48:16 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/29 20:06:59 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static void	exec_command(char *path, t_shell *shell, char **args)
 		if (path)
 			free(path);
 		free_array_of_strings(args);
+		free_everything(shell);
 		exit(127);
 	}
 	execve(path, args, shell->env_array);

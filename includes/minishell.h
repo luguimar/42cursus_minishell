@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:24:19 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/28 17:21:22 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/29 19:35:22 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ typedef struct s_shell
 	int		proccess_status;
 	int		exit_status;
 	int		*pids;
-	int		**redir_fds;
 	int		arg_count;
 	int		*heredocs;
 	char	*input;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/28 19:29:37 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/29 19:49:07 by jduraes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,40 @@ void	free_everything(t_shell *shell)
 			free(tmp);
 		}
 	}
-	free(shell->env_array);
-	free(shell->input);
+	if (shell->env_array)
+		free(shell->env_array);
+	if (shell->input)
+		free(shell->input);
+	if(shell->heredocs)
+		free(shell->heredocs);
+	free(shell);
 	rl_clear_history();
+}
+
+int	arg_check(char **input, t_shell *shell)
+{
+	char	**new;
+	int	i;
+
+	i = -1;
+	(void)new;
+	(void)shell;
+	*input = ft_strtrimfree(*input, " \t\n\v\f\r");
+	while ((*input)[++i])
+	{
+		if (is_c_not_in_quotes(*input, i, '|') && (*input)[i + 1] == '|')
+		{
+			ft_putstr_fd("minishell: no suport for \"||\"\n", 2);
+            return (0);
+		}
+	}
+	if (inquote(*input, i - 1))
+	{
+		ft_putstr_fd("minishell: no suport for open quotes\n", 2);
+        return (0);
+	}
+//	new = ft_split_if_not_in_quote(input, '|');
+	return (1);
 }
 
 int	minishell(t_shell *shell)
@@ -43,11 +74,8 @@ int	minishell(t_shell *shell)
 	int		orig_stdin;
 
 	i = -1;
-	shell->input = ft_strtrim(shell->input, " \t\n\v\f\r");
-	if (shell->input[0] == '|' || (ft_strlen(shell->input) != 0 && \
-	shell->input[ft_strlen(shell->input) - 1] == '|'))
-		return (ft_putstr_fd \
-		("minishell: syntax error near unexpected token `|'\n", 2), 0);
+	if (!arg_check(&(shell->input), shell))
+		return (1);
 	args = ft_split_if_not_in_quote(shell->input, '|');
 	if (args == NULL)
 		return (1);
@@ -84,31 +112,37 @@ int	minishell(t_shell *shell)
 	pipex(shell->arg_count, args, shell);
 	heredoc_unlink(shell);
 	free_array_of_strings(args);
+	free(shell->heredocs);
 	return (0);
+}
+
+t_shell	*initialize(void)
+{
+	t_shell	*shell;
+
+	shell = ft_calloc(1, sizeof(t_shell));
+	return (shell);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_shell				shell;
+	t_shell				*shell;
 
 	(void)argc;
 	(void)argv;
-	shell.env = NULL;
-	shell.input = NULL;
-	shell.env_array = NULL;
-	shell.exit_status = 0;
-	env_to_list(&shell, envp);
-	shell.env_array = env_to_array(shell.env);
+	shell = initialize();
+	env_to_list(shell, envp);
+	shell->env_array = env_to_array(shell->env);
 	while (1)
 	{
 		signal(SIGINT, main_handler);
 		signal(SIGQUIT, SIG_IGN);
-		shell.input = readline("minishell$> ");
-		if (shell.input == NULL)
-			ft_exit(NULL, &shell, NULL);
-		add_history(shell.input);
-		minishell(&shell);
-		free(shell.input);
+		shell->input = readline("minishell$> ");
+		if (shell->input == NULL)
+			ft_exit(NULL, shell, NULL);
+		add_history(shell->input);
+		minishell(shell);
+		free(shell->input);
 	}
 	return (0);
 }
