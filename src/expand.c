@@ -6,7 +6,7 @@
 /*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:58:13 by jduraes-          #+#    #+#             */
-/*   Updated: 2024/06/10 19:12:20 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/06/28 17:20:52 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ static char	*expand_aux(char *key, t_shell *shell)
 		return (NULL);
 	}
 }
-
 
 static void	expandqm(char **input, char *key, int *i, int *s)
 {
@@ -85,11 +84,12 @@ void	expand(char **input, t_shell *shell, int i, int s)
 	{
 		if ((*input)[i] == '$' && inquote(*input, i) != '\'')
 		{
-			while ((*input)[i + 1 + s] != '\0' && !ft_is_special_char((*input)[i + 1 + s]))
+			while ((*input)[i + 1 + s] != '\0' && !ft_is_special_char
+			((*input)[i + 1 + s]))
 			{
 				s++;
 				if (ft_isdigit((*input)[i + 1]))
-					break;
+					break ;
 			}
 			if (s)
 			{
@@ -99,10 +99,38 @@ void	expand(char **input, t_shell *shell, int i, int s)
 			}
 			else if ((*input)[i + 1] == '?' && (*input)[i] != '\0')
 			{
-				if((*input)[i + 1] == '?')
+				if ((*input)[i + 1] == '?')
 					s++;
+				expandqm(input, ft_itoa(shell->exit_status), &i, &s);
+			}
+		}
+	}
+}
+
+void	expand_heredoc(char **input, t_shell *shell, int i, int s)
+{
+	while ((*input)[++i] != '\0')
+	{
+		if ((*input)[i] == '$')
+		{
+			while ((*input)[i + 1 + s] != '\0' && !ft_is_special_char
+			((*input)[i + 1 + s]))
+			{
+				s++;
+				if (ft_isdigit((*input)[i + 1]))
+					break ;
+			}
+			if (s)
+			{
 				expandqm(input, \
-					ft_itoa(shell->exit_status), &i, &s);
+					expand_aux(ft_substr(*input, i + 1, s), \
+						shell), &i, &s);
+			}
+			else if ((*input)[i + 1] == '?' && (*input)[i] != '\0')
+			{
+				if ((*input)[i + 1] == '?')
+					s++;
+				expandqm(input, ft_itoa(shell->exit_status), &i, &s);
 			}
 		}
 	}

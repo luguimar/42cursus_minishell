@@ -6,7 +6,7 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 15:31:54 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/27 03:16:37 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/12 18:31:33 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	has_open_quote(char *s, int index)
 
 	i = 0;
 	quote = '\0';
-	while (i < index)
+	while (i <= index)
 	{
 		if ((s[i] == '\'' || s[i] == '\"') && \
 		(i == 0 || s[i - 1] != '\\') && quote == '\0')

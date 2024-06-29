@@ -6,11 +6,20 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 20:46:24 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/27 03:45:56 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/27 05:55:55 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+int	is_just_quotes(char *str, int i)
+{
+	if ((is_c_not_in_quotes(str, i, '\"') || is_c_not_in_quotes(str, i, '\'' \
+	)) && str[i + 1] == str[i])
+		return (1);
+	else
+		return (0);
+}
 
 int	ft_quote_count(char *str)
 {
@@ -49,12 +58,15 @@ static void	ft_remove_quotes_aux(char *str, char *new)
 	j = 0;
 	while (str[i] != '\0')
 	{
-		if (quote == '\0' && (str[i] == '\'' || str[i] == '\"'))
+		if (quote == '\0' && (str[i] == '\'' || str[i] == '\"' || \
+		(str[i] == '\\' && (str[i + 1] == '\'' || str[i + 1] == '\"'))))
 			quote = str[i];
-		else if (str[i] == quote)
+		else if (!(quote == '\\') && str[i] == quote)
 			quote = '\0';
 		else
 		{
+			if (quote == '\\')
+				quote = '\0';
 			new[j] = str[i];
 			j++;
 		}
@@ -63,7 +75,7 @@ static void	ft_remove_quotes_aux(char *str, char *new)
 	new[j] = '\0';
 }
 
-static char	*ft_remove_quotes(char *str)
+char	*ft_remove_quotes(char *str)
 {
 	int		quote_count;
 	char	*new;

@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:58:44 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/29 04:45:12 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/28 19:24:32 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,14 @@ int	ft_export(char **args, t_shell *shell)
 
 	i = 0;
 	new_env = NULL;
-	if (ft_matrixlen((void **)args) == 1)
+	if (ft_matrixlen((void **)args) == 1 && shell->env != NULL)
 	{
 		print_sorted_env(shell->env);
 		shell->exit_status = 0;
 		free_array_of_strings(args);
 		return (1);
 	}
+	shell->exit_status = 0;
 	while (args[++i])
 	{
 		j = 0;
@@ -89,10 +90,10 @@ int	ft_export(char **args, t_shell *shell)
 		}
 		while (!ft_is_special_char(args[i][j]))
 			j++;
-		if (args[i][j] == '=' && args[i][j + 1] != '\0')
+		if (args[i][j] == '=' && args[i][j + 1] == '\0')
 		{
 			tmp = ft_substr(args[i], 0, j);
-			tmp2 = ft_substr(args[i], j + 1, ft_strlen(args[i]) - j - 1);
+			tmp2 = ft_strdup("");
 			if (!change_value(shell->env, tmp, tmp2))
 				new_env = envnew(tmp, tmp2, args[i], 1);
 			else
@@ -108,12 +109,12 @@ int	ft_export(char **args, t_shell *shell)
 			free_array_of_strings(args);
 			return (1);
 		}
-		else if (args[i][j] == '=' && args[i][j + 1] == '\0')
+		else if (args[i][j] == '=' && args[i][j + 1] != '\0')
 		{
 			tmp = ft_substr(args[i], 0, j);
-			tmp2 = ft_strdup("");
+			tmp2 = ft_substr(args[i], j + 1, ft_strlen(args[i]) - j - 1);
 			if (!change_value(shell->env, tmp, tmp2))
-				new_env = envnew(tmp, tmp2, args[i], 1);
+				new_env = envnew(tmp, tmp2, args[i], 0);
 			else
 				free(tmp);
 		}
@@ -123,10 +124,9 @@ int	ft_export(char **args, t_shell *shell)
 			tmp2 = ft_strdup("");
 			new_env = envnew(tmp, tmp2, args[i], 2);
 		}
+		if (new_env)
+			ft_lstadd_back(&shell->env, ft_lstnew(new_env));
 	}
-	shell->exit_status = 0;
-	if (new_env)
-		ft_lstadd_back(&shell->env, ft_lstnew(new_env));
 	free_array_of_strings(args);
 	return (1);
 }

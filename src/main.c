@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jduraes- <jduraes-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 19:26:09 by luguimar          #+#    #+#             */
-/*   Updated: 2024/06/07 18:15:55 by jduraes-         ###   ########.fr       */
+/*   Updated: 2024/06/28 19:29:37 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include <signal.h>
 
 void	free_everything(t_shell *shell)
 {
@@ -29,74 +30,61 @@ void	free_everything(t_shell *shell)
 			free(tmp);
 		}
 	}
-	if (shell->env_array)
-		free(shell->env_array);
-	if (shell->input)
-		free(shell->input);
+	free(shell->env_array);
+	free(shell->input);
 	rl_clear_history();
-}
-
-static int	check_args(char **args)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (args[i])
-	{
-		j = 0;
-		while ((args[i][j] == ' ' || args[i][j] == '\t' || args[i][j] == '\n' \
-		|| args[i][j] == '\v' || args[i][j] == '\f' || args[i][j] == '\r') \
-		&& args[i][j])
-			j++;
-		if (!args[i][j])
-		{
-			free_array_of_strings(args);
-			ft_putstr_fd("minishell: syntax error near unexpected token `|'\n" \
-			, 2);
-			return (0);
-		}
-		i++;
-	}
-	return (1);
 }
 
 int	minishell(t_shell *shell)
 {
 	char	**args;
+	int		i;
+	int		orig_stdout;
+	int		orig_stdin;
 
+	i = -1;
+	shell->input = ft_strtrim(shell->input, " \t\n\v\f\r");
 	if (shell->input[0] == '|' || (ft_strlen(shell->input) != 0 && \
 	shell->input[ft_strlen(shell->input) - 1] == '|'))
-	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
-		return (0);
-	}
+		return (ft_putstr_fd \
+		("minishell: syntax error near unexpected token `|'\n", 2), 0);
 	args = ft_split_if_not_in_quote(shell->input, '|');
 	if (args == NULL)
 		return (1);
-	if (!check_args(args))
-		return (0);
 	shell->arg_count = ft_matrixlen((void **) args);
+	shell->heredocs = malloc(sizeof(int) * (shell->arg_count + 1));
+	if (shell->heredocs == NULL)
+		return (1);
+	shell->heredocs[shell->arg_count] = -1;
+	while (args[++i])
+	{
+		heredocs(args[i], i, shell);
+		expand(&args[i], shell, -1, 0);
+	}
 	if (ft_matrixlen((void **) args) == 1)
 	{
+		orig_stdout = dup(STDOUT_FILENO);
+		orig_stdin = dup(STDIN_FILENO);
 		if (exec_builtin(args, shell, 0))
 		{
-			free_array_of_strings(args);
-			return (0);
+			dup2(orig_stdout, STDOUT_FILENO);
+			dup2(orig_stdin, STDIN_FILENO);
+			close(orig_stdout);
+			close(orig_stdin);
+			return (free_array_of_strings(args), 0);
+		}
+		else
+		{
+			dup2(orig_stdout, STDOUT_FILENO);
+			dup2(orig_stdin, STDIN_FILENO);
+			close(orig_stdout);
+			close(orig_stdin);
 		}
 	}
 	pipex(shell->arg_count, args, shell);
+	heredoc_unlink(shell);
 	free_array_of_strings(args);
 	return (0);
-}
-
-t_shell	*getshell(t_shell *shell)
-{
-	static t_shell	*new;
-
-	if (shell)
-		new = shell;
-	return (new);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -107,25 +95,18 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	shell.env = NULL;
 	shell.input = NULL;
-	shell.env = NULL;
+	shell.env_array = NULL;
 	shell.exit_status = 0;
 	env_to_list(&shell, envp);
 	shell.env_array = env_to_array(shell.env);
 	while (1)
 	{
-		sigset(1);
-		shell.input = readline("minishell$>");
-		/*if (shell.input == NULL)
-			break ;*/
-		if (!(shell.input))
-		{
-			write(1, "exit\n", 5);
-			free_everything(&shell);
-			return (0);
-		}
+		signal(SIGINT, main_handler);
+		signal(SIGQUIT, SIG_IGN);
+		shell.input = readline("minishell$> ");
+		if (shell.input == NULL)
+			ft_exit(NULL, &shell, NULL);
 		add_history(shell.input);
-		expand(&(shell.input), &shell, -1, 0);
-		getshell(&shell);
 		minishell(&shell);
 		free(shell.input);
 	}
