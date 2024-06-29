@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 13:10:31 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 05:19:35 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/28 19:27:20 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	ft_cd_case_dotdot(t_shell *shell, char ***args)
 	char	*pwd;
 
 	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		return (free_array_of_strings(*args), 1);
 	i = ft_strlen(pwd);
 	while (i > 1 && pwd[--i] != '/')
 		;
@@ -37,6 +39,7 @@ int	ft_cd_case_dotdot(t_shell *shell, char ***args)
 		change_value(shell->env, "PWD", path);
 	else
 		free(path);
+	shell->exit_status = 0;
 	return (free_array_of_strings(*args), 1);
 }
 
@@ -45,6 +48,7 @@ int	ft_cd_aux_extra(t_shell *shell, char ***args)
 	if (ft_strcmp((*args)[1], ".") == 0)
 	{
 		free_array_of_strings(*args);
+		shell->exit_status = 0;
 		return (1);
 	}
 	else if (ft_strcmp((*args)[1], "..") == 0)
@@ -67,6 +71,7 @@ int	ft_cd_case_slash(t_shell *shell, char ***args)
 		ft_strdup(get_env_value(shell->env, "PWD")));
 	change_value(shell->env, "PWD", ft_strdup((*args)[1]));
 	free_array_of_strings(*args);
+	shell->exit_status = 0;
 	return (1);
 }
 
@@ -81,6 +86,9 @@ int	ft_cd_case_tild(t_shell *shell, char ***args)
 		return (free_array_of_strings(*args), 1);
 	}
 	pwd = getcwd(NULL, 0);
+	shell->exit_status = 0;
+	if (!pwd)
+		return (free_array_of_strings(*args), 1);
 	path = ft_strjoin(get_env_value(shell->env, "HOME"), (*args)[1] + 1);
 	path = ft_cd_check_for_dots(path);
 	if (chdir(path) == -1)
@@ -96,6 +104,7 @@ int	ft_cd_case_tild(t_shell *shell, char ***args)
 		change_value(shell->env, "PWD", path);
 	else
 		free(path);
+	shell->exit_status = 0;
 	return (free_array_of_strings(*args), 1);
 }
 
@@ -106,7 +115,7 @@ int	ft_cd_aux(char **args, t_shell *shell)
 	else if (args[1][0] == '~')
 		return (ft_cd_case_tild(shell, &args));
 	else if (args[1][0] == '/')
-		ft_cd_case_slash(shell, &args);
+		return (ft_cd_case_slash(shell, &args));
 	else
 		return (ft_cd_aux_extra(shell, &args));
 	return (0);

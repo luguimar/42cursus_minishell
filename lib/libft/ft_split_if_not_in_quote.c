@@ -6,7 +6,7 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 21:39:52 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/19 03:41:51 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/27 04:36:31 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	wordfiller(char *j, char *str, char c)
 	int	i;
 
 	i = 0;
-	while (j[i] != '\0' && j[i] != c)
+	while (j[i] != '\0' && !is_c_not_in_quotes(j, i, c))
 	{
 		str[i] = j[i];
 		i++;
@@ -107,8 +107,8 @@ char	**ft_split_if_not_in_quote(char *s, char c)
 	str[wordcounter(s, c)] = NULL;
 	while (s[++i] != '\0')
 	{
-		if ((!is_c_not_in_quotes(s, i, c) && \
-		is_c_not_in_quotes(s, i + 1, c)) || s[i + 1] == '\0')
+		if (!is_c_not_in_quotes(s, i, c) && \
+		(is_c_not_in_quotes(s, i + 1, c) || s[i + 1] == '\0'))
 		{
 			strmalloc(&j, &str, &k);
 			if (!str)
@@ -223,4 +223,21 @@ char	**ft_split_if_not_in_quote(char *s, char c)
 	}
 	strfiller((char *)s, str, c);
 	return (str);
+}*/
+/*
+int	main(void)
+{
+	char	**str;
+	char	input[1000];
+	int		i;
+
+	i = 0;
+	scanf("%s", input);
+	str = ft_split_if_not_in_quote(input, ' ');
+	while (str[i])
+	{
+		printf("%s\n", str[i]);
+		i++;
+	}
+	return (0);
 }*/

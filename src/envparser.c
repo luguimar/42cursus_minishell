@@ -6,13 +6,13 @@
 /*   By: luguimar <luguimar@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 23:50:43 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/18 23:18:15 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/21 07:48:26 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	change_value(t_list *env, char *key, char *value)
+int	change_value(t_list *env, char *key, char *value)
 {
 	while (env)
 	{
@@ -23,16 +23,26 @@ void	change_value(t_list *env, char *key, char *value)
 			free(((t_env *)env->content)->full);
 			((t_env *)env->content)->full = ft_strjoinfree2(key, \
 				ft_strjoin("=", value));
-			return ;
+			((t_env *)env->content)->export_version = ft_strjoin(\
+				"declare -x ", key);
+			((t_env *)env->content)->export_version = ft_strjoinfree(\
+				((t_env *)env->content)->export_version, "=\"");
+			((t_env *)env->content)->export_version = ft_strjoinfree(\
+				((t_env *)env->content)->export_version, value);
+			((t_env *)env->content)->export_version = ft_strjoinfree(\
+				((t_env *)env->content)->export_version, "\"");
+			((t_env *)env->content)->is_just_exported = 0;
+			return (1);
 		}
 		env = env->next;
 	}
+	return (0);
 }
 
 void	add_env(t_shell *shell, char *key, char *value)
 {
 	ft_lstadd_back(&shell->env, ft_lstnew((void *)envnew(key, value, \
-		ft_strjoin(key, ft_strjoin("=", value)))));
+		ft_strjoin(key, ft_strjoin("=", value)), 0)));
 }
 
 char	**env_to_array(t_list *env)
@@ -56,7 +66,7 @@ char	**env_to_array(t_list *env)
 	return (envp);
 }
 
-t_env	*envnew(char *key, char *value, char *env_i)
+t_env	*envnew(char *key, char *value, char *env_i, int is_just_exported)
 {
 	t_env	*new;
 
@@ -66,6 +76,17 @@ t_env	*envnew(char *key, char *value, char *env_i)
 	new->key = key;
 	new->value = value;
 	new->full = ft_strdup(env_i);
+	new->is_just_exported = is_just_exported;
+	new->export_version = ft_strdup("declare -x ");
+	new->export_version = ft_strjoinfree(new->export_version, key);
+	//if (!is_just_exported)
+	//{
+	new->export_version = ft_strjoinfree(new->export_version, "=\"");
+	new->export_version = ft_strjoinfree(new->export_version, value);
+	new->export_version = ft_strjoinfree(new->export_version, "\"");
+	//}
+	//else if (is_just_exported == 1)
+	//new->export_version = ft_strjoinfree(new->export_version, "=\"\"");
 	if (!new->full)
 		return (NULL);
 	return (new);
@@ -90,7 +111,7 @@ int	env_to_list(t_shell *shell, char **envp)
 		if (!key || !value)
 			return (0);
 		ft_lstadd_back(&shell->env, \
-			ft_lstnew((void *)envnew(key, value, envp[i])));
+			ft_lstnew((void *)envnew(key, value, envp[i], 0)));
 		i++;
 	}
 	return (1);

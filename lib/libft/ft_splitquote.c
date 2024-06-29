@@ -6,13 +6,118 @@
 /*   By: luguimar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 20:46:24 by luguimar          #+#    #+#             */
-/*   Updated: 2024/04/13 02:37:28 by luguimar         ###   ########.fr       */
+/*   Updated: 2024/06/27 05:55:55 by luguimar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	wordcounter(char *s, char c)
+int	is_just_quotes(char *str, int i)
+{
+	if ((is_c_not_in_quotes(str, i, '\"') || is_c_not_in_quotes(str, i, '\'' \
+	)) && str[i + 1] == str[i])
+		return (1);
+	else
+		return (0);
+}
+
+int	ft_quote_count(char *str)
+{
+	int		quote_count;
+	char	quote;
+	int		i;
+
+	quote_count = 0;
+	quote = '\0';
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (quote == '\0' && (str[i] == '\'' || str[i] == '\"'))
+		{
+			quote = str[i];
+			quote_count++;
+		}
+		else if (str[i] == quote && quote != '\0')
+		{
+			quote_count++;
+			quote = '\0';
+		}
+		i++;
+	}
+	return (quote_count);
+}
+
+static void	ft_remove_quotes_aux(char *str, char *new)
+{
+	char	quote;
+	int		i;
+	int		j;
+
+	quote = '\0';
+	i = 0;
+	j = 0;
+	while (str[i] != '\0')
+	{
+		if (quote == '\0' && (str[i] == '\'' || str[i] == '\"' || \
+		(str[i] == '\\' && (str[i + 1] == '\'' || str[i + 1] == '\"'))))
+			quote = str[i];
+		else if (!(quote == '\\') && str[i] == quote)
+			quote = '\0';
+		else
+		{
+			if (quote == '\\')
+				quote = '\0';
+			new[j] = str[i];
+			j++;
+		}
+		i++;
+	}
+	new[j] = '\0';
+}
+
+char	*ft_remove_quotes(char *str)
+{
+	int		quote_count;
+	char	*new;
+
+	quote_count = ft_quote_count(str);
+	new = malloc((ft_strlen(str) + 1 - quote_count) * sizeof(char));
+	if (!new)
+		return (NULL);
+	ft_remove_quotes_aux(str, new);
+	free(str);
+	return (new);
+}
+
+char	**ft_splitquote(char *s, char c)
+{
+	char	**str;
+	int		i;
+
+	str = ft_split_if_not_in_quote(s, c);
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (str[i] != NULL)
+	{
+		str[i] = ft_remove_quotes(str[i]);
+		if (!str[i])
+		{
+			while (i > 0)
+			{
+				i--;
+				free(str[i]);
+				str[i] = NULL;
+			}
+			free(str);
+			return (NULL);
+		}
+		i++;
+	}
+	return (str);
+}
+
+/*static int	wordcounter(char *s, char c)
 {
 	int	wordcount;
 	int	i;
@@ -30,15 +135,27 @@ static int	wordcounter(char *s, char c)
 	return (wordcount);
 }
 
-static void	wordfiller(char *j, char *str, char c)
+static void	wordfiller(char *j, char *str, char c, int k)
 {
 	int	i;
 
 	i = 0;
-	while (inquote(j, i) || (!quote(j, i) && j[i] != c && j[i] != '\0'))
+	if (k != 0)
 	{
-		str[i] = j[i];
-		i++;
+		while (inquote(j - 1, i + 1) || (!quote(j - 1, i + 1) && j[i] != c \
+		&& j[i] != '\0'))
+		{
+			str[i] = j[i];
+			i++;
+		}
+	}
+	else
+	{
+		while (inquote(j, i) || (!quote(j, i) && j[i] != c && j[i] != '\0'))
+		{
+			str[i] = j[i];
+			i++;
+		}
 	}
 	str[i] = '\0';
 }
@@ -63,7 +180,7 @@ static void	strfiller(char *s, char **str, char c)
 				if (is_beginning_wordquote(s, j, c))
 				{
 					nextc = j + 1;
-					wordfiller(s + j, str[k], c);
+					wordfiller(s + j, str[k], c, j);
 					k++;
 				}
 			}
@@ -117,7 +234,7 @@ char	**ft_splitquote(char *s, char c)
 	}
 	strfiller((char *)s, str, c);
 	return (str);
-}
+}*/
 /*
 #include <stdio.h>
 
